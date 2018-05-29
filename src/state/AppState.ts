@@ -1,7 +1,7 @@
-import { observable } from 'mobx';
+
+
 
 export class AppState {
-    @observable 
     public drawerOpen: boolean = false;
 
     public openDrawer() {
