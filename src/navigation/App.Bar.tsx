@@ -15,12 +15,18 @@ import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, withRouter } from 'react-router-dom';
 import { InboxPage } from '../pages/Inbox';
 import Hidden from '@material-ui/core/Hidden';
 import { SentPage } from '../pages/Sent';
 import { DraftsPage } from '../pages/Drafts';
 import { styles } from './styles';
+import { IApplicationProps } from '../actions/App.Actions';
+import * as AppActionCreators from '../actions/App.Actions';
+import { AppState } from '../state/AppState';
+import { Dispatch, connect } from 'react-redux';
+import * as _ from 'lodash';
+import { bindActionCreators } from 'redux';
 
 const mailFolderList: any = () => {
   return (
@@ -55,39 +61,36 @@ const mailFolderList: any = () => {
 };
 
 
-interface IAppProps {
+interface IAppProps extends IApplicationProps {
   classes: any;
   theme?: any;
 }
 
 class MiniDrawer extends React.Component<IAppProps, {}> {
-  public state = {
-    open: false,
-  };
 
   public handleDrawerOpen = () => {
-    this.setState({ open: true });
+    this.props.openDrawer();
   };
 
   public handleDrawerClose = () => {
-    this.setState({ open: false });
+    this.props.closeDrawer();
   };
 
   public render() {
-    const { classes, theme } = this.props;
+    const { utility, classes, theme } = this.props;
 
     return (
       <div className={classes.root}>
         <AppBar
           position="absolute"
-          className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
+          className={classNames(classes.appBar, utility.drawerOpen && classes.appBarShift)}
         >
-          <Toolbar disableGutters={!this.state.open}>
+          <Toolbar disableGutters={!utility.drawerOpen}>
             <IconButton
               color="inherit"
               aria-label="open drawer"
               onClick={this.handleDrawerOpen}
-              className={classNames(classes.menuButton, this.state.open && classes.hide)}
+              className={classNames(classes.menuButton, utility.drawerOpen && classes.hide)}
             >
               <MenuIcon />
             </IconButton>
@@ -97,13 +100,13 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
           </Toolbar>
         </AppBar>
 
-        <Hidden mdDown={!this.state.open && true}>
+        <Hidden mdDown={!utility.drawerOpen && true}>
           <Drawer
             variant="permanent"
             classes={{
-              paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
+              paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),
             }}
-            open={this.state.open}
+            open={utility.drawerOpen}
           >
             <div className={classes.toolbar}>
               <IconButton onClick={this.handleDrawerClose}>
@@ -127,4 +130,10 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
   }
 }
 
-export default withStyles(styles as any, { withTheme: true })(MiniDrawer as any);
+const mapStateToProps = (state: AppState) => ({
+  utility: state.utility
+});
+
+const mapDispatchtoProps = (dispatch: Dispatch) => bindActionCreators(_.assign({},AppActionCreators), dispatch);
+
+export default withRouter(connect(mapStateToProps, mapDispatchtoProps)(withStyles(styles as any, { withTheme: true })(MiniDrawer as any)) as any);

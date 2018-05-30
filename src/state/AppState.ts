@@ -1,14 +1,16 @@
+import { Utility } from './Utility';
+import { Model } from "./Helpers";
 
+export interface IAppState {
+    utility?: Utility;
+}
 
+export const AppStateModel = Model<IAppState>({
+    utility: new Utility()
+});
 
-export class AppState {
-    public drawerOpen: boolean = false;
+export class AppState extends AppStateModel {
+    public static UTILITY = 'utility';
 
-    public openDrawer() {
-        this.drawerOpen = true;
-    }
-
-    public closeDrawer() {
-        this.drawerOpen = false;
-    }
+    public utility: Utility;
 }
