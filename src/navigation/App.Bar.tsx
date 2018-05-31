@@ -1,3 +1,4 @@
+//#region 
 import * as React from 'react';
 const classNames = require('classnames');
 import { withStyles } from '@material-ui/core/styles';
@@ -30,6 +31,8 @@ import * as _ from 'lodash';
 import { bindActionCreators } from 'redux';
 import { Alert } from '../state/Alert';
 import { AlertDialog } from '../alert/Alert';
+import SpinnerDialog from '../spinner/Spinner';
+//#endregion
 
 const mailFolderList: any = () => {
   return (
@@ -82,7 +85,12 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
   public showPopup = () => {
     this.props.showPopup(new Alert({
       title: "Testing title",
-      message: "This is a very long message, expect alert to be very wide"}))
+      message: "This is a very long message, expect alert to be very wide"
+    }))
+  }
+
+  public showSpinner = () => {
+    this.props.showSpinner("I am loading here please...")
   }
 
   private renderAlert(): JSX.Element {
@@ -91,6 +99,18 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
         <AlertDialog
           handleClose={this.props.closePopup}
           data={this.props.utility.alert}
+        />
+      );
+    }
+
+    return null
+  }
+
+  private renderSpinner(): JSX.Element {
+    if (this.props.utility.spinner) {
+      return (
+        <SpinnerDialog
+          message={this.props.utility.spinner.message}
         />
       );
     }
@@ -145,11 +165,15 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
           <div className={classes.toolbar} />
           <Button variant="raised" color="primary" className={classes.button} onClick={this.showPopup}>
             Show alert
-      </Button>
+          </Button>
+          <Button variant="raised" color="primary" className={classes.button} onClick={this.showSpinner}>
+            Show Spinner
+          </Button>
           <Route path='/inbox' component={InboxPage} />
           <Route path='/sent' component={SentPage} />
           <Route path='/drafts' component={DraftsPage} />
           {this.renderAlert()}
+          {this.renderSpinner()}
         </main>
       </div>
     );

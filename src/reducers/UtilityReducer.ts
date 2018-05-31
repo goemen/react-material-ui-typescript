@@ -11,6 +11,10 @@ export const UtilityReducer = (state: Utility = new Utility(), action: IAppActio
             return state.set(Utility.ALERT, action.payload) as Utility;
         case ActionType.CLOSE_ALERT:
             return state.set(Utility.ALERT, null) as Utility;
+        case ActionType.OPEN_SPINNER:
+            return state.set(Utility.SPINNER, action.payload) as Utility;
+        case ActionType.CLOSE_SPINNER:
+            return state.set(Utility.SPINNER, null) as Utility;
         default:
             return state;
     }

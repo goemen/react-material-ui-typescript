@@ -2,12 +2,15 @@ import { IAppAction, ActionType } from './Helpers';
 import { match } from 'react-router';
 import { Utility } from '../state/Utility';
 import { Alert } from '../state/Alert';
+import { Spinner } from '../state/Spinner';
 
 export interface IApplicationProps {
     openDrawer: () => IAppAction;
     closeDrawer: () => IAppAction;
     showPopup: (alert: Alert) => IAppAction;
-    closePopup: () => IAppAction;    
+    closePopup: () => IAppAction;  
+    showSpinner: (message: string) => IAppAction;
+    hideSpinner: () => IAppAction;  
     match: match<any>,
     location: any,
     history: any,
@@ -36,5 +39,18 @@ export const showPopup = (data: Alert): IAppAction => {
 export const closePopup = (): IAppAction => {
     return {
         type: ActionType.CLOSE_ALERT
+    };
+};
+
+export const showSpinner = (message: string): IAppAction => {
+    return {
+        type: ActionType.OPEN_SPINNER,
+        payload: new Spinner({message})
+    };
+};
+
+export const hideSpinner = (): IAppAction => {
+    return {
+        type: ActionType.CLOSE_SPINNER
     };
 };
