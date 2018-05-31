@@ -7,6 +7,10 @@ export const UtilityReducer = (state: Utility = new Utility(), action: IAppActio
             return state.set(Utility.DRAWER_OPEN, true) as Utility;
         case ActionType.CLOSE_DRAWER:
             return state.set(Utility.DRAWER_OPEN, false) as Utility;
+        case ActionType.OPEN_ALERT:
+            return state.set(Utility.ALERT, action.payload) as Utility;
+        case ActionType.CLOSE_ALERT:
+            return state.set(Utility.ALERT, null) as Utility;
         default:
             return state;
     }

@@ -69,4 +69,7 @@ export const styles = (theme: any) => ({
       padding: theme.spacing.unit * 3,
       minHeight: '100%',
     },
+    button: {
+      margin: theme.spacing.unit,
+    },
   });

@@ -8,6 +8,7 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -27,6 +28,8 @@ import { AppState } from '../state/AppState';
 import { Dispatch, connect } from 'react-redux';
 import * as _ from 'lodash';
 import { bindActionCreators } from 'redux';
+import { Alert } from '../state/Alert';
+import { AlertDialog } from '../alert/Alert';
 
 const mailFolderList: any = () => {
   return (
@@ -76,6 +79,25 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
     this.props.closeDrawer();
   };
 
+  public showPopup = () => {
+    this.props.showPopup(new Alert({
+      title: "Testing title",
+      message: "This is a very long message, expect alert to be very wide"}))
+  }
+
+  private renderAlert(): JSX.Element {
+    if (this.props.utility.alert) {
+      return (
+        <AlertDialog
+          handleClose={this.props.closePopup}
+          data={this.props.utility.alert}
+        />
+      );
+    }
+
+    return null
+  }
+
   public render() {
     const { utility, classes, theme } = this.props;
 
@@ -121,9 +143,13 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
         </Hidden>
         <main className={classes.content}>
           <div className={classes.toolbar} />
+          <Button variant="raised" color="primary" className={classes.button} onClick={this.showPopup}>
+            Show alert
+      </Button>
           <Route path='/inbox' component={InboxPage} />
           <Route path='/sent' component={SentPage} />
           <Route path='/drafts' component={DraftsPage} />
+          {this.renderAlert()}
         </main>
       </div>
     );
@@ -134,6 +160,6 @@ const mapStateToProps = (state: AppState) => ({
   utility: state.utility
 });
 
-const mapDispatchtoProps = (dispatch: Dispatch) => bindActionCreators(_.assign({},AppActionCreators), dispatch);
+const mapDispatchtoProps = (dispatch: Dispatch) => bindActionCreators(_.assign({}, AppActionCreators), dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchtoProps)(withStyles(styles as any, { withTheme: true })(MiniDrawer as any)) as any);
