@@ -3,12 +3,14 @@ const drawerWidth = 240;
 export const styles = (theme: any) => ({
     root: {
       flexGrow: 1,
-      height: '100%',
+      height: '100vh',
+      minHeight: '100%',
       zIndex: 1,
       overflow: 'hidden',
       position: 'relative',
       display: 'flex',
       width: '100%',
+      backgroundColor: theme.palette.background.default,
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
@@ -68,8 +70,12 @@ export const styles = (theme: any) => ({
       backgroundColor: theme.palette.background.default,
       padding: theme.spacing.unit * 3,
       minHeight: '100%',
+      height: '100%',
     },
     button: {
       margin: theme.spacing.unit,
+    },
+    link: {
+      textDecoration: 'none',
     },
   });

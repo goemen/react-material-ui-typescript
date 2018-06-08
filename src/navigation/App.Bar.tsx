@@ -9,7 +9,6 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -17,27 +16,37 @@ import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
+import AccountCirleIcon from '@material-ui/icons/AccountCircle';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import { Route, Link, withRouter } from 'react-router-dom';
-import { InboxPage } from '../pages/Inbox';
 import Hidden from '@material-ui/core/Hidden';
-import { SentPage } from '../pages/Sent';
-import { DraftsPage } from '../pages/Drafts';
 import { styles } from './styles';
 import { IApplicationProps } from '../actions/App.Actions';
 import * as AppActionCreators from '../actions/App.Actions';
-import { AppState } from '../state/AppState';
+import { AppState, isAuthenticated } from '../state/AppState';
 import { Dispatch, connect } from 'react-redux';
 import * as _ from 'lodash';
 import { bindActionCreators } from 'redux';
 import { Alert } from '../state/Alert';
 import { AlertDialog } from '../alert/Alert';
 import SpinnerDialog from '../spinner/Spinner';
+import { AccountPage } from '../pages/account/Account';
+import { MailPage } from '../pages/mail/Mail';
+import { HomePage } from '../pages/Home';
 //#endregion
 
-const mailFolderList: any = () => {
+const mailFolderList: any = (classes: any) => {
   return (
     <List>
-      <Link to='/inbox' >
+      <Link className={classes.link} to='/' >
+        <ListItem button={true}>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItem>
+      </Link>
+      <Link className={classes.link} to='/mail/inbox' >
         <ListItem button={true}>
           <ListItemIcon>
             <InboxIcon />
@@ -45,7 +54,7 @@ const mailFolderList: any = () => {
           <ListItemText primary="Inbox" />
         </ListItem>
       </Link>
-      <Link to='/sent' >
+      <Link className={classes.link} to='/mail/sent' >
         <ListItem button={true}>
           <ListItemIcon>
             <SendIcon />
@@ -53,13 +62,22 @@ const mailFolderList: any = () => {
           <ListItemText primary="Sent mail" />
         </ListItem>
       </Link>
-      <Link to='/drafts' >
+      <Link className={classes.link} to='/mail/drafts' >
 
         <ListItem button={true}>
           <ListItemIcon>
             <DraftsIcon />
           </ListItemIcon>
           <ListItemText primary="Drafts" />
+        </ListItem>
+      </Link>
+      <Link className={classes.link} to='/account' >
+
+        <ListItem button={true}>
+          <ListItemIcon>
+            <AccountCirleIcon/>
+          </ListItemIcon>
+          <ListItemText primary="Profile" />
         </ListItem>
       </Link>
     </List>
@@ -118,11 +136,10 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
     return null
   }
 
-  public render() {
-    const { utility, classes, theme } = this.props;
-
-    return (
-      <div className={classes.root}>
+  private renderAppBar() {
+    if (this.props.authentication) {
+      const { classes, utility } = this.props;
+      return (
         <AppBar
           position="absolute"
           className={classNames(classes.appBar, utility.drawerOpen && classes.appBarShift)}
@@ -137,13 +154,32 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
               <MenuIcon />
             </IconButton>
             <Typography variant="title" color="inherit" noWrap={true}>
-              Mini variant drawer
+              Eliminator
             </Typography>
           </Toolbar>
         </AppBar>
+      );
+    }
+
+    return null;
+  }
+
+  public renderAccount = () => {
+    return (
+      <AccountPage user={this.props.authentication} login={this.props.login} match={this.props.match} location={this.props.location}/>
+    );
+  }
+
+  public render() {
+    const { utility, classes, theme, authentication } = this.props;
+
+    return (
+      <div className={classes.root}>
+        {this.renderAppBar()}
 
         <Hidden mdDown={!utility.drawerOpen && true}>
           <Drawer
+            hidden={!authentication}
             variant="permanent"
             classes={{
               paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),
@@ -156,22 +192,16 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
               </IconButton>
             </div>
             <Divider />
-            {mailFolderList()}
+            {mailFolderList(classes)}
             <Divider />
           </Drawer>
 
         </Hidden>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Button variant="raised" color="primary" className={classes.button} onClick={this.showPopup}>
-            Show alert
-          </Button>
-          <Button variant="raised" color="primary" className={classes.button} onClick={this.showSpinner}>
-            Show Spinner
-          </Button>
-          <Route path='/inbox' component={InboxPage} />
-          <Route path='/sent' component={SentPage} />
-          <Route path='/drafts' component={DraftsPage} />
+          <Route path='/' exact={true} component={isAuthenticated(HomePage as any)}/>
+          <Route path='/mail' component={MailPage} />
+          <Route path='/account' render={this.renderAccount}/>
           {this.renderAlert()}
           {this.renderSpinner()}
         </main>
@@ -181,7 +211,8 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  utility: state.utility
+  utility: state.utility,
+  authentication: state.authentication
 });
 
 const mapDispatchtoProps = (dispatch: Dispatch) => bindActionCreators(_.assign({}, AppActionCreators), dispatch);

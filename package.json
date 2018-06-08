@@ -17,6 +17,7 @@
     "lodash": "^4.17.10",
     "mobx": "^4.3.0",
     "mobx-react-devtools": "^5.0.1",
+    "querystring": "^0.2.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-mobx": "0.0.3",

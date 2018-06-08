@@ -3,6 +3,7 @@ import { match } from 'react-router';
 import { Utility } from '../state/Utility';
 import { Alert } from '../state/Alert';
 import { Spinner } from '../state/Spinner';
+import { User } from '../state/User';
 
 export interface IApplicationProps {
     openDrawer: () => IAppAction;
@@ -10,11 +11,13 @@ export interface IApplicationProps {
     showPopup: (alert: Alert) => IAppAction;
     closePopup: () => IAppAction;  
     showSpinner: (message: string) => IAppAction;
-    hideSpinner: () => IAppAction;  
+    hideSpinner: () => IAppAction; 
+    login: (data: any) => IAppAction; 
     match: match<any>,
     location: any,
     history: any,
     utility: Utility;
+    authentication: User;
 }
 
 export const openDrawer = (): IAppAction => {
@@ -53,4 +56,8 @@ export const hideSpinner = (): IAppAction => {
     return {
         type: ActionType.CLOSE_SPINNER
     };
+};
+
+export const login = (data: any): IAppAction => {
+    return { type: ActionType.LOGIN_REQUEST, payload: data };
 };
