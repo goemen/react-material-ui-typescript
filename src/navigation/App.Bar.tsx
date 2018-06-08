@@ -18,7 +18,7 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
 import AccountCirleIcon from '@material-ui/icons/AccountCircle';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import { Route, Link, withRouter } from 'react-router-dom';
+import { Route, withRouter, NavLink } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { styles } from './styles';
 import { IApplicationProps } from '../actions/App.Actions';
@@ -38,31 +38,31 @@ import { HomePage } from '../pages/Home';
 const mailFolderList: any = (classes: any) => {
   return (
     <List>
-      <Link className={classes.link} to='/' >
+      <NavLink activeClassName={classes.active} className={classes.link} to='/' >
         <ListItem button={true}>
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItem>
-      </Link>
-      <Link className={classes.link} to='/mail/inbox' >
+      </NavLink>
+      <NavLink activeClassName={classes.active} className={classes.link} to='/mail/inbox' >
         <ListItem button={true}>
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="Inbox" />
         </ListItem>
-      </Link>
-      <Link className={classes.link} to='/mail/sent' >
+      </NavLink>
+      <NavLink activeClassName={classes.active} className={classes.link} to='/mail/sent' >
         <ListItem button={true}>
           <ListItemIcon>
             <SendIcon />
           </ListItemIcon>
           <ListItemText primary="Sent mail" />
         </ListItem>
-      </Link>
-      <Link className={classes.link} to='/mail/drafts' >
+      </NavLink>
+      <NavLink activeClassName={classes.active} className={classes.link} to='/mail/drafts' >
 
         <ListItem button={true}>
           <ListItemIcon>
@@ -70,8 +70,8 @@ const mailFolderList: any = (classes: any) => {
           </ListItemIcon>
           <ListItemText primary="Drafts" />
         </ListItem>
-      </Link>
-      <Link className={classes.link} to='/account' >
+      </NavLink>
+      <NavLink activeClassName={classes.active} className={classes.link} to='/account' >
 
         <ListItem button={true}>
           <ListItemIcon>
@@ -79,7 +79,7 @@ const mailFolderList: any = (classes: any) => {
           </ListItemIcon>
           <ListItemText primary="Profile" />
         </ListItem>
-      </Link>
+      </NavLink>
     </List>
   );
 };

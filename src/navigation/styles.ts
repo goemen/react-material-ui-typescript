@@ -1,6 +1,8 @@
+import { Theme } from "@material-ui/core";
+
 const drawerWidth = 240;
 
-export const styles = (theme: any) => ({
+export const styles = (theme: Theme) => ({
     root: {
       flexGrow: 1,
       height: '100vh',
@@ -78,4 +80,7 @@ export const styles = (theme: any) => ({
     link: {
       textDecoration: 'none',
     },
+    active: {
+      background: theme.palette.primary
+    }
   });
