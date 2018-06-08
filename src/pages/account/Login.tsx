@@ -13,10 +13,27 @@ interface ILoginProps {
     user: User;
 }
 
-class LoginPage extends React.Component<ILoginProps, {}> {
+interface ILoginState {
+    email: string;
+    password: string;
+}
+
+class LoginPage extends React.Component<ILoginProps, ILoginState> {
+    public state = {
+        email: "",
+        password: ""
+    };
+
+    private handleEmailAddressChange = (event: any) => {
+        this.setState({email: event.target.value})
+    }
+
+    private handlePasswordChange = (event: any) => {
+        this.setState({password: event.target.value})
+    }
 
     private handleLogin = () => {
-        this.props.login({ email: 'gnthomiwa@gmail.com' });
+        this.props.login(this.state);
     }
 
     public render(): JSX.Element {
@@ -32,10 +49,11 @@ class LoginPage extends React.Component<ILoginProps, {}> {
             <div className={classes.container}>
                 <Paper className={classes.paper}>
                     <h2>{'Login'}</h2>
-                    <FormControl fullWidth={true} className={classes.field}>
+                    <FormControl required={true} fullWidth={true} className={classes.field}>
                         <InputLabel htmlFor="email">Email Address</InputLabel>
                         <Input
-                            value={"gnthomiwa@gmail.com"}
+                            value={this.state.email}
+                            onChange={this.handleEmailAddressChange}
                             id="email"
                             startAdornment={
                                 <InputAdornment position="start">
@@ -43,10 +61,11 @@ class LoginPage extends React.Component<ILoginProps, {}> {
                                 </InputAdornment>}
                         />
                     </FormControl>
-                    <FormControl fullWidth={true} className={classes.field}>
+                    <FormControl required={true} fullWidth={true} className={classes.field}>
                         <InputLabel htmlFor="password">Password</InputLabel>
                         <Input
-                            value={"ucwc"}
+                            value={this.state.password}
+                            onChange={this.handlePasswordChange}
                             type="password"
                             id="password"
                             startAdornment={

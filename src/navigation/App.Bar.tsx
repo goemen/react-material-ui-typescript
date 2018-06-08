@@ -164,42 +164,50 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
     return null;
   }
 
-  public renderAccount = () => {
+  private renderAccount = () => {
     return (
       <AccountPage user={this.props.authentication} login={this.props.login} match={this.props.match} location={this.props.location}/>
     );
   }
 
+  private renderDrawer() {
+    const { utility, classes, authentication, theme } = this.props;
+    return (
+      <Hidden mdDown={!utility.drawerOpen && true}>
+      <Drawer
+        hidden={!authentication}
+        variant="permanent"
+        classes={{
+          paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),
+        }}
+        open={utility.drawerOpen}
+      >
+        <div className={classes.toolbar}>
+          <IconButton onClick={this.handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </div>
+        <Divider />
+        {mailFolderList(classes)}
+        <Divider />
+      </Drawer>
+
+    </Hidden>
+    );
+  }
+
   public render() {
-    const { utility, classes, theme, authentication } = this.props;
+    const { classes } = this.props;
 
     return (
       <div className={classes.root}>
         {this.renderAppBar()}
-
-        <Hidden mdDown={!utility.drawerOpen && true}>
-          <Drawer
-            hidden={!authentication}
-            variant="permanent"
-            classes={{
-              paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),
-            }}
-            open={utility.drawerOpen}
-          >
-            <div className={classes.toolbar}>
-              <IconButton onClick={this.handleDrawerClose}>
-                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-              </IconButton>
-            </div>
-            <Divider />
-            {mailFolderList(classes)}
-            <Divider />
-          </Drawer>
-
-        </Hidden>
+        {this.renderDrawer()}
+       
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Route path='/' exact={true} component={isAuthenticated(HomePage as any)}/>
+          <Route path='/dashboard' component={isAuthenticated(HomePage as any)}/>          
           <Route path='/mail' component={MailPage} />
           <Route path='/account' render={this.renderAccount}/>
           {this.renderAlert()}
