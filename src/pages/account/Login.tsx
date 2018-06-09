@@ -25,11 +25,11 @@ class LoginPage extends React.Component<ILoginProps, ILoginState> {
     };
 
     private handleEmailAddressChange = (event: any) => {
-        this.setState({email: event.target.value})
+        this.setState({ email: event.target.value })
     }
 
     private handlePasswordChange = (event: any) => {
-        this.setState({password: event.target.value})
+        this.setState({ password: event.target.value })
     }
 
     private handleLogin = () => {
@@ -40,8 +40,8 @@ class LoginPage extends React.Component<ILoginProps, ILoginState> {
         const classes = this.props.classes;
 
         if (this.props.user) {
-            const path : string = querystring.
-            parse((this.props.location.search as string).substr(1)).redirect as any || '/inbox';
+            const path: string = querystring.
+                parse((this.props.location.search as string).substr(1)).redirect as any || '/inbox';
             return <Redirect to={path} />
         }
 
@@ -104,7 +104,10 @@ const styles = (theme: Theme) => ({
         width: '30%',
         display: 'flex',
         flexDirection: 'column',
-        alignContent: 'center'
+        alignContent: 'center',
+        [theme.breakpoints.down('md')]: {
+            width: '100%',
+        },
     }),
     field: {
         marginTop: theme.spacing.unit * 3

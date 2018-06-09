@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText, Menu, MenuItem } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
@@ -33,6 +33,7 @@ import SpinnerDialog from '../spinner/Spinner';
 import { AccountPage } from '../pages/account/Account';
 import { MailPage } from '../pages/mail/Mail';
 import { HomePage } from '../pages/Home';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 //#endregion
 
 const mailFolderList: any = (classes: any) => {
@@ -75,7 +76,7 @@ const mailFolderList: any = (classes: any) => {
 
         <ListItem button={true}>
           <ListItemIcon>
-            <AccountCirleIcon/>
+            <AccountCirleIcon />
           </ListItemIcon>
           <ListItemText primary="Profile" />
         </ListItem>
@@ -90,7 +91,35 @@ interface IAppProps extends IApplicationProps {
   theme?: any;
 }
 
-class MiniDrawer extends React.Component<IAppProps, {}> {
+interface IState {
+  anchorEl: any;
+}
+
+class MiniDrawer extends React.Component<IAppProps, IState> {
+
+  public state: IState = {
+    anchorEl: null,
+  };
+
+  private handleMenu = (event: any) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  private handleMenuClose = (path?: string) => {
+    this.setState({ anchorEl: null });
+    this.navigate(path);
+  };
+
+  public handleLogout = () => {
+    this.props.logout();
+    this.handleMenuClose();
+  };
+
+  private navigate = (path?: string) => {
+    if (path) {
+      this.props.history.push(path);
+    }
+  }
 
   public handleDrawerOpen = () => {
     this.props.openDrawer();
@@ -139,6 +168,9 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
   private renderAppBar() {
     if (this.props.authentication) {
       const { classes, utility } = this.props;
+      const { anchorEl } = this.state;
+      const open = Boolean(anchorEl);
+
       return (
         <AppBar
           position="absolute"
@@ -153,9 +185,36 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="title" color="inherit" noWrap={true}>
-              Eliminator
+            <Typography className={classes.fillSpace} variant="title" color="inherit" noWrap={true}>
+              Tomahawk
             </Typography>
+            <div>
+                <IconButton
+                  aria-owns={open ? 'menu-appbar' : null}
+                  aria-haspopup="true"
+                  onClick={this.handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={open}
+                  onClose={this.handleMenuClose.bind(this, null)}
+                >
+                  <MenuItem onClick={this.handleMenuClose.bind(this, '/account')}>{this.props.authentication.name}</MenuItem>
+                  <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                </Menu>
+              </div>
           </Toolbar>
         </AppBar>
       );
@@ -166,7 +225,7 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
 
   private renderAccount = () => {
     return (
-      <AccountPage user={this.props.authentication} login={this.props.login} match={this.props.match} location={this.props.location}/>
+      <AccountPage user={this.props.authentication} login={this.props.login} match={this.props.match} location={this.props.location} />
     );
   }
 
@@ -174,25 +233,25 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
     const { utility, classes, authentication, theme } = this.props;
     return (
       <Hidden mdDown={!utility.drawerOpen && true}>
-      <Drawer
-        hidden={!authentication}
-        variant="permanent"
-        classes={{
-          paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),
-        }}
-        open={utility.drawerOpen}
-      >
-        <div className={classes.toolbar}>
-          <IconButton onClick={this.handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </div>
-        <Divider />
-        {mailFolderList(classes)}
-        <Divider />
-      </Drawer>
+        <Drawer
+          hidden={!authentication}
+          variant="permanent"
+          classes={{
+            paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),
+          }}
+          open={utility.drawerOpen}
+        >
+          <div className={classes.toolbar}>
+            <IconButton onClick={this.handleDrawerClose}>
+              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
+          </div>
+          <Divider />
+          {mailFolderList(classes)}
+          <Divider />
+        </Drawer>
 
-    </Hidden>
+      </Hidden>
     );
   }
 
@@ -203,13 +262,13 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
       <div className={classes.root}>
         {this.renderAppBar()}
         {this.renderDrawer()}
-       
+
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Route path='/' exact={true} component={isAuthenticated(HomePage as any)}/>
-          <Route path='/dashboard' component={isAuthenticated(HomePage as any)}/>          
+          <Route path='/' exact={true} component={isAuthenticated(HomePage as any)} />
+          <Route path='/dashboard' component={isAuthenticated(HomePage as any)} />
           <Route path='/mail' component={MailPage} />
-          <Route path='/account' render={this.renderAccount}/>
+          <Route path='/account' render={this.renderAccount} />
           {this.renderAlert()}
           {this.renderSpinner()}
         </main>

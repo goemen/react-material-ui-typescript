@@ -82,5 +82,8 @@ export const styles = (theme: Theme) => ({
     },
     active: {
       background: theme.palette.primary
+    },
+    fillSpace: {
+      flex: '1 1 auto'
     }
   });

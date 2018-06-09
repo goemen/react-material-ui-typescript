@@ -13,6 +13,7 @@ export interface IApplicationProps {
     showSpinner: (message: string) => IAppAction;
     hideSpinner: () => IAppAction; 
     login: (data: any) => IAppAction; 
+    logout: () => IAppAction;
     match: match<any>,
     location: any,
     history: any,
@@ -60,4 +61,8 @@ export const hideSpinner = (): IAppAction => {
 
 export const login = (data: any): IAppAction => {
     return { type: ActionType.LOGIN_REQUEST, payload: data };
+};
+
+export const logout = (): IAppAction => {
+    return { type: ActionType.LOGOUT_REQUEST };
 };

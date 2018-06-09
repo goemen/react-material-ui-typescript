@@ -9,7 +9,10 @@ export enum ActionType {
     CLOSE_SPINNER,
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
-    LOGIN_FAIL
+    LOGIN_FAIL,
+    LOGOUT_REQUEST,
+    LOGOUT_SUCCESS,
+    LOGOUT_FAIL
 }
 
 export interface IAppAction extends Action<ActionType> {
