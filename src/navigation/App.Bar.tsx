@@ -32,8 +32,10 @@ import { AlertDialog } from '../alert/Alert';
 import SpinnerDialog from '../spinner/Spinner';
 import { AccountPage } from '../pages/account/Account';
 import { MailPage } from '../pages/mail/Mail';
-import { HomePage } from '../pages/Home';
+import HomePage from '../pages/Home';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import { actions as UserActionCreators } from '../data/users';
+
 //#endregion
 
 const mailFolderList: any = (classes: any) => {
@@ -100,6 +102,10 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
   public state: IState = {
     anchorEl: null,
   };
+
+  public componentWillMount() {
+    this.props.fetchUsers();
+  }
 
   private handleMenu = (event: any) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -257,7 +263,14 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
   public render() {
     const { classes } = this.props;
-
+    const Dashboard = isAuthenticated((props: any): any => {
+      return (
+        <HomePage
+          users={this.props.users}
+          fetchUsers={this.props.fetchUsers}
+        />
+      );
+    });
     return (
       <div className={classes.root}>
         {this.renderAppBar()}
@@ -265,8 +278,8 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Route path='/' exact={true} component={isAuthenticated(HomePage as any)} />
-          <Route path='/dashboard' component={isAuthenticated(HomePage as any)} />
+          <Route path='/' exact={true} component={Dashboard} />
+          <Route path='/dashboard' component={Dashboard} />
           <Route path='/mail' component={MailPage} />
           <Route path='/account' render={this.renderAccount} />
           {this.renderAlert()}
@@ -279,9 +292,11 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
 const mapStateToProps = (state: AppState) => ({
   utility: state.utility,
-  authentication: state.authentication
+  authentication: state.authentication,
+  users: state.users
 });
 
-const mapDispatchtoProps = (dispatch: Dispatch) => bindActionCreators(_.assign({}, AppActionCreators), dispatch);
+const mapDispatchtoProps = (dispatch: Dispatch) => 
+bindActionCreators(_.assign({}, AppActionCreators, UserActionCreators), dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchtoProps)(withStyles(styles as any, { withTheme: true })(MiniDrawer as any)) as any);

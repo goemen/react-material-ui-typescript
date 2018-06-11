@@ -14,11 +14,17 @@ export interface IApplicationProps {
     hideSpinner: () => IAppAction; 
     login: (data: any) => IAppAction; 
     logout: () => IAppAction;
+    createUser: (content: any) => any;
+    getUser: (id: any) => any;
+    fetchUsers: (context?: any) => any;
+    updateUser: (context: any) => any;
+    deleteUser: (context: any) => any;
     match: match<any>,
     location: any,
     history: any,
     utility: Utility;
     authentication: User;
+    users: any;
 }
 
 export const openDrawer = (): IAppAction => {

@@ -1,8 +1,44 @@
 import * as React from 'react';
-import { Typography } from '@material-ui/core';
+import { Theme, withStyles } from '@material-ui/core';
 
-export class HomePage extends React.Component<{}, {}> {
+interface IDashboardProps {
+    fetchUsers: (context?: any) => void;
+    users: any;
+    classes?: any;
+    theme?: any;
+    children?: any;
+}
+
+class HomePage extends React.Component<IDashboardProps, {}> {
+
+    private renderUsers(): JSX.Element {
+        return null;
+    }
+    
     public render(): JSX.Element {
-        return (<Typography noWrap={false}>{"Home Page"}</Typography>)
+        return (
+            <div className={this.props.classes.root}>
+                {this.renderUsers()}
+            </div>
+        );
     }
 }
+
+const styles = (theme: Theme) => ({
+    root: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.paper,
+    },
+    gridList: {
+        width: 500,
+        height: 450,
+    },
+    subheader: {
+        width: '100%',
+    },
+});
+
+export default withStyles(styles as any)(HomePage as any) as any;
