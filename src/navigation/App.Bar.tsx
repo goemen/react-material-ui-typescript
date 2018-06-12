@@ -36,6 +36,7 @@ import HomePage from '../pages/Home';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { actions as UserActionCreators } from '../data/users';
 import { actions as MaterialActionCreators } from '../data/material';
+import { getMaterialChartItems } from '../selectors';
 //#endregion
 
 const mailFolderList: any = (classes: any) => {
@@ -269,6 +270,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
         <HomePage
           users={this.props.users}
           fetchUsers={this.props.fetchUsers}
+          materialChartData={this.props.materialCharts}
         />
       );
     });
@@ -295,7 +297,8 @@ const mapStateToProps = (state: AppState) => ({
   utility: state.utility,
   authentication: state.authentication,
   users: state.users,
-  materials: state.materials
+  materials: state.materials,
+  materialCharts: getMaterialChartItems(state)
 });
 
 const mapDispatchtoProps = (dispatch: Dispatch) => 

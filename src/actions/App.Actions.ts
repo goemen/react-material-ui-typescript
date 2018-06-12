@@ -31,6 +31,7 @@ export interface IApplicationProps {
     authentication: User;
     users: any;
     materials: any;
+    materialCharts: Array<{name: string, value: number, fill: string}>;
 }
 
 export const openDrawer = (): IAppAction => {

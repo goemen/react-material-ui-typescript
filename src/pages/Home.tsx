@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { Theme, withStyles, Paper, Table, TableHead, TableRow, TableCell, TableBody, TablePagination } from '@material-ui/core';
+import { Theme, withStyles, Paper, Table, TableHead, TableRow, 
+    TableCell, TableBody, TablePagination, Grid } from '@material-ui/core';
+import { BarChart, CartesianGrid, XAxis, YAxis, Bar, Tooltip, Legend, PieChart, Pie } from 'recharts';
+const classNames = require('classnames');
+import GroupIcon from '@material-ui/icons/Group';
+import MailIcon from '@material-ui/icons/Mail';
+import SettingsIcon from '@material-ui/icons/Settings';
+import BusinessIcon from '@material-ui/icons/BusinessCenter';
 
 interface IDashboardProps {
     fetchUsers: (context?: any) => void;
     users: any;
+    materialChartData: any[];
     classes?: any;
     theme?: any;
     children?: any;
@@ -37,8 +45,8 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
         }
 
         return (
-            <Paper className={classes.users}>
-                <h3 className={classes.sectionTitle}>Users</h3>
+            <Paper className={classes.paper}>
+                <h3 className={classes.sectionTitle}>Customers</h3>
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
@@ -81,20 +89,68 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
 
     }
 
-    private renderChart(): JSX.Element {
+    private renderRadialBarChart(): JSX.Element {
         return (
-            <Paper className={this.props.classes.chart} />
+            <Paper className={this.props.classes.paper}>
+                <h3 className={this.props.classes.sectionTitle}>Material Inventory</h3>
+                <PieChart width={730} height={350}>
+                    <Pie data={this.props.materialChartData} dataKey="value" nameKey="name" cx="50%" cy="50%" label={true} fill="#8884d8" />
+                    <Legend />
+                </PieChart>
+            </Paper>
+        );
+    }
+
+    private renderBarChart(): JSX.Element {
+        return (
+            <Paper className={this.props.classes.paper}>
+                <h3 className={this.props.classes.sectionTitle}>Material Sales</h3>
+                <BarChart width={730} height={350} data={this.props.materialChartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#8884d8" />
+                </BarChart>
+            </Paper>
         );
     }
 
     public render(): JSX.Element {
+        const { classes } = this.props;
         return (
-            <div className={this.props.classes.root}>
-                <div className={this.props.classes.charts}>
-                    {this.renderChart()}
-                    {this.renderChart()}
-                </div>
-                {this.renderUsers()}
+            <div className={classes.root}>
+                <Grid container={true} spacing={24}>
+                    <Grid item={true} xs={3}>
+                        <Paper className={classNames(classes.paper, classes.headerTiles)}>
+                            <GroupIcon className={classes.headerTileIcon}/>
+                        </Paper>
+                    </Grid>
+                    <Grid item={true} xs={3}>
+                    <Paper className={classNames(classes.paper, classes.headerTiles)}>
+                            <MailIcon className={classes.headerTileIcon}/>
+                        </Paper>
+                    </Grid>
+                    <Grid item={true} xs={3}>
+                    <Paper className={classNames(classes.paper, classes.headerTiles)}>
+                            <SettingsIcon className={classes.headerTileIcon}/>
+                        </Paper>
+                    </Grid>
+                    <Grid item={true} xs={3}>
+                    <Paper className={classNames(classes.paper, classes.headerTiles)}>
+                            <BusinessIcon className={classes.headerTileIcon}/>
+                        </Paper>
+                    </Grid>
+                    <Grid item={true} xs={12} md={6}>
+                        {this.renderBarChart()}
+                    </Grid>
+                    <Grid item={true} xs={12} md={6}>
+                        {this.renderRadialBarChart()}
+                    </Grid>
+                    <Grid item={true} xs={12}>
+                        {this.renderUsers()}
+                    </Grid>
+                </Grid>
             </div>
         );
     }
@@ -102,29 +158,18 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
 
 const styles = (theme: Theme) => ({
     root: {
+        flexGrow: 1,
+    },
+    paper: {
+        padding: theme.spacing.unit * 2,
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    },
+    headerTiles: {
         display: 'flex',
-        flexWrap: 'wrap',
-        overflow: 'hidden',
-        flexDirection: 'column',
     },
-    charts: {
-        display: 'flex',
-        margin: 8,
-        flexDirection: 'row',
-        [theme.breakpoints.down('md')]: {
-            flexDirection: 'column',
-        },
-    },
-    chart: {
-        flex: 0.5,
-        height: 200,
-        [theme.breakpoints.down('md')]: {
-            flex: 1,
-        },
-    },
-    users: {
-        flex: 1,
-        margin: theme.spacing.unit,
+    headerTileIcon: {
+        fontSize: 40
     },
     sectionTitle: {
         paddingLeft: theme.spacing.unit * 2,

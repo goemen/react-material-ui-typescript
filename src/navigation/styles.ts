@@ -8,7 +8,7 @@ export const styles = (theme: Theme) => ({
       height: '100vh',
       minHeight: '100%',
       zIndex: 1,
-      overflow: 'auto',
+      overflow: 'hidden',
       position: 'relative',
       display: 'flex',
       width: '100%',
@@ -74,7 +74,8 @@ export const styles = (theme: Theme) => ({
       padding: theme.spacing.unit * 3,
       minHeight: '100%',
       height: '100%',
-      flex: '1 1 auto'
+      flex: '1 1 auto',
+      overflowY: 'scroll'
     },
     button: {
       margin: theme.spacing.unit,
