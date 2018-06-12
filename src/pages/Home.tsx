@@ -48,18 +48,18 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.items.slice(this.state.usersTablePage * this.state.usersTableRowsPerPage, 
-                        this.state.usersTablePage * this.state.usersTableRowsPerPage + this.state.usersTableRowsPerPage).map((n: any) => {
-                            return (
-                                <TableRow key={n.id}>
-                                    <TableCell component="th" scope="row">
-                                        {n.id}
-                                    </TableCell>
-                                    <TableCell>{n.name}</TableCell>
-                                    <TableCell>{n.email}</TableCell>
-                                </TableRow>
-                            );
-                        })}
+                        {users.items.slice(this.state.usersTablePage * this.state.usersTableRowsPerPage,
+                            this.state.usersTablePage * this.state.usersTableRowsPerPage + this.state.usersTableRowsPerPage).map((n: any) => {
+                                return (
+                                    <TableRow key={n.id}>
+                                        <TableCell component="th" scope="row">
+                                            {n.id}
+                                        </TableCell>
+                                        <TableCell>{n.name}</TableCell>
+                                        <TableCell>{n.email}</TableCell>
+                                    </TableRow>
+                                );
+                            })}
                     </TableBody>
                 </Table>
                 <TablePagination
@@ -81,9 +81,19 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
 
     }
 
+    private renderChart(): JSX.Element {
+        return (
+            <Paper className={this.props.classes.chart} />
+        );
+    }
+
     public render(): JSX.Element {
         return (
             <div className={this.props.classes.root}>
+                <div className={this.props.classes.charts}>
+                    {this.renderChart()}
+                    {this.renderChart()}
+                </div>
                 {this.renderUsers()}
             </div>
         );
@@ -95,13 +105,29 @@ const styles = (theme: Theme) => ({
         display: 'flex',
         flexWrap: 'wrap',
         overflow: 'hidden',
+        flexDirection: 'column',
+    },
+    charts: {
+        display: 'flex',
+        margin: 8,
+        flexDirection: 'row',
+        [theme.breakpoints.down('md')]: {
+            flexDirection: 'column',
+        },
+    },
+    chart: {
+        flex: 0.5,
+        height: 200,
+        [theme.breakpoints.down('md')]: {
+            flex: 1,
+        },
     },
     users: {
-        flex: 0.5,
+        flex: 1,
         margin: theme.spacing.unit,
     },
     sectionTitle: {
-        paddingLeft: theme.spacing.unit + 3,
+        paddingLeft: theme.spacing.unit * 2,
     },
 });
 

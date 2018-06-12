@@ -35,7 +35,7 @@ import { MailPage } from '../pages/mail/Mail';
 import HomePage from '../pages/Home';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { actions as UserActionCreators } from '../data/users';
-
+import { actions as MaterialActionCreators } from '../data/material';
 //#endregion
 
 const mailFolderList: any = (classes: any) => {
@@ -105,6 +105,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
   public componentWillMount() {
     this.props.fetchUsers();
+    this.props.fetchMaterials();
   }
 
   private handleMenu = (event: any) => {
@@ -179,7 +180,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
       return (
         <AppBar
-          position="absolute"
+          position="fixed"
           className={classNames(classes.appBar, utility.drawerOpen && classes.appBarShift)}
         >
           <Toolbar disableGutters={!utility.drawerOpen}>
@@ -241,7 +242,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
       <Hidden mdDown={!utility.drawerOpen && true}>
         <Drawer
           hidden={!authentication}
-          variant="permanent"
+          variant="persistent"
           classes={{
             paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),
           }}
@@ -293,10 +294,12 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   utility: state.utility,
   authentication: state.authentication,
-  users: state.users
+  users: state.users,
+  materials: state.materials
 });
 
 const mapDispatchtoProps = (dispatch: Dispatch) => 
-bindActionCreators(_.assign({}, AppActionCreators, UserActionCreators), dispatch);
+bindActionCreators(_.assign({}, AppActionCreators,
+   UserActionCreators, MaterialActionCreators), dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchtoProps)(withStyles(styles as any, { withTheme: true })(MiniDrawer as any)) as any);

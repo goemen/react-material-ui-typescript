@@ -8,7 +8,7 @@ export const styles = (theme: Theme) => ({
       height: '100vh',
       minHeight: '100%',
       zIndex: 1,
-      overflow: 'hidden',
+      overflow: 'auto',
       position: 'relative',
       display: 'flex',
       width: '100%',
@@ -41,6 +41,7 @@ export const styles = (theme: Theme) => ({
     },
     drawerPaper: {
       position: 'relative',
+      top: 0,
       whiteSpace: 'nowrap',
       width: drawerWidth,
       transition: theme.transitions.create('width', {
@@ -73,6 +74,7 @@ export const styles = (theme: Theme) => ({
       padding: theme.spacing.unit * 3,
       minHeight: '100%',
       height: '100%',
+      flex: '1 1 auto'
     },
     button: {
       margin: theme.spacing.unit,

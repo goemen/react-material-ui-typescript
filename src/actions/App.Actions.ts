@@ -19,12 +19,18 @@ export interface IApplicationProps {
     fetchUsers: (context?: any) => any;
     updateUser: (context: any) => any;
     deleteUser: (context: any) => any;
+    createMaterial: (content: any) => any;
+    getMaterial: (id: any) => any;
+    fetchMaterials: (context?: any) => any;
+    updateMaterial: (context: any) => any;
+    deleteMaterial: (context: any) => any;
     match: match<any>,
     location: any,
     history: any,
     utility: Utility;
     authentication: User;
     users: any;
+    materials: any;
 }
 
 export const openDrawer = (): IAppAction => {
