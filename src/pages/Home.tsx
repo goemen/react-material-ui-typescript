@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { Theme, withStyles, Paper, Table, TableHead, TableRow, 
-    TableCell, TableBody, TablePagination, Grid } from '@material-ui/core';
-import { BarChart, CartesianGrid, XAxis, YAxis, Bar, Tooltip, Legend, PieChart, Pie } from 'recharts';
+import {
+    Theme, withStyles, Paper, Table, TableHead, TableRow,
+    TableCell, TableBody, TablePagination, Grid
+} from '@material-ui/core';
+import { BarChart, CartesianGrid, XAxis, YAxis, Bar, Tooltip, Legend, PieChart, Pie, ResponsiveContainer } from 'recharts';
 const classNames = require('classnames');
 import GroupIcon from '@material-ui/icons/Group';
 import MailIcon from '@material-ui/icons/Mail';
@@ -45,7 +47,7 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
         }
 
         return (
-            <Paper className={classes.paper}>
+            <Paper className={classNames(classes.paper, classes.users)}>
                 <h3 className={classes.sectionTitle}>Customers</h3>
                 <Table className={classes.table}>
                     <TableHead>
@@ -93,10 +95,19 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
         return (
             <Paper className={this.props.classes.paper}>
                 <h3 className={this.props.classes.sectionTitle}>Material Inventory</h3>
-                <PieChart width={730} height={350}>
-                    <Pie data={this.props.materialChartData} dataKey="value" nameKey="name" cx="50%" cy="50%" label={true} fill="#8884d8" />
-                    <Legend />
-                </PieChart>
+                <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                        <Pie
+                            data={this.props.materialChartData}
+                            dataKey="value"
+                            nameKey="name"
+                            cx="50%"
+                            cy="50%"
+                            label={true}
+                            fill="#8884d8" />
+                        <Legend />
+                    </PieChart>
+                </ResponsiveContainer>
             </Paper>
         );
     }
@@ -105,13 +116,15 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
         return (
             <Paper className={this.props.classes.paper}>
                 <h3 className={this.props.classes.sectionTitle}>Material Sales</h3>
-                <BarChart width={730} height={350} data={this.props.materialChartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#8884d8" />
-                </BarChart>
+                <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={this.props.materialChartData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="value" fill="#8884d8" />
+                    </BarChart>
+                </ResponsiveContainer>
             </Paper>
         );
     }
@@ -121,24 +134,24 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
         return (
             <div className={classes.root}>
                 <Grid container={true} spacing={24}>
-                    <Grid item={true} xs={3}>
+                    <Grid item={true} lg={3} xs={12}>
                         <Paper className={classNames(classes.paper, classes.headerTiles)}>
-                            <GroupIcon className={classes.headerTileIcon}/>
+                            <GroupIcon className={classes.headerTileIcon} />
                         </Paper>
                     </Grid>
-                    <Grid item={true} xs={3}>
-                    <Paper className={classNames(classes.paper, classes.headerTiles)}>
-                            <MailIcon className={classes.headerTileIcon}/>
+                    <Grid item={true} lg={3} xs={12}>
+                        <Paper className={classNames(classes.paper, classes.headerTiles)}>
+                            <MailIcon className={classes.headerTileIcon} />
                         </Paper>
                     </Grid>
-                    <Grid item={true} xs={3}>
-                    <Paper className={classNames(classes.paper, classes.headerTiles)}>
-                            <SettingsIcon className={classes.headerTileIcon}/>
+                    <Grid item={true} lg={3} xs={12}>
+                        <Paper className={classNames(classes.paper, classes.headerTiles)}>
+                            <SettingsIcon className={classes.headerTileIcon} />
                         </Paper>
                     </Grid>
-                    <Grid item={true} xs={3}>
-                    <Paper className={classNames(classes.paper, classes.headerTiles)}>
-                            <BusinessIcon className={classes.headerTileIcon}/>
+                    <Grid item={true} lg={3} xs={12}>
+                        <Paper className={classNames(classes.paper, classes.headerTiles)}>
+                            <BusinessIcon className={classes.headerTileIcon} />
                         </Paper>
                     </Grid>
                     <Grid item={true} xs={12} md={6}>
@@ -159,6 +172,7 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
 const styles = (theme: Theme) => ({
     root: {
         flexGrow: 1,
+        marginBottom: 24,
     },
     paper: {
         padding: theme.spacing.unit * 2,
@@ -173,6 +187,12 @@ const styles = (theme: Theme) => ({
     },
     sectionTitle: {
         paddingLeft: theme.spacing.unit * 2,
+    },
+    users: {
+        marginBottom: 24
+    },
+    chart: {
+        width: '100%'
     },
 });
 
