@@ -12,11 +12,12 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { ListItem, ListItemIcon, ListItemText, Menu, MenuItem } from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Badge } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
 import AccountCirleIcon from '@material-ui/icons/AccountCircle';
+import NotificationIcon from '@material-ui/icons/Notifications';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import { Route, withRouter, NavLink } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
@@ -97,12 +98,14 @@ interface IAppProps extends IApplicationProps {
 
 interface IState {
   anchorEl: any;
+  notificationEl: any;
 }
 
 class MiniDrawer extends React.Component<IAppProps, IState> {
 
   public state: IState = {
     anchorEl: null,
+    notificationEl: null
   };
 
   public componentWillMount() {
@@ -110,6 +113,15 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
     this.props.fetchMaterials();
     this.props.fetchMails();
   }
+
+  private handleNotificationMenu = (event: any) => {
+    this.setState({ notificationEl: event.currentTarget });
+  };
+
+  private handleNotificationMenuClose = (path?: string) => {
+    this.setState({ notificationEl: null });
+    this.navigate(path);
+  };
 
   private handleMenu = (event: any) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -175,11 +187,34 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
     return null
   }
 
+  private renderNotifications() {
+    return (
+      <Menu
+        id="menu-appbar"
+        anchorEl={this.state.notificationEl}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={true}
+        onClose={this.handleMenuClose.bind(this, null)}
+      >
+        <MenuItem onClick={this.handleMenuClose.bind(this, '/account')}>{this.props.authentication.name}</MenuItem>
+        <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+      </Menu>
+    );
+  }
+
   private renderAppBar() {
     if (this.props.authentication) {
       const { classes, utility } = this.props;
       const { anchorEl } = this.state;
       const open = Boolean(anchorEl);
+      const unreadMessages = this.props.mail.filter(x => x.seen === false);
 
       return (
         <AppBar
@@ -199,32 +234,41 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
               Tomahawk
             </Typography>
             <div>
-                <IconButton
-                  aria-owns={open ? 'menu-appbar' : null}
-                  aria-haspopup="true"
-                  onClick={this.handleMenu}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={this.handleMenuClose.bind(this, null)}
-                >
-                  <MenuItem onClick={this.handleMenuClose.bind(this, '/account')}>{this.props.authentication.name}</MenuItem>
-                  <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-                </Menu>
-              </div>
+              <IconButton
+                aria-owns={open ? 'menu-appbar' : null}
+                aria-haspopup="true"
+                color="inherit"
+              >
+                <Badge badgeContent={unreadMessages.length} color="secondary">
+                  <NotificationIcon />
+                </Badge>
+              </IconButton>
+              <IconButton
+                aria-owns={open ? 'menu-appbar' : null}
+                aria-haspopup="true"
+                onClick={this.handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={this.handleMenuClose.bind(this, null)}
+              >
+                <MenuItem onClick={this.handleMenuClose.bind(this, '/account')}>{this.props.authentication.name}</MenuItem>
+                <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+              </Menu>
+            </div>
           </Toolbar>
         </AppBar>
       );
@@ -284,7 +328,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
         />
       );
     });
-    
+
 
     return (
       <div className={classes.root}>
@@ -314,8 +358,8 @@ const mapStateToProps = (state: AppState) => ({
   mail: getMailitems(state)
 });
 
-const mapDispatchtoProps = (dispatch: Dispatch) => 
-bindActionCreators(_.assign({}, AppActionCreators, MailActionCreators,
-   UserActionCreators, MaterialActionCreators), dispatch);
+const mapDispatchtoProps = (dispatch: Dispatch) =>
+  bindActionCreators(_.assign({}, AppActionCreators, MailActionCreators,
+    UserActionCreators, MaterialActionCreators), dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchtoProps)(withStyles(styles as any, { withTheme: true })(MiniDrawer as any)) as any);
