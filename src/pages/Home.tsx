@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
     Theme, withStyles, Paper, Table, TableHead, TableRow,
-    TableCell, TableBody, TablePagination, Grid
+    TableCell, TableBody, TablePagination, Grid, Typography
 } from '@material-ui/core';
 import { BarChart, CartesianGrid, XAxis, YAxis, Bar, Tooltip, Legend, PieChart, Pie, ResponsiveContainer } from 'recharts';
 const classNames = require('classnames');
@@ -134,24 +134,28 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
         return (
             <div className={classes.root}>
                 <Grid container={true} spacing={24}>
-                    <Grid item={true} lg={3} xs={12}>
+                    <Grid item={true} lg={3} xs={12} sm={6}>
                         <Paper className={classNames(classes.paper, classes.headerTiles)}>
                             <GroupIcon className={classes.headerTileIcon} />
+                            <Typography className={classes.tileText}> {this.props.users.items.length} Customers</Typography>
                         </Paper>
                     </Grid>
-                    <Grid item={true} lg={3} xs={12}>
+                    <Grid item={true} lg={3} xs={12} sm={6}>
                         <Paper className={classNames(classes.paper, classes.headerTiles)}>
                             <MailIcon className={classes.headerTileIcon} />
+                            <Typography className={classes.tileText}>Inbox</Typography>
                         </Paper>
                     </Grid>
-                    <Grid item={true} lg={3} xs={12}>
-                        <Paper className={classNames(classes.paper, classes.headerTiles)}>
-                            <SettingsIcon className={classes.headerTileIcon} />
-                        </Paper>
-                    </Grid>
-                    <Grid item={true} lg={3} xs={12}>
+                    <Grid item={true} lg={3} xs={12} sm={6}>
                         <Paper className={classNames(classes.paper, classes.headerTiles)}>
                             <BusinessIcon className={classes.headerTileIcon} />
+                            <Typography className={classes.tileText}>Purchases</Typography>
+                        </Paper>
+                    </Grid>
+                    <Grid item={true} lg={3} xs={12} sm={6}>
+                        <Paper className={classNames(classes.paper, classes.headerTiles)}>
+                            <SettingsIcon className={classes.headerTileIcon} />
+                            <Typography className={classes.tileText}>Settings</Typography>
                         </Paper>
                     </Grid>
                     <Grid item={true} xs={12} md={6}>
@@ -180,16 +184,27 @@ const styles = (theme: Theme) => ({
         color: theme.palette.text.secondary,
     },
     headerTiles: {
+        overflowX: 'hidden',
         display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRight: `5px solid ${theme.palette.secondary.main}`,
     },
     headerTileIcon: {
-        fontSize: 40
+        fontSize: 40,
+        color: theme.palette.primary.main,
+        paddingRight: 5
+    },
+    tileText: {
+        fontSize: 20,
+        color: theme.palette.grey["400"],
     },
     sectionTitle: {
         paddingLeft: theme.spacing.unit * 2,
     },
     users: {
-        marginBottom: 24
+        marginBottom: 24,
+        overflowX: 'scroll'
     },
     chart: {
         width: '100%'

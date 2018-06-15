@@ -35,8 +35,9 @@ import { MailPage } from '../pages/mail/Mail';
 import HomePage from '../pages/Home';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { actions as UserActionCreators } from '../data/users';
+import { actions as MailActionCreators } from '../data/mail';
 import { actions as MaterialActionCreators } from '../data/material';
-import { getMaterialChartItems } from '../selectors';
+import { getMaterialChartItems, getMailitems } from '../selectors';
 //#endregion
 
 const mailFolderList: any = (classes: any) => {
@@ -107,6 +108,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
   public componentWillMount() {
     this.props.fetchUsers();
     this.props.fetchMaterials();
+    this.props.fetchMails();
   }
 
   private handleMenu = (event: any) => {
@@ -243,7 +245,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
       <Hidden mdDown={!utility.drawerOpen && true}>
         <Drawer
           hidden={!authentication}
-          variant="persistent"
+          variant="permanent"
           classes={{
             paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),
           }}
@@ -274,6 +276,16 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
         />
       );
     });
+
+    const MailBoard = isAuthenticated((props: any): any => {
+      return (
+        <MailPage
+          mail={this.props.mail}
+        />
+      );
+    });
+    
+
     return (
       <div className={classes.root}>
         {this.renderAppBar()}
@@ -283,7 +295,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
           <div className={classes.toolbar} />
           <Route path='/' exact={true} component={Dashboard} />
           <Route path='/dashboard' component={Dashboard} />
-          <Route path='/mail' component={MailPage} />
+          <Route path='/mail' component={MailBoard} />
           <Route path='/account' render={this.renderAccount} />
           {this.renderAlert()}
           {this.renderSpinner()}
@@ -298,11 +310,12 @@ const mapStateToProps = (state: AppState) => ({
   authentication: state.authentication,
   users: state.users,
   materials: state.materials,
-  materialCharts: getMaterialChartItems(state)
+  materialCharts: getMaterialChartItems(state),
+  mail: getMailitems(state)
 });
 
 const mapDispatchtoProps = (dispatch: Dispatch) => 
-bindActionCreators(_.assign({}, AppActionCreators,
+bindActionCreators(_.assign({}, AppActionCreators, MailActionCreators,
    UserActionCreators, MaterialActionCreators), dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchtoProps)(withStyles(styles as any, { withTheme: true })(MiniDrawer as any)) as any);

@@ -7,14 +7,16 @@ export interface IAppState {
     utility?: Utility;
     authentication?: User;
     users?: any;
-    materials: any;
+    materials?: any;
+    mail?: any;
 }
 
 export const AppStateModel = Model<IAppState>({
     utility: new Utility(),
     authentication: null,
     users: null,
-    materials: null
+    materials: null,
+    mail: null
 });
 
 export class AppState extends AppStateModel {
@@ -25,6 +27,7 @@ export class AppState extends AppStateModel {
     public authentication: User;
     public users: any;
     public materials: any;
+    public mail: any;
 }
 
 export const isAuthenticated = connectedRouterRedirect({

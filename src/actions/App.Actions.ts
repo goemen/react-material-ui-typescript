@@ -24,6 +24,10 @@ export interface IApplicationProps {
     fetchMaterials: (context?: any) => any;
     updateMaterial: (context: any) => any;
     deleteMaterial: (context: any) => any;
+    getMail: (id: any) => any;
+    fetchMails: (context?: any) => any;
+    updateMail: (context: any) => any;
+    deleteMail: (context: any) => any;
     match: match<any>,
     location: any,
     history: any,
@@ -31,6 +35,7 @@ export interface IApplicationProps {
     authentication: User;
     users: any;
     materials: any;
+    mail: any[];
     materialCharts: Array<{name: string, value: number, fill: string}>;
 }
 
