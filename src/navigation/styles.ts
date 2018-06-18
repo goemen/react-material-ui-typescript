@@ -83,8 +83,11 @@ export const styles = (theme: Theme) => ({
     link: {
       textDecoration: 'none',
     },
-    active: {
-      background: theme.palette.primary
+    current: {
+      color: 'red !important',
+    },
+    notifications: {
+      overflowX: 'hidden'
     },
     fillSpace: {
       flex: '1 1 auto'

@@ -2,24 +2,14 @@
 import * as React from 'react';
 const classNames = require('classnames');
 import { withStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Badge } from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
-import AccountCirleIcon from '@material-ui/icons/AccountCircle';
-import NotificationIcon from '@material-ui/icons/Notifications';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import { Route, withRouter, NavLink } from 'react-router-dom';
+
+import { ListItemText, Menu, MenuItem, Badge, Avatar } from '@material-ui/core';
+import { Route, withRouter } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { styles } from './styles';
 import { IApplicationProps } from '../actions/App.Actions';
@@ -39,57 +29,9 @@ import { actions as UserActionCreators } from '../data/users';
 import { actions as MailActionCreators } from '../data/mail';
 import { actions as MaterialActionCreators } from '../data/material';
 import { getMaterialChartItems, getMailitems } from '../selectors';
+import AppDrawer from './App.Drawer';
+import NotificationIcon from '@material-ui/icons/Notifications';
 //#endregion
-
-const mailFolderList: any = (classes: any) => {
-  return (
-    <List>
-      <NavLink activeClassName={classes.active} className={classes.link} to='/' >
-        <ListItem button={true}>
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary="Dashboard" />
-        </ListItem>
-      </NavLink>
-      <NavLink activeClassName={classes.active} className={classes.link} to='/mail/inbox' >
-        <ListItem button={true}>
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-        </ListItem>
-      </NavLink>
-      <NavLink activeClassName={classes.active} className={classes.link} to='/mail/sent' >
-        <ListItem button={true}>
-          <ListItemIcon>
-            <SendIcon />
-          </ListItemIcon>
-          <ListItemText primary="Sent mail" />
-        </ListItem>
-      </NavLink>
-      <NavLink activeClassName={classes.active} className={classes.link} to='/mail/drafts' >
-
-        <ListItem button={true}>
-          <ListItemIcon>
-            <DraftsIcon />
-          </ListItemIcon>
-          <ListItemText primary="Drafts" />
-        </ListItem>
-      </NavLink>
-      <NavLink activeClassName={classes.active} className={classes.link} to='/account' >
-
-        <ListItem button={true}>
-          <ListItemIcon>
-            <AccountCirleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Profile" />
-        </ListItem>
-      </NavLink>
-    </List>
-  );
-};
-
 
 interface IAppProps extends IApplicationProps {
   classes: any;
@@ -118,9 +60,8 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
     this.setState({ notificationEl: event.currentTarget });
   };
 
-  private handleNotificationMenuClose = (path?: string) => {
+  private handleNotificationMenuClose = () => {
     this.setState({ notificationEl: null });
-    this.navigate(path);
   };
 
   private handleMenu = (event: any) => {
@@ -187,10 +128,11 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
     return null
   }
 
-  private renderNotifications() {
+  private renderNotifications(notifications: any[]) {
+    const { classes } = this.props;
     return (
       <Menu
-        id="menu-appbar"
+        id="notifications"
         anchorEl={this.state.notificationEl}
         anchorOrigin={{
           vertical: 'top',
@@ -200,11 +142,16 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
           vertical: 'top',
           horizontal: 'right',
         }}
-        open={true}
-        onClose={this.handleMenuClose.bind(this, null)}
+        className={classes.notifications}
+        open={Boolean(this.state.notificationEl)}
+        onClose={this.handleNotificationMenuClose}  
       >
-        <MenuItem onClick={this.handleMenuClose.bind(this, '/account')}>{this.props.authentication.name}</MenuItem>
-        <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+          {notifications.map((n: any) => (
+            <MenuItem key={n.id} onClick={this.handleNotificationMenuClose} dense={true} button={true} className={classes.notificationListItem}>
+              <Avatar src={n.avatar} />
+              <ListItemText primary={n.subject} />
+            </MenuItem>
+          ))}
       </Menu>
     );
   }
@@ -212,8 +159,9 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
   private renderAppBar() {
     if (this.props.authentication) {
       const { classes, utility } = this.props;
-      const { anchorEl } = this.state;
+      const { anchorEl, notificationEl } = this.state;
       const open = Boolean(anchorEl);
+      const notificationsOpen = Boolean(notificationEl);
       const unreadMessages = this.props.mail.filter(x => x.seen === false);
 
       return (
@@ -235,14 +183,16 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
             </Typography>
             <div>
               <IconButton
-                aria-owns={open ? 'menu-appbar' : null}
+                aria-owns={notificationsOpen ? 'notifications' : null}
                 aria-haspopup="true"
                 color="inherit"
+                onClick={this.handleNotificationMenu}
               >
                 <Badge badgeContent={unreadMessages.length} color="secondary">
                   <NotificationIcon />
                 </Badge>
               </IconButton>
+              {this.renderNotifications(unreadMessages)}
               <IconButton
                 aria-owns={open ? 'menu-appbar' : null}
                 aria-haspopup="true"
@@ -284,27 +234,14 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
   }
 
   private renderDrawer() {
-    const { utility, classes, authentication, theme } = this.props;
+    const { utility, authentication } = this.props;
     return (
       <Hidden mdDown={!utility.drawerOpen && true}>
-        <Drawer
-          hidden={!authentication}
-          variant="permanent"
-          classes={{
-            paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),
-          }}
-          open={utility.drawerOpen}
-        >
-          <div className={classes.toolbar}>
-            <IconButton onClick={this.handleDrawerClose}>
-              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-            </IconButton>
-          </div>
-          <Divider />
-          {mailFolderList(classes)}
-          <Divider />
-        </Drawer>
-
+        <AppDrawer
+          utility={utility}
+          authentication={authentication}
+          handleDrawerClose={this.handleDrawerClose}
+        />
       </Hidden>
     );
   }
