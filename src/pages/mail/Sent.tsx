@@ -1,9 +1,51 @@
 import * as React from 'react'
-import { Typography } from '@material-ui/core';
+import MailList from '../../components/MailList';
+import { Paper, Typography, Theme, withStyles } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
-export class SentPage extends React.Component<{}, {}> {
+interface ISentProps {
+    items: any[];
+    classes: any;
+}
+
+class SentPage extends React.Component<ISentProps, {}> {
 
     public render(): JSX.Element {
-        return (<Typography noWrap={false}>{'Sent page'}</Typography>)
+        const { classes } = this.props;
+        return (
+            <Paper className={classes.root}>
+                <div className={classes.boxHeader}>
+                    <Typography className={classes.boxHeaderTitle}>Sent</Typography>
+                    <span className={classes.fillRemainingSpace}/>
+                    <Button>Delete all</Button>
+                </div>
+                <MailList {...this.props} />
+            </Paper>
+        );
     }
 }
+
+const styles = (theme: Theme) => ({
+    root: {
+        width: '100%',
+    },
+    boxHeader: {
+        width: '100%',
+        display: 'flex',
+        [theme.breakpoints.down('md')]: {
+            flexDirection: 'column',
+        },
+    },
+    boxHeaderTitle: {
+        padding: '5px 10px',
+        fontSize: 35,
+    },
+    fillRemainingSpace: {
+        flex: '1 1 auto',
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
+        },
+    },
+});
+
+export default withStyles(styles as any)(SentPage as any) as any;
