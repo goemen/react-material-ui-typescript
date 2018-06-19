@@ -17,6 +17,7 @@
     "@types/redux-thunk": "^2.1.0",
     "@types/reselect": "^2.2.0",
     "classnames": "^2.2.5",
+    "express": "^4.16.3",
     "immutable": "^3.8.2",
     "lodash": "^4.17.10",
     "mobx": "^4.3.0",
@@ -42,6 +43,8 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
+    "postinstall": "npm run build",
+    "deploy": "node server.js",
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
