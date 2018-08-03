@@ -1,2 +1,6 @@
-dependencies
+dependencies:
   - npm install
+
+tasks:
+  test:
+    - npm run test
