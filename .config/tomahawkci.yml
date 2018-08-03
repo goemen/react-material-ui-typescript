@@ -1,7 +1,7 @@
 version: '1.0.0'
 
 dependencies:
-  - npm install
+  - npm install --ignore-scripts
 
 tasks:
   test:
