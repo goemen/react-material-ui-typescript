@@ -90,5 +90,4 @@ class MailList extends React.Component<IMailListProps, IState> {
     }
 }
 
-
 export default withStyles(styles)(MailList);
