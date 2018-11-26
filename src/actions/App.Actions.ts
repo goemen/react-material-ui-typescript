@@ -93,7 +93,9 @@ export const register = (data: IRegisterModel) => {
     return async (dispatch: Dispatch<IAppAction>) => {
         dispatch({ type: ActionType.REGISTER_REQUEST, payload: data });
         try {
-            const response = await firebase.auth().createUserWithEmailAndPassword(data.email, data.password);
+            const response = await firebase.auth().createUserAndRetrieveDataWithEmailAndPassword (data.email, data.password);
+            await response.user.updateProfile({displayName: data.displayName, photoURL: ''})
+            await response.user.sendEmailVerification();
             dispatch({ type: ActionType.REGISTER_SUCCESS, payload: response });
         } catch (error) {
             dispatch({type: ActionType.REGISTER_FAIL, payload: {errorMessage: 'Failed to register user.', error}});

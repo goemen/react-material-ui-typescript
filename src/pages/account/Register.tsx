@@ -21,10 +21,12 @@ interface IRegisterState {
     email: IField;
     password: IField;
     confirmPassword: IField;
+    displayName: IField;
 }
 
 class RegisterPage extends React.Component<IRegisterProps, IRegisterState> {
     public state = {
+        displayName: {value: '', dirty: false},
         email: {value: '', dirty: false} ,
         password: {value: '', dirty: false},
         confirmPassword: {value: '', errorMessage: '', dirty: false, hasError: false}
@@ -32,6 +34,10 @@ class RegisterPage extends React.Component<IRegisterProps, IRegisterState> {
 
     private handleEmailAddressChange = (event: any) => {
         this.setState({ email: { value: event.target.value, dirty: true }});
+    }
+
+    private handleDisplayNameChange = (event: any) => {
+        this.setState({ displayName: { value: event.target.value, dirty: true }});
     }
 
     private handlePasswordChange = (event: any) => {
@@ -48,7 +54,11 @@ class RegisterPage extends React.Component<IRegisterProps, IRegisterState> {
     }
 
     private handleRegister = () => {
-        this.props.register({email: this.state.email.value, password: this.state.password.value});
+        this.props.register({
+            email: this.state.email.value, 
+            password: this.state.password.value, 
+            displayName: this.state.displayName.value
+        });
     }
 
     public render(): JSX.Element {
@@ -58,6 +68,14 @@ class RegisterPage extends React.Component<IRegisterProps, IRegisterState> {
             <div className={classes.container}>
                 <Paper className={classes.paper}>
                     <h2>{'Create account'}</h2>
+                    <FormControl required={true} fullWidth={true} className={classes.field}>
+                        <InputLabel htmlFor="displayName">Display Name</InputLabel>
+                        <Input
+                            defaultValue={this.state.displayName.value}
+                            onChange={this.handleDisplayNameChange}
+                            id="displayName"
+                        />
+                    </FormControl>
                     <FormControl required={true} fullWidth={true} className={classes.field}>
                         <InputLabel htmlFor="email">Email Address</InputLabel>
                         <Input
