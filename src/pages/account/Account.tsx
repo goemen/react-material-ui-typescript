@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { User } from '../../state/User';
 import LoginPage from './Login';
+import RegisterPage from './Register';
 import { Route, Switch } from 'react-router';
 import { ProfilePage } from './Profile';
 import { isAuthenticated } from '../../state/AppState';
 
 interface IAccountProps {
     login?: (data: any) => void;
+    register: (data: any) => void;
     match?: any;
     location?: any;
     classes?: any;
@@ -24,10 +26,20 @@ export class AccountPage extends React.Component<IAccountProps, {}> {
         );
     }
 
+    private renderRegister = () => {
+        return (
+            <RegisterPage
+                register={this.props.register}
+                match={this.props.match}
+                location={this.props.location} />
+        );
+    }
+
     public render(): JSX.Element {
         return (<Switch>
             <Route path="/account" exact={true} component={isAuthenticated(ProfilePage as any)} />
             <Route path={'/account/login'} render={this.renderLogin} />
+            <Route path={'/account/register'} render={this.renderRegister} />
         </Switch>);
     }
 

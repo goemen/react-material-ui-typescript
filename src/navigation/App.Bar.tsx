@@ -144,14 +144,14 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
         }}
         className={classes.notifications}
         open={Boolean(this.state.notificationEl)}
-        onClose={this.handleNotificationMenuClose}  
+        onClose={this.handleNotificationMenuClose}
       >
-          {notifications.map((n: any) => (
-            <MenuItem key={n.id} onClick={this.handleNotificationMenuClose} dense={true} button={true} className={classes.notificationListItem}>
-              <Avatar src={n.avatar} />
-              <ListItemText primary={n.subject} />
-            </MenuItem>
-          ))}
+        {notifications.map((n: any) => (
+          <MenuItem key={n.id} onClick={this.handleNotificationMenuClose} dense={true} button={true} className={classes.notificationListItem}>
+            <Avatar src={n.avatar} />
+            <ListItemText primary={n.subject} />
+          </MenuItem>
+        ))}
       </Menu>
     );
   }
@@ -229,7 +229,12 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
   private renderAccount = () => {
     return (
-      <AccountPage user={this.props.authentication} login={this.props.login} match={this.props.match} location={this.props.location} />
+      <AccountPage
+        register={this.props.register}
+        user={this.props.authentication}
+        login={this.props.login}
+        match={this.props.match}
+        location={this.props.location} />
     );
   }
 

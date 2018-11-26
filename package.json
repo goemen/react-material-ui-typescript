@@ -18,6 +18,7 @@
     "@types/reselect": "^2.2.0",
     "classnames": "^2.2.5",
     "express": "^4.16.3",
+    "firebase": "^5.5.9",
     "immutable": "^3.8.2",
     "lodash": "^4.17.10",
     "mobx": "^4.3.0",
@@ -41,6 +42,7 @@
   },
   "scripts": {
     "start": "react-scripts-ts start",
+    "start:local": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "postinstall": "npm run build",

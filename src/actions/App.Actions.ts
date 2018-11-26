@@ -4,6 +4,9 @@ import { Utility } from '../state/Utility';
 import { Alert } from '../state/Alert';
 import { Spinner } from '../state/Spinner';
 import { User } from '../state/User';
+import * as firebase from 'firebase';
+import { Dispatch } from 'react-redux';
+import { IRegisterModel } from 'src/models';
 
 export interface IApplicationProps {
     openDrawer: () => IAppAction;
@@ -13,6 +16,7 @@ export interface IApplicationProps {
     showSpinner: (message: string) => IAppAction;
     hideSpinner: () => IAppAction; 
     login: (data: any) => IAppAction; 
+    register: (data: IRegisterModel) => IAppAction; 
     logout: () => IAppAction;
     createUser: (content: any) => any;
     getUser: (id: any) => any;
@@ -83,4 +87,16 @@ export const login = (data: any): IAppAction => {
 
 export const logout = (): IAppAction => {
     return { type: ActionType.LOGOUT_REQUEST };
+};
+
+export const register = (data: IRegisterModel) => {
+    return async (dispatch: Dispatch<IAppAction>) => {
+        dispatch({ type: ActionType.REGISTER_REQUEST, payload: data });
+        try {
+            const response = await firebase.auth().createUserWithEmailAndPassword(data.email, data.password);
+            dispatch({ type: ActionType.REGISTER_SUCCESS, payload: response });
+        } catch (error) {
+            dispatch({type: ActionType.REGISTER_FAIL, payload: {errorMessage: 'Failed to register user.', error}});
+        }
+    }
 };
