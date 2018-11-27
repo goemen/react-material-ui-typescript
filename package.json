@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^1.1.0",
     "@material-ui/icons": "^1.1.0",
+    "@types/axios": "^0.14.0",
     "@types/immutable": "^3.8.7",
     "@types/lodash": "^4.14.109",
     "@types/moment": "^2.13.0",
@@ -16,6 +17,7 @@
     "@types/redux-devtools-extension": "^2.13.2",
     "@types/redux-thunk": "^2.1.0",
     "@types/reselect": "^2.2.0",
+    "axios": "^0.18.0",
     "classnames": "^2.2.5",
     "express": "^4.16.3",
     "firebase": "^5.5.9",

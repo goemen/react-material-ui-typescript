@@ -15,7 +15,8 @@ export enum ActionType {
     REGISTER_FAIL,
     LOGOUT_REQUEST,
     LOGOUT_SUCCESS,
-    LOGOUT_FAIL
+    LOGOUT_FAIL,
+    CURRENT_USER
 }
 
 export interface IAppAction extends Action<ActionType> {

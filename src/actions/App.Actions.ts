@@ -12,11 +12,11 @@ export interface IApplicationProps {
     openDrawer: () => IAppAction;
     closeDrawer: () => IAppAction;
     showPopup: (alert: Alert) => IAppAction;
-    closePopup: () => IAppAction;  
+    closePopup: () => IAppAction;
     showSpinner: (message: string) => IAppAction;
-    hideSpinner: () => IAppAction; 
-    login: (data: any) => IAppAction; 
-    register: (data: IRegisterModel) => IAppAction; 
+    hideSpinner: () => IAppAction;
+    login: (data: any) => IAppAction;
+    register: (data: IRegisterModel) => IAppAction;
     logout: () => IAppAction;
     createUser: (content: any) => any;
     getUser: (id: any) => any;
@@ -40,7 +40,7 @@ export interface IApplicationProps {
     users: any;
     materials: any;
     mail: any[];
-    materialCharts: Array<{name: string, value: number, fill: string}>;
+    materialCharts: Array<{ name: string, value: number, fill: string }>;
 }
 
 export const openDrawer = (): IAppAction => {
@@ -71,7 +71,7 @@ export const closePopup = (): IAppAction => {
 export const showSpinner = (message: string): IAppAction => {
     return {
         type: ActionType.OPEN_SPINNER,
-        payload: new Spinner({message})
+        payload: new Spinner({ message })
     };
 };
 
@@ -93,12 +93,20 @@ export const register = (data: IRegisterModel) => {
     return async (dispatch: Dispatch<IAppAction>) => {
         dispatch({ type: ActionType.REGISTER_REQUEST, payload: data });
         try {
-            const response = await firebase.auth().createUserAndRetrieveDataWithEmailAndPassword (data.email, data.password);
-            await response.user.updateProfile({displayName: data.displayName, photoURL: ''})
+            const response = await firebase.auth().createUserWithEmailAndPassword(data.email, data.password);
+            await response.user.updateProfile({ displayName: data.displayName, photoURL: '' });
+            const userInfo = {
+                uid: response.user.uid,
+                displayName: response.user.displayName,
+                email: response.user.email,
+                photoUrl: response.user.photoURL
+            };
+
+            await firebase.firestore().doc(`users/${userInfo.uid}`).set(userInfo);
             await response.user.sendEmailVerification();
-            dispatch({ type: ActionType.REGISTER_SUCCESS, payload: response });
+            dispatch({ type: ActionType.REGISTER_SUCCESS, payload: { message: 'Successfully created an account. Check you inbox to verify your email address.' } });
         } catch (error) {
-            dispatch({type: ActionType.REGISTER_FAIL, payload: {errorMessage: 'Failed to register user.', error}});
+            dispatch({ type: ActionType.REGISTER_FAIL, payload: { errorMessage: 'Failed to register user.', error } });
         }
-    }
+    };
 };

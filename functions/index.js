@@ -2,15 +2,23 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
-exports.createProfile = functions.auth.user().onOperation (event => {
+exports.createProfile = functions.auth.user().onCreate(event => {
     const data = {
-        email: event.email,
         displayName: event.displayName,
+        email: event.email,
         photoUrl: event.photoURL,
         uid: event.uid
     };
-
-    return admin.firestore().collection(`users`).doc(data.uid).create(data);
+    
+    if (user.email === 'gnthomiwa@gmail.com') {
+        return admin.auth().setCustomUserClaims(event.uid, {
+            admin: true
+        });
+    } else {
+        return;
+    }
 });
+
+exports.auth = functions.https.onRequest(require('./app'));
 
 

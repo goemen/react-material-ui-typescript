@@ -215,7 +215,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
                 open={open}
                 onClose={this.handleMenuClose.bind(this, null)}
               >
-                <MenuItem onClick={this.handleMenuClose.bind(this, '/account')}>{this.props.authentication.name}</MenuItem>
+                <MenuItem onClick={this.handleMenuClose.bind(this, '/account')}>{this.props.authentication.displayName}</MenuItem>
                 <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
               </Menu>
             </div>
