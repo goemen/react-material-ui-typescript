@@ -6,7 +6,8 @@ import { Spinner } from '../state/Spinner';
 import { User } from '../state/User';
 import * as firebase from 'firebase';
 import { Dispatch } from 'react-redux';
-import { IRegisterModel } from 'src/models';
+import { IRegisterModel, ILoginModel, IResetPasswordModel } from 'src/models';
+import { Location, History } from 'history';
 
 export interface IApplicationProps {
     openDrawer: () => IAppAction;
@@ -17,6 +18,7 @@ export interface IApplicationProps {
     hideSpinner: () => IAppAction;
     login: (data: any) => IAppAction;
     register: (data: IRegisterModel) => IAppAction;
+    requestPasswordReset: (data: IResetPasswordModel) => IAppAction;
     logout: () => IAppAction;
     createUser: (content: any) => any;
     getUser: (id: any) => any;
@@ -33,8 +35,8 @@ export interface IApplicationProps {
     updateMail: (context: any) => any;
     deleteMail: (context: any) => any;
     match: match<any>,
-    location: any,
-    history: any,
+    location: Location,
+    history: History,
     utility: Utility;
     authentication: User;
     users: any;
@@ -81,12 +83,50 @@ export const hideSpinner = (): IAppAction => {
     };
 };
 
-export const login = (data: any): IAppAction => {
-    return { type: ActionType.LOGIN_REQUEST, payload: data };
+export const login = (data: ILoginModel) => {
+
+    return async (dispatch: Dispatch<IAppAction>) => {
+        dispatch({ type: ActionType.LOGIN_REQUEST, payload: data });
+
+        try {
+            await firebase.auth().signInWithEmailAndPassword(data.email, data.password);
+            dispatch({ type: ActionType.LOGIN_SUCCESS, payload: 'Successfully logged in' });
+        } catch (error) {
+            dispatch({ type: ActionType.LOGIN_FAIL, payload: 'Login failed' });
+        }
+    }
 };
 
-export const logout = (): IAppAction => {
-    return { type: ActionType.LOGOUT_REQUEST };
+export const requestPasswordReset = (data: IResetPasswordModel) => {
+
+    return async (dispatch: Dispatch<IAppAction>) => {
+        dispatch({ type: ActionType.RESET_PASSWORD_REQUEST, payload: data });
+
+        try {
+            await firebase.auth().sendPasswordResetEmail(data.email);
+            dispatch({ type: ActionType.RESET_PASSWORD_SUCCESS, payload: 'Check your inbox and follow instructions to reset your password' });
+        } catch (error) {
+            dispatch({ type: ActionType.RESET_PASSWORD_FAIL, payload: { message: 'Failed to process your password reset request', error } });
+        }
+    }
+};
+
+export const logout = () => {
+    return async (dispatch: Dispatch<IAppAction>) => {
+        dispatch({ type: ActionType.LOGOUT_REQUEST });
+    
+        try {
+            await firebase.auth().signOut();
+            dispatch({ 
+                type: ActionType.LOGOUT_SUCCESS, 
+                payload: 'Successfully logout.' 
+            });
+        } catch (error) {
+            dispatch({ 
+                type: ActionType.LOGOUT_FAIL, 
+                payload: { message: 'Logout failed', error } });
+        }
+    }
 };
 
 export const register = (data: IRegisterModel) => {

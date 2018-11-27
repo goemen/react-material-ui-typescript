@@ -231,10 +231,13 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
     return (
       <AccountPage
         register={this.props.register}
+        requestPasswordReset={this.props.requestPasswordReset}
         user={this.props.authentication}
         login={this.props.login}
         match={this.props.match}
-        location={this.props.location} />
+        location={this.props.location}
+        history={this.props.history}
+      />
     );
   }
 

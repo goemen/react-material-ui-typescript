@@ -1,60 +1,41 @@
 import * as React from 'react';
 import { Theme, withStyles, FormControl, InputLabel, Input, InputAdornment, Button, Icon } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-import * as querystring from 'querystring';
 import { User } from '../../state/User';
-import { Redirect } from 'react-router';
-import { ILoginModel } from '../../models';
-import { Location } from 'history';
+import { IResetPasswordModel } from '../../models';
 
-interface ILoginProps {
-    login?: (data: any) => void;
+interface IRequestPasswordResetProps {
+    requestPasswordReset: (data: IResetPasswordModel) => void;
     match?: any;
-    location?: Location;
+    location?: any;
     classes?: any;
     user: User;
-    history: any;
 }
 
-class LoginPage extends React.Component<ILoginProps, ILoginModel> {
+class RequestPasswordResetPage extends React.Component<IRequestPasswordResetProps, IResetPasswordModel> {
     public state = {
         email: '',
-        password: ''
     };
 
     private handleEmailAddressChange = (event: any) => {
         this.setState({ email: event.target.value })
     }
 
-    private handlePasswordChange = (event: any) => {
-        this.setState({ password: event.target.value })
-    }
-
-    private handleLogin = () => {
-        this.props.login(this.state);
-    }
-
-    public goToPasswordReset = () => {
-        this.props.history.push('/account/request-password-reset');
+    private submit = () => {
+        this.props.requestPasswordReset(this.state);
     }
 
     public render(): JSX.Element {
         const classes = this.props.classes;
 
-        if (this.props.user) {
-            const path: string = querystring.
-                parse((this.props.location.search as string).substr(1)).redirect as any || '/inbox';
-            return <Redirect to={path} />
-        }
-
         return (
             <div className={classes.container}>
                 <Paper className={classes.paper}>
-                    <h2>{'Login'}</h2>
+                    <h2>{'Request Password Reset'}</h2>
                     <FormControl required={true} fullWidth={true} className={classes.field}>
                         <InputLabel htmlFor="email">Email Address</InputLabel>
                         <Input
-                            value={this.state.email}
+                            defaultValue={this.state.email}
                             onChange={this.handleEmailAddressChange}
                             id="email"
                             startAdornment={
@@ -63,28 +44,13 @@ class LoginPage extends React.Component<ILoginProps, ILoginModel> {
                                 </InputAdornment>}
                         />
                     </FormControl>
-                    <FormControl required={true} fullWidth={true} className={classes.field}>
-                        <InputLabel htmlFor="password">Password</InputLabel>
-                        <Input
-                            value={this.state.password}
-                            onChange={this.handlePasswordChange}
-                            type="password"
-                            id="password"
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <Icon>lock</Icon>
-                                </InputAdornment>}
-                        />
-                    </FormControl>
+                 
                     <div className={classes.actions}>
-                        <Button onClick={this.goToPasswordReset} variant="raised" className={classes.button}>
-                            Forgot Password
-                        </Button>
                         <Button variant="raised" className={classes.button}>
                             Cancel
                         </Button>
                         <Button
-                            onClick={this.handleLogin}
+                            onClick={this.submit}
                             variant="raised"
                             color="primary"
                             className={classes.button}>
@@ -130,5 +96,5 @@ const styles = (theme: Theme) => ({
     },
 });
 
-export default withStyles(styles, { withTheme: true })(LoginPage as any) as any;
+export default withStyles(styles, { withTheme: true })(RequestPasswordResetPage as any) as any;
 

@@ -32,7 +32,6 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
     };
 
     private handleChangeUsersPage = (event: any, page: number) => {
-        console.log(event);
         this.setState({ usersTablePage: page });
     };
 

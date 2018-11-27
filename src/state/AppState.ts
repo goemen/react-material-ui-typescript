@@ -2,6 +2,7 @@ import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect';
 import { Utility } from './Utility';
 import { Model } from "./Helpers";
 import { User } from './User';
+import { IApplicationProps } from '../actions/App.Actions';
 
 export interface IAppState {
     utility?: Utility;
@@ -30,7 +31,7 @@ export class AppState extends AppStateModel {
     public mail: any;
 }
 
-export const isAuthenticated = connectedRouterRedirect({
+export const isAuthenticated = connectedRouterRedirect<IApplicationProps, IAppState>({
     redirectPath: '/account/login',
     authenticatedSelector: (state: AppState) => state.authentication !== null,
     wrapperDisplayName: 'Authenticated'
