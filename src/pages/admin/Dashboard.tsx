@@ -24,7 +24,7 @@ interface IPageState {
     usersTableRowsPerPage: number;
 }
 
-class HomePage extends React.Component<IDashboardProps, IPageState> {
+class DashboardPage extends React.Component<IDashboardProps, IPageState> {
 
     public state: IPageState = {
         usersTablePage: 0,
@@ -210,4 +210,4 @@ const styles = (theme: Theme) => ({
     },
 });
 
-export default withStyles(styles as any)(HomePage as any) as any;
+export default withStyles(styles as any)(DashboardPage as any) as any;

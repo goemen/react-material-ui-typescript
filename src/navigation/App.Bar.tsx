@@ -23,14 +23,21 @@ import { AlertDialog } from '../alert/Alert';
 import SpinnerDialog from '../spinner/Spinner';
 import { AccountPage } from '../pages/account/Account';
 import { MailPage } from '../pages/mail/Mail';
-import HomePage from '../pages/Home';
+import AdminPage from '../pages/admin/Index';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { actions as UserActionCreators } from '../data/users';
 import { actions as MailActionCreators } from '../data/mail';
 import { actions as MaterialActionCreators } from '../data/material';
 import { getMaterialChartItems, getMailitems } from '../selectors';
-import AppDrawer from './App.Drawer';
+import AppDrawer, { IRoute } from './App.Drawer';
 import NotificationIcon from '@material-ui/icons/Notifications';
+import { ADMIN_ROLE } from '../state/User';
+import InboxIcon from '@material-ui/icons/Inbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
+import SendIcon from '@material-ui/icons/Send';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import GroupIcon from '@material-ui/icons/Group';
 //#endregion
 
 interface IAppProps extends IApplicationProps {
@@ -243,12 +250,25 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
   private renderDrawer() {
     const { utility, authentication } = this.props;
+    let routes: IRoute[] = [];
+    if (authentication && authentication.isInRole(ADMIN_ROLE)) {
+      routes.push({ path: '/admin', title: 'Dashboard', icon: () => <DashboardIcon /> })
+      routes.push({ path: '/admin/users-management', title: 'User Management', icon: () => <GroupIcon /> })
+    }
+
+    routes = _.concat(routes, [
+      { path: '/mail/inbox', title: 'Inbox', icon: () => <InboxIcon /> },
+      { path: '/mail/sent', title: 'Sent', icon: () => <SendIcon /> },
+      { path: '/mail/drafts', title: 'Drafts', icon: () => <DraftsIcon /> },
+      { path: '/account', title: 'Profile', icon: () => <AccountCircleIcon /> }
+    ])
     return (
       <Hidden mdDown={!utility.drawerOpen && true}>
         <AppDrawer
           utility={utility}
           authentication={authentication}
           handleDrawerClose={this.handleDrawerClose}
+          routes={routes}
         />
       </Hidden>
     );
@@ -258,10 +278,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
     const { classes } = this.props;
     const Dashboard = isAuthenticated((props: any): any => {
       return (
-        <HomePage
-          users={this.props.users}
-          fetchUsers={this.props.fetchUsers}
-          materialChartData={this.props.materialCharts}
+        <AdminPage {...this.props}
         />
       );
     });
@@ -282,8 +299,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Route path='/' exact={true} component={Dashboard} />
-          <Route path='/dashboard' component={Dashboard} />
+          <Route path='/admin' component={Dashboard} />
           <Route path='/mail' component={MailBoard} />
           <Route path='/account' render={this.renderAccount} />
           {this.renderAlert()}

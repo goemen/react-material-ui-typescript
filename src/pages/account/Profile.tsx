@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Theme, withStyles, Avatar } from '@material-ui/core';
+import { Theme, withStyles, Avatar, Typography, Paper } from '@material-ui/core';
 import { User } from '../../state/User';
 
 interface IProfilePageProps {
@@ -10,12 +10,21 @@ interface IProfilePageProps {
 class ProfilePage extends React.Component<IProfilePageProps, {}> {
 
     public render(): JSX.Element {
-        
+
         const { classes, user } = this.props;
         return (
             <div className={classes.container}>
-                {user.displayName}
-                <Avatar className={classes.avatar} src='imgs/avatar.png'/>
+                <div className={classes.avatarContainer}>
+                    <Avatar className={classes.avatar} src={user.photoUrl || 'imgs/avatar.png'} />
+                </div>
+                <Paper className={classes.detailsContainer}>
+                    <Typography className={classes.infoTitle}>
+                        {user.displayName}
+                    </Typography>
+                    <Typography variant='subheading'>
+                        {user.email}
+                    </Typography>
+                </Paper>
             </div>
         )
     }
@@ -24,7 +33,7 @@ class ProfilePage extends React.Component<IProfilePageProps, {}> {
 const styles: any = (theme: Theme) => ({
     container: {
         display: 'flex',
-        justifyContent: 'center',
+        // justifyContent: 'center',
         flexDirection: 'column',
         [theme.breakpoints.up('md')]: {
             flexDirection: 'row',
@@ -34,31 +43,26 @@ const styles: any = (theme: Theme) => ({
         width: 100,
         height: 100
     },
-    paper: theme.mixins.gutters({
-        paddingTop: 16,
-        paddingBottom: 16,
-        marginTop: theme.spacing.unit * 3,
-        width: '30%',
+    avatarContainer: {
+        justifyContent: 'center',
         display: 'flex',
-        flexDirection: 'column',
-        alignContent: 'center',
-        [theme.breakpoints.down('md')]: {
-            width: '100%',
+        flex: 1,
+        [theme.breakpoints.up('md')]: {
+            flex: .3,
         },
-    }),
-    field: {
-        marginTop: theme.spacing.unit * 3
     },
-    actions: theme.mixins.gutters({
-        paddingTop: 16,
-        paddingBottom: 16,
-        marginTop: theme.spacing.unit * 3,
+    detailsContainer: {
         display: 'flex',
-        flexDirection: 'row',
-        alignContent: 'center'
-    }),
-    button: {
-        marginRight: theme.spacing.unit
+        flex: 1,
+        padding: 10,
+        flexDirection: 'column',
+        [theme.breakpoints.up('md')]: {
+            flex: .7,
+        },
+    },
+    infoTitle: {
+        fontWeight: 'bold',
+        fontSize: 25
     },
 });
 
