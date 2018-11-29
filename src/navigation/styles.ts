@@ -1,4 +1,4 @@
-import { Theme } from "@material-ui/core";
+import { Theme } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -48,7 +48,6 @@ export const styles = (theme: Theme) => ({
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       })
-  
     },
     drawerPaperClose: {
       overflowX: 'hidden',
@@ -93,3 +92,4 @@ export const styles = (theme: Theme) => ({
       flex: '1 1 auto'
     }
   });
+  

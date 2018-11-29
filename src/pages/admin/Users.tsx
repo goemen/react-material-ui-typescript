@@ -10,6 +10,10 @@ interface IUserManagementPageProps {
 }
 
 class UserManagementPage extends React.Component<IUserManagementPageProps, {}> {
+    public componentDidMount() {
+        console.log('here');
+    }
+
     public render(): JSX.Element {
         return (
             <div className={this.props.classes.main}>

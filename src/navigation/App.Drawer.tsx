@@ -31,7 +31,7 @@ class AppDrawer extends React.Component<IAppDrawer, {}> {
         return (
             <Drawer
                 hidden={!authentication}
-                variant="permanent"
+                variant='permanent'
                 classes={{
                     paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),
                 }}

@@ -10,6 +10,7 @@ import { pink } from '@material-ui/core/colors';
 import * as firebase from 'firebase';
 import { ActionType } from './actions/Helpers';
 import { IUser, ADMIN_ROLE } from './state/User';
+import Loading from './components/Loading';
 
 const theme = createMuiTheme({
   palette: {
@@ -18,10 +19,12 @@ const theme = createMuiTheme({
   }
 });
 
-class App extends React.Component {
+class App extends React.Component<{}, { loading: any }> {
+  public removeAuthListener: firebase.Unsubscribe;
+  public state = { loading: true };
 
-  public componentWillMount() {
-    firebase.auth().onAuthStateChanged(async user => {
+  public componentDidMount() {
+    this.removeAuthListener = firebase.auth().onAuthStateChanged(async user => {
 
       if (user && user.emailVerified) {
         const identity = await user.getIdTokenResult(true);
@@ -30,19 +33,28 @@ class App extends React.Component {
           displayName: user.displayName,
           email: user.email,
           photoUrl: user.photoURL,
-          roles: []
+          roles: [],
         };
 
         if (identity && identity.claims) {
           const claims = identity.claims;
+          userInfo.claims = claims;
           if (claims.admin) {
             userInfo.roles.push(ADMIN_ROLE);
           }
         }
-
         store.dispatch({ type: ActionType.CURRENT_USER, payload: userInfo });
       }
+
+      this.setState({ loading: false });
     });
+  }
+
+  public componentWillUnmount() {
+    if (this.removeAuthListener) {
+      console.log("unloading");
+      this.removeAuthListener();
+    }
   }
 
   public render() {
@@ -50,7 +62,7 @@ class App extends React.Component {
       <Provider store={store}>
         <Router>
           <MuiThemeProvider theme={theme}>
-            <AppNavBar />
+            {!this.state.loading ? (<AppNavBar />) : (<Loading />)}
           </MuiThemeProvider>
         </Router>
       </Provider>

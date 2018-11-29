@@ -1,16 +1,37 @@
 import axios, { AxiosInstance } from 'axios';
 import { IRegisterModel } from 'src/models';
+import * as firebase from 'firebase';
 
 class CloudFunctionsApi {
   private handler: AxiosInstance;
   constructor() {
     this.handler = axios.create({
-      baseURL: 'https://us-central1-tomahawk-da413.cloudfunctions.net'
+      baseURL: 'https://us-central1-tomahawk-da413.cloudfunctions.net',
     });
+
+    this.handler.interceptors.request.use(async config =>  {
+      const token = await firebase.auth().currentUser.getIdToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    }, (error) => {
+      return Promise.reject(error);
+    });
+
+    this.handler.interceptors.response.use(res => res.data, error => Promise.reject(error));
   }
 
   public async registerUser(data: IRegisterModel) {
     return await this.handler.post('/auth/register', data);
+  }
+
+  public async getUsers() {
+    return  await this.handler.get('/auth/users');
+  }
+
+  public async setUserCustomClaims(userId: string, claims: any) {
+    return await this.handler.post(`/auth/users/${userId}/custom-claims`, claims);
   }
 }
 

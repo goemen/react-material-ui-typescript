@@ -9,6 +9,7 @@ export interface IUser {
     photoUrl: string;
     uid: string;
     roles?: string[];
+    claims?: any;
 }
 
 const UserModel = Model<IUser>({
@@ -16,7 +17,8 @@ const UserModel = Model<IUser>({
     email: null,
     photoUrl: null,
     uid: null,
-    roles: null
+    roles: null,
+    claims: null
 });
 
 export class User extends UserModel {
@@ -25,12 +27,14 @@ export class User extends UserModel {
     public static DISPLAY_NAME = 'displayName';
     public static PHOTO_URL = 'photoUrl';
     public static ROLES = 'roles';
+    public static CUSTOM_CLAIMS = 'claims';
 
     public uid: string;
     public email: string;
     public displayName: string;
     public roles: string[];
     public photoUrl: string;
+    public claims: any;
 
     public isInRole(candidate: string) {
         return _.intersection(this.roles, [candidate]).length > 0;

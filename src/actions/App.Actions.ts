@@ -7,7 +7,7 @@ import { User } from '../state/User';
 import * as firebase from 'firebase';
 import { Dispatch } from 'react-redux';
 import { IRegisterModel, ILoginModel, IResetPasswordModel } from 'src/models';
-import { Location, History } from 'history';
+import { CFAPI } from '../helpers/cf_api';
 
 export interface IApplicationProps {
     openDrawer: () => IAppAction;
@@ -22,7 +22,8 @@ export interface IApplicationProps {
     logout: () => IAppAction;
     createUser: (content: any) => any;
     getUser: (id: any) => any;
-    fetchUsers: (context?: any) => any;
+    fetchUsers: () => any;
+    setUserCustomClaims: (userId: string, claims: any) => any;
     updateUser: (context: any) => any;
     deleteUser: (context: any) => any;
     createMaterial: (content: any) => any;
@@ -34,9 +35,9 @@ export interface IApplicationProps {
     fetchMails: (context?: any) => any;
     updateMail: (context: any) => any;
     deleteMail: (context: any) => any;
-    match: match<any>,
-    location: Location,
-    history: History,
+    match: match<any>;
+    location: any;
+    history: any;
     utility: Utility;
     authentication: User;
     users: any;
@@ -94,7 +95,7 @@ export const login = (data: ILoginModel) => {
         } catch (error) {
             dispatch({ type: ActionType.LOGIN_FAIL, payload: 'Login failed' });
         }
-    }
+    };
 };
 
 export const requestPasswordReset = (data: IResetPasswordModel) => {
@@ -108,25 +109,25 @@ export const requestPasswordReset = (data: IResetPasswordModel) => {
         } catch (error) {
             dispatch({ type: ActionType.RESET_PASSWORD_FAIL, payload: { message: 'Failed to process your password reset request', error } });
         }
-    }
+    };
 };
 
 export const logout = () => {
     return async (dispatch: Dispatch<IAppAction>) => {
         dispatch({ type: ActionType.LOGOUT_REQUEST });
-    
+
         try {
             await firebase.auth().signOut();
-            dispatch({ 
-                type: ActionType.LOGOUT_SUCCESS, 
-                payload: 'Successfully logout.' 
+            dispatch({
+                type: ActionType.LOGOUT_SUCCESS,
+                payload: 'Successfully logout.'
             });
         } catch (error) {
-            dispatch({ 
-                type: ActionType.LOGOUT_FAIL, 
+            dispatch({
+                type: ActionType.LOGOUT_FAIL,
                 payload: { message: 'Logout failed', error } });
         }
-    }
+    };
 };
 
 export const register = (data: IRegisterModel) => {
@@ -150,3 +151,31 @@ export const register = (data: IRegisterModel) => {
         }
     };
 };
+
+export const fetchUsers = () => {
+    return async (dispatch: Dispatch<IAppAction>) => {
+        dispatch({ type: ActionType.GET_USERS_REQUEST });
+        try {
+            const users = await CFAPI.getUsers();
+
+            dispatch({ type: ActionType.GET_USERS_SUCCESS, payload: users });
+        } catch (error) {
+            dispatch({ type: ActionType.GET_USERS_FAIL, payload: { errorMessage: 'Failed to fetch user.', error } });
+        }
+    };
+};
+
+export const setUserCustomClaims = (userId: string, claims: any) => {
+    return async (dispatch: Dispatch<IAppAction>) => {
+        dispatch({ type: ActionType.SET_USER_CLAIMS_REQUEST, payload: {userId, claims}});
+        try {
+            const response = await CFAPI.setUserCustomClaims(userId, claims);
+
+            dispatch({ type: ActionType.SET_USER_CLAIMS_SUCCESS, payload: {userId, claims, response} });
+        } catch (error) {
+            dispatch({ type: ActionType.SET_USER_CLAIMS_FAIL, payload: { errorMessage: 'Failed to set user claims.', error } });
+        }
+    };
+};
+
+

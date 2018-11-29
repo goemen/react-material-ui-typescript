@@ -1,4 +1,4 @@
-//#region 
+//#region
 import * as React from 'react';
 const classNames = require('classnames');
 import { withStyles } from '@material-ui/core/styles';
@@ -25,7 +25,6 @@ import { AccountPage } from '../pages/account/Account';
 import { MailPage } from '../pages/mail/Mail';
 import AdminPage from '../pages/admin/Index';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { actions as UserActionCreators } from '../data/users';
 import { actions as MailActionCreators } from '../data/mail';
 import { actions as MaterialActionCreators } from '../data/material';
 import { getMaterialChartItems, getMailitems } from '../selectors';
@@ -38,6 +37,8 @@ import SendIcon from '@material-ui/icons/Send';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import GroupIcon from '@material-ui/icons/Group';
+import HomeIcon from '@material-ui/icons/Home';
+import HomePage from '../pages/home/Index';
 //#endregion
 
 interface IAppProps extends IApplicationProps {
@@ -58,32 +59,32 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
   };
 
   public componentWillMount() {
-    this.props.fetchUsers();
+    // this.props.fetchUsers();
     this.props.fetchMaterials();
     this.props.fetchMails();
   }
 
   private handleNotificationMenu = (event: any) => {
     this.setState({ notificationEl: event.currentTarget });
-  };
+  }
 
   private handleNotificationMenuClose = () => {
     this.setState({ notificationEl: null });
-  };
+  }
 
   private handleMenu = (event: any) => {
     this.setState({ anchorEl: event.currentTarget });
-  };
+  }
 
   private handleMenuClose = (path?: string) => {
     this.setState({ anchorEl: null });
     this.navigate(path);
-  };
+  }
 
   public handleLogout = () => {
     this.props.logout();
     this.handleMenuClose();
-  };
+  }
 
   private navigate = (path?: string) => {
     if (path) {
@@ -93,21 +94,21 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
   public handleDrawerOpen = () => {
     this.props.openDrawer();
-  };
+  }
 
   public handleDrawerClose = () => {
     this.props.closeDrawer();
-  };
+  }
 
   public showPopup = () => {
     this.props.showPopup(new Alert({
-      title: "Testing title",
-      message: "This is a very long message, expect alert to be very wide"
-    }))
+      title: 'Testing title',
+      message: 'This is a very long message, expect alert to be very wide'
+    }));
   }
 
   public showSpinner = () => {
-    this.props.showSpinner("I am loading here please...")
+    this.props.showSpinner('I am loading here please...');
   }
 
   private renderAlert(): JSX.Element {
@@ -120,7 +121,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
       );
     }
 
-    return null
+    return null;
   }
 
   private renderSpinner(): JSX.Element {
@@ -132,14 +133,14 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
       );
     }
 
-    return null
+    return null;
   }
 
   private renderNotifications(notifications: any[]) {
     const { classes } = this.props;
     return (
       <Menu
-        id="notifications"
+        id='notifications'
         anchorEl={this.state.notificationEl}
         anchorOrigin={{
           vertical: 'top',
@@ -173,43 +174,43 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
       return (
         <AppBar
-          position="fixed"
+          position='fixed'
           className={classNames(classes.appBar, utility.drawerOpen && classes.appBarShift)}
         >
           <Toolbar disableGutters={!utility.drawerOpen}>
             <IconButton
-              color="inherit"
-              aria-label="open drawer"
+              color='inherit'
+              aria-label='open drawer'
               onClick={this.handleDrawerOpen}
               className={classNames(classes.menuButton, utility.drawerOpen && classes.hide)}
             >
               <MenuIcon />
             </IconButton>
-            <Typography className={classes.fillSpace} variant="title" color="inherit" noWrap={true}>
+            <Typography className={classes.fillSpace} variant='title' color='inherit' noWrap={true}>
               Tomahawk
             </Typography>
             <div>
               <IconButton
                 aria-owns={notificationsOpen ? 'notifications' : null}
-                aria-haspopup="true"
-                color="inherit"
+                aria-haspopup='true'
+                color='inherit'
                 onClick={this.handleNotificationMenu}
               >
-                <Badge badgeContent={unreadMessages.length} color="secondary">
+                <Badge badgeContent={unreadMessages.length} color='secondary'>
                   <NotificationIcon />
                 </Badge>
               </IconButton>
               {this.renderNotifications(unreadMessages)}
               <IconButton
                 aria-owns={open ? 'menu-appbar' : null}
-                aria-haspopup="true"
+                aria-haspopup='true'
                 onClick={this.handleMenu}
-                color="inherit"
+                color='inherit'
               >
                 <AccountCircle />
               </IconButton>
               <Menu
-                id="menu-appbar"
+                id='menu-appbar'
                 anchorEl={anchorEl}
                 anchorOrigin={{
                   vertical: 'top',
@@ -252,16 +253,18 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
     const { utility, authentication } = this.props;
     let routes: IRoute[] = [];
     if (authentication && authentication.isInRole(ADMIN_ROLE)) {
-      routes.push({ path: '/admin', title: 'Dashboard', icon: () => <DashboardIcon /> })
-      routes.push({ path: '/admin/users-management', title: 'User Management', icon: () => <GroupIcon /> })
+      routes.push({ path: '/admin', title: 'Dashboard', icon: () => <DashboardIcon /> });
+      routes.push({ path: '/admin/user-management', title: 'User Management', icon: () => <GroupIcon /> });
     }
 
     routes = _.concat(routes, [
+      { path: '/', title: 'Inbox', icon: () => <HomeIcon /> },
       { path: '/mail/inbox', title: 'Inbox', icon: () => <InboxIcon /> },
       { path: '/mail/sent', title: 'Sent', icon: () => <SendIcon /> },
       { path: '/mail/drafts', title: 'Drafts', icon: () => <DraftsIcon /> },
       { path: '/account', title: 'Profile', icon: () => <AccountCircleIcon /> }
-    ])
+    ]);
+
     return (
       <Hidden mdDown={!utility.drawerOpen && true}>
         <AppDrawer
@@ -299,6 +302,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
         <main className={classes.content}>
           <div className={classes.toolbar} />
+          <Route path='/' exact={true} component={HomePage} />
           <Route path='/admin' component={Dashboard} />
           <Route path='/mail' component={MailBoard} />
           <Route path='/account' render={this.renderAccount} />
@@ -320,7 +324,6 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchtoProps = (dispatch: Dispatch) =>
-  bindActionCreators(_.assign({}, AppActionCreators, MailActionCreators,
-    UserActionCreators, MaterialActionCreators), dispatch);
+  bindActionCreators(_.assign({}, AppActionCreators, MailActionCreators, MaterialActionCreators), dispatch);
+export default withStyles(styles as any, {withTheme: true})(withRouter(connect(mapStateToProps, mapDispatchtoProps)(MiniDrawer as any) as any) as any) as any;
 
-export default withRouter(connect(mapStateToProps, mapDispatchtoProps)(withStyles(styles as any, { withTheme: true })(MiniDrawer as any)) as any);

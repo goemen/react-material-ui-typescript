@@ -49,7 +49,8 @@
     "test": "react-scripts-ts test --env=jsdom",
     "postinstall": "npm run build",
     "deploy": "node server.js",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "build:functions": "babel functions-app --out-dir functions --copy-files --ignore funcations-app/node_modules"
   },
   "devDependencies": {
     "@types/jest": "^22.2.3",

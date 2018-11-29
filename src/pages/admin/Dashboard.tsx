@@ -33,11 +33,11 @@ class DashboardPage extends React.Component<IDashboardProps, IPageState> {
 
     private handleChangeUsersPage = (event: any, page: number) => {
         this.setState({ usersTablePage: page });
-    };
+    }
 
     private handleChangeTableRowsPerPage = (event: any) => {
         this.setState({ usersTableRowsPerPage: event.target.value });
-    };
+    }
 
     private renderUsers(): JSX.Element {
         const { users, classes } = this.props;
@@ -61,7 +61,7 @@ class DashboardPage extends React.Component<IDashboardProps, IPageState> {
                             this.state.usersTablePage * this.state.usersTableRowsPerPage + this.state.usersTableRowsPerPage).map((n: any) => {
                                 return (
                                     <TableRow key={n.id}>
-                                        <TableCell component="th" scope="row">
+                                        <TableCell component='th' scope='row'>
                                             {n.id}
                                         </TableCell>
                                         <TableCell>{n.name}</TableCell>
@@ -72,7 +72,7 @@ class DashboardPage extends React.Component<IDashboardProps, IPageState> {
                     </TableBody>
                 </Table>
                 <TablePagination
-                    component="div"
+                    component='div'
                     count={users.items.length}
                     rowsPerPage={this.state.usersTableRowsPerPage}
                     page={this.state.usersTablePage}
@@ -94,16 +94,16 @@ class DashboardPage extends React.Component<IDashboardProps, IPageState> {
         return (
             <Paper className={this.props.classes.paper}>
                 <h3 className={this.props.classes.sectionTitle}>Material Inventory</h3>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width='100%' height={300}>
                     <PieChart>
                         <Pie
                             data={this.props.materialChartData}
-                            dataKey="value"
-                            nameKey="name"
-                            cx="50%"
-                            cy="50%"
+                            dataKey='value'
+                            nameKey='name'
+                            cx='50%'
+                            cy='50%'
                             label={true}
-                            fill="#8884d8" />
+                            fill='#8884d8' />
                         <Legend />
                     </PieChart>
                 </ResponsiveContainer>
@@ -115,13 +115,13 @@ class DashboardPage extends React.Component<IDashboardProps, IPageState> {
         return (
             <Paper className={this.props.classes.paper}>
                 <h3 className={this.props.classes.sectionTitle}>Material Sales</h3>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width='100%' height={300}>
                     <BarChart data={this.props.materialChartData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
+                        <CartesianGrid strokeDasharray='3 3' />
+                        <XAxis dataKey='name' />
                         <YAxis />
                         <Tooltip />
-                        <Bar dataKey="value" fill="#8884d8" />
+                        <Bar dataKey='value' fill='#8884d8' />
                     </BarChart>
                 </ResponsiveContainer>
             </Paper>
@@ -196,7 +196,7 @@ const styles = (theme: Theme) => ({
     },
     tileText: {
         fontSize: 20,
-        color: theme.palette.grey["400"],
+        color: theme.palette.grey['400'],
     },
     sectionTitle: {
         paddingLeft: theme.spacing.unit * 2,
@@ -210,4 +210,4 @@ const styles = (theme: Theme) => ({
     },
 });
 
-export default withStyles(styles as any)(DashboardPage as any) as any;
+export default withStyles(styles as any, {withTheme: true})(DashboardPage as any) as any;
