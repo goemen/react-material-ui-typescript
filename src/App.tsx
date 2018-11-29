@@ -19,7 +19,7 @@ const theme = createMuiTheme({
   }
 });
 
-class App extends React.Component<{}, { loading: any }> {
+class App extends React.Component<{}, { loading: boolean }> {
   public removeAuthListener: firebase.Unsubscribe;
   public state = { loading: true };
 
@@ -45,14 +45,14 @@ class App extends React.Component<{}, { loading: any }> {
         }
         store.dispatch({ type: ActionType.CURRENT_USER, payload: userInfo });
       }
-
-      this.setState({ loading: false });
+      setTimeout(() =>
+        this.setState({ loading: false }), 2000
+      );
     });
   }
 
   public componentWillUnmount() {
     if (this.removeAuthListener) {
-      console.log("unloading");
       this.removeAuthListener();
     }
   }
@@ -62,7 +62,7 @@ class App extends React.Component<{}, { loading: any }> {
       <Provider store={store}>
         <Router>
           <MuiThemeProvider theme={theme}>
-            {!this.state.loading ? (<AppNavBar />) : (<Loading />)}
+            {this.state.loading ? (<Loading />) : (<AppNavBar />)}
           </MuiThemeProvider>
         </Router>
       </Provider>

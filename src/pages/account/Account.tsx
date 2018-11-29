@@ -4,7 +4,7 @@ import LoginPage from './Login';
 import RegisterPage from './Register';
 import { Route, Switch } from 'react-router';
 import ProfilePage from './Profile';
-import { isAuthenticated } from '../../state/AppState';
+// import { isAuthenticated } from '../../state/AppState';
 import RequestPasswordReset from './RequestPasswordReset';
 import { ILoginModel, IRegisterModel, IResetPasswordModel } from '../../models';
 import { History } from 'history';
@@ -59,7 +59,7 @@ export class AccountPage extends React.Component<IAccountProps, {}> {
 
     public render(): JSX.Element {
         return (<Switch>
-            <Route path="/account" exact={true} component={isAuthenticated(this.renderProfilePage)} />
+            <Route path="/account" exact={true} component={this.renderProfilePage} />
             <Route path={'/account/login'} render={this.renderLogin} />
             <Route path={'/account/register'} render={this.renderRegister} />
             <Route path={'/account/request-password-reset'} render={this.renderRequestPasswordReset} />

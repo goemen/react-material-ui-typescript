@@ -3,9 +3,11 @@ import { createSelector } from 'reselect';
 const randomColor = require('randomcolor');
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import { DataState } from '../state/DataState';
 
-const materialItemsSelector = (state: AppState) => state.materials.items;
-const mailSelector = (state: AppState) => state.mail;
+const materialItemsSelector = (state: AppState): any => [];
+const mailSelector = (state: AppState): any => ({items: []});
+const usersSelector = (state: AppState): DataState => state.users;
 
 export const getMaterialChartItems = createSelector(materialItemsSelector, (items: any[]) => {
     const categories = _.groupBy(items, x => x.category);
@@ -17,4 +19,8 @@ export const getMaterialChartItems = createSelector(materialItemsSelector, (item
 export const getMailitems = createSelector(mailSelector, (mail: any) => {
     return _.sortBy(mail.items.map((item: any) => 
     _.assign({}, item, {createdAt: moment(item.createdAt)}), (i: any) => i.createdAt));
+});
+
+export const getUsers = createSelector(usersSelector, (users: DataState) => {
+    return users;
 });

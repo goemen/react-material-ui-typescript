@@ -1,17 +1,19 @@
 import * as React from 'react';
-import { User } from '../../state/User';
 import { Theme, withStyles, Typography } from '@material-ui/core';
+import { DataState } from '../../state/DataState';
 
 interface IUserManagementPageProps {
     fetchUsers: () => void;
-    users?: User[];
+    users?: DataState;
     location?: any;
     classes?: any;
 }
 
 class UserManagementPage extends React.Component<IUserManagementPageProps, {}> {
     public componentDidMount() {
-        console.log('here');
+        if (!this.props.users.loading && !this.props.users.doneLoading) { 
+            this.props.fetchUsers(); 
+        }
     }
 
     public render(): JSX.Element {

@@ -9,10 +9,13 @@ import GroupIcon from '@material-ui/icons/Group';
 import MailIcon from '@material-ui/icons/Mail';
 import SettingsIcon from '@material-ui/icons/Settings';
 import BusinessIcon from '@material-ui/icons/BusinessCenter';
+// import { isAuthenticated } from '../../state/AppState';
+import { List } from 'immutable';
+import { User } from '../../state/User';
 
 interface IDashboardProps {
     fetchUsers: (context?: any) => void;
-    users: any;
+    users: List<User>;
     materialChartData: any[];
     classes?: any;
     theme?: any;
@@ -57,7 +60,7 @@ class DashboardPage extends React.Component<IDashboardProps, IPageState> {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.items.slice(this.state.usersTablePage * this.state.usersTableRowsPerPage,
+                        {users.slice(this.state.usersTablePage * this.state.usersTableRowsPerPage,
                             this.state.usersTablePage * this.state.usersTableRowsPerPage + this.state.usersTableRowsPerPage).map((n: any) => {
                                 return (
                                     <TableRow key={n.id}>
@@ -73,7 +76,7 @@ class DashboardPage extends React.Component<IDashboardProps, IPageState> {
                 </Table>
                 <TablePagination
                     component='div'
-                    count={users.items.length}
+                    count={users.size}
                     rowsPerPage={this.state.usersTableRowsPerPage}
                     page={this.state.usersTablePage}
                     backIconButtonProps={{
@@ -136,7 +139,7 @@ class DashboardPage extends React.Component<IDashboardProps, IPageState> {
                     <Grid item={true} lg={3} xs={12} sm={6}>
                         <Paper className={classNames(classes.paper, classes.headerTiles)}>
                             <GroupIcon className={classes.headerTileIcon} />
-                            <Typography className={classes.tileText}> {this.props.users.items.length} Customers</Typography>
+                            <Typography className={classes.tileText}> {this.props.users.size} Customers</Typography>
                         </Paper>
                     </Grid>
                     <Grid item={true} lg={3} xs={12} sm={6}>
@@ -210,4 +213,4 @@ const styles = (theme: Theme) => ({
     },
 });
 
-export default withStyles(styles as any, {withTheme: true})(DashboardPage as any) as any;
+export default  withStyles(styles as any, {withTheme: true})(DashboardPage as any) as any;

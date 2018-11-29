@@ -3,12 +3,12 @@ import { Utility } from './Utility';
 import { Model } from './Helpers';
 import { User, ADMIN_ROLE } from './User';
 import { IApplicationProps } from '../actions/App.Actions';
-import { Map } from 'immutable';
+import { DataState } from './DataState';
 
 export interface IAppState {
     utility?: Utility;
     authentication?: User;
-    users?: Map<string, User>;
+    users?: DataState;
     materials?: any;
     mail?: any;
 }
@@ -16,7 +16,7 @@ export interface IAppState {
 export const AppStateModel = Model<IAppState>({
     utility: new Utility(),
     authentication: null,
-    users: null,
+    users: new DataState(),
     materials: null,
     mail: null
 });
@@ -27,7 +27,7 @@ export class AppState extends AppStateModel {
 
     public utility: Utility;
     public authentication: User;
-    public users: Map<string, User>;
+    public users: DataState;
     public materials: any;
     public mail: any;
 }

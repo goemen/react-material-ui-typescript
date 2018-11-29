@@ -15,6 +15,12 @@ export const UtilityReducer = (state: Utility = new Utility(), action: IAppActio
             return state.set(Utility.SPINNER, action.payload) as Utility;
         case ActionType.CLOSE_SPINNER:
             return state.set(Utility.SPINNER, null) as Utility;
+        case ActionType.TOGGLE_APP_LOADING:
+            return state.set(Utility.APP_LOADING, !state.appLoading) as Utility;
+        case ActionType.SET_ANCHOR_ELEMENT:
+            return state.set(Utility.ANCHOR_EL, action.payload) as Utility;
+        case ActionType.SET_NOTIFICATION_ELEMENT:
+            return state.set(Utility.NOTIFICATION_EL, !state.appLoading) as Utility;
         default:
             return state;
     }

@@ -1,11 +1,17 @@
 import * as React from 'react';
-import { IApplicationProps } from '../../actions/App.Actions';
 import { Switch, Route } from 'react-router';
-import { isAuthenticated } from '../../state/AppState';
 import DashboardPage from './Dashboard';
 import UserManagementPage from './Users';
+import { DataState } from '../../state/DataState';
 
-export default class AdminPage extends React.Component<IApplicationProps, {}> {
+interface IAdminProps {
+    location?: any;
+    fetchUsers: () => void;
+    users: DataState;
+    materialCharts: any;
+}
+
+export default class AdminPage extends React.Component<IAdminProps, {}> {
     private renderUserManagementPage = () => {
         return (
             <UserManagementPage
@@ -27,11 +33,11 @@ export default class AdminPage extends React.Component<IApplicationProps, {}> {
     }
 
     public render(): JSX.Element {
-        return (<Switch>
-            <Route path='/admin' exact={true} component={isAuthenticated(this.renderDashboardPage)} />
-            <Route path='/admin/dashboard' component={isAuthenticated(this.renderDashboardPage)} />
-            <Route path={'/admin/user-management'} component={isAuthenticated(this.renderUserManagementPage)} />
+        return (
+        <Switch location={this.props.location}>
+            <Route path='/admin' exact={true} component={this.renderDashboardPage} />
+            <Route path='/admin/dashboard' component={this.renderDashboardPage} />
+            <Route path={'/admin/user-management'} component={this.renderUserManagementPage} />
         </Switch>);
     }
-
 }

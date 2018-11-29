@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import { ListItemText, Menu, MenuItem, Badge, Avatar } from '@material-ui/core';
-import { Route, withRouter } from 'react-router-dom';
+import { Route, withRouter, Switch } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { styles } from './styles';
 import { IApplicationProps } from '../actions/App.Actions';
@@ -27,7 +27,7 @@ import AdminPage from '../pages/admin/Index';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { actions as MailActionCreators } from '../data/mail';
 import { actions as MaterialActionCreators } from '../data/material';
-import { getMaterialChartItems, getMailitems } from '../selectors';
+import { getMaterialChartItems, getMailitems, getUsers } from '../selectors';
 import AppDrawer, { IRoute } from './App.Drawer';
 import NotificationIcon from '@material-ui/icons/Notifications';
 import { ADMIN_ROLE } from '../state/User';
@@ -46,38 +46,28 @@ interface IAppProps extends IApplicationProps {
   theme?: any;
 }
 
-interface IState {
-  anchorEl: any;
-  notificationEl: any;
-}
+class MiniDrawer extends React.Component<IAppProps, {}> {
 
-class MiniDrawer extends React.Component<IAppProps, IState> {
-
-  public state: IState = {
-    anchorEl: null,
-    notificationEl: null
-  };
-
-  public componentWillMount() {
+  public componentDidMount() {
     // this.props.fetchUsers();
-    this.props.fetchMaterials();
-    this.props.fetchMails();
+    // this.props.fetchMaterials();
+    // this.props.fetchMails();
   }
 
   private handleNotificationMenu = (event: any) => {
-    this.setState({ notificationEl: event.currentTarget });
+    this.props.toggleNotification(event.currentTarget);
   }
 
   private handleNotificationMenuClose = () => {
-    this.setState({ notificationEl: null });
+    this.props.toggleNotification(null);
   }
 
   private handleMenu = (event: any) => {
-    this.setState({ anchorEl: event.currentTarget });
+    this.props.toggleAnchor(event.currentTarget);
   }
 
   private handleMenuClose = (path?: string) => {
-    this.setState({ anchorEl: null });
+    this.props.toggleAnchor(null);
     this.navigate(path);
   }
 
@@ -141,7 +131,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
     return (
       <Menu
         id='notifications'
-        anchorEl={this.state.notificationEl}
+        anchorEl={this.props.utility.anchorEl}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'right',
@@ -151,7 +141,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
           horizontal: 'right',
         }}
         className={classes.notifications}
-        open={Boolean(this.state.notificationEl)}
+        open={Boolean(this.props.utility.notificationEl)}
         onClose={this.handleNotificationMenuClose}
       >
         {notifications.map((n: any) => (
@@ -167,9 +157,8 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
   private renderAppBar() {
     if (this.props.authentication) {
       const { classes, utility } = this.props;
-      const { anchorEl, notificationEl } = this.state;
-      const open = Boolean(anchorEl);
-      const notificationsOpen = Boolean(notificationEl);
+      const open = Boolean(utility.anchorEl);
+      const notificationsOpen = Boolean(utility.notificationEl);
       const unreadMessages = this.props.mail.filter(x => x.seen === false);
 
       return (
@@ -211,7 +200,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
               </IconButton>
               <Menu
                 id='menu-appbar'
-                anchorEl={anchorEl}
+                anchorEl={utility.anchorEl}
                 anchorOrigin={{
                   vertical: 'top',
                   horizontal: 'right',
@@ -279,21 +268,24 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
   public render() {
     const { classes } = this.props;
-    const Dashboard = isAuthenticated((props: any): any => {
+    const Dashboard = isAuthenticated((): any => {
       return (
-        <AdminPage {...this.props}
+        <AdminPage 
+          fetchUsers={this.props.fetchUsers}
+          users={this.props.users}
+          location={this.props.location}
+          materialCharts={this.props.materialCharts}
         />
       );
     });
 
-    const MailBoard = isAuthenticated((props: any): any => {
+    const MailBoard = (): any => {
       return (
         <MailPage
           mail={this.props.mail}
         />
       );
-    });
-
+    };
 
     return (
       <div className={classes.root}>
@@ -302,10 +294,12 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Route path='/' exact={true} component={HomePage} />
-          <Route path='/admin' component={Dashboard} />
-          <Route path='/mail' component={MailBoard} />
-          <Route path='/account' render={this.renderAccount} />
+          <Switch>
+            <Route path='/' exact={true} component={HomePage} />
+            <Route path='/admin' component={Dashboard} />
+            <Route path='/mail' component={MailBoard} />
+            <Route path='/account' render={this.renderAccount} />
+          </Switch>
           {this.renderAlert()}
           {this.renderSpinner()}
         </main>
@@ -317,7 +311,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   utility: state.utility,
   authentication: state.authentication,
-  users: state.users,
+  users: getUsers(state),
   materials: state.materials,
   materialCharts: getMaterialChartItems(state),
   mail: getMailitems(state)
@@ -325,5 +319,5 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchtoProps = (dispatch: Dispatch) =>
   bindActionCreators(_.assign({}, AppActionCreators, MailActionCreators, MaterialActionCreators), dispatch);
-export default withStyles(styles as any, {withTheme: true})(withRouter(connect(mapStateToProps, mapDispatchtoProps)(MiniDrawer as any) as any) as any) as any;
+export default withStyles(styles as any, { withTheme: true })(withRouter(connect(mapStateToProps, mapDispatchtoProps)(MiniDrawer as any) as any) as any) as any;
 

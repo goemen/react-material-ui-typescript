@@ -8,6 +8,7 @@ import * as firebase from 'firebase';
 import { Dispatch } from 'react-redux';
 import { IRegisterModel, ILoginModel, IResetPasswordModel } from 'src/models';
 import { CFAPI } from '../helpers/cf_api';
+import { DataState } from '../state/DataState';
 
 export interface IApplicationProps {
     openDrawer: () => IAppAction;
@@ -40,10 +41,12 @@ export interface IApplicationProps {
     history: any;
     utility: Utility;
     authentication: User;
-    users: any;
+    users: DataState;
     materials: any;
     mail: any[];
     materialCharts: Array<{ name: string, value: number, fill: string }>;
+    toggleAnchor: (payload: any) => void;
+    toggleNotification: (payload: any) => void;
 }
 
 export const openDrawer = (): IAppAction => {
@@ -177,5 +180,13 @@ export const setUserCustomClaims = (userId: string, claims: any) => {
         }
     };
 };
+
+export const toggleAnchor = (payload: any) => {
+    return { type: ActionType.SET_ANCHOR_ELEMENT, payload };
+}
+
+export const toggleNotification = (payload: any) => {
+    return { type: ActionType.SET_ANCHOR_ELEMENT, payload };
+}
 
 

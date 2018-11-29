@@ -25,7 +25,10 @@ export enum ActionType {
     SET_USER_CLAIMS_REQUEST,
     SET_USER_CLAIMS_SUCCESS,
     SET_USER_CLAIMS_FAIL,
-    CURRENT_USER
+    CURRENT_USER,
+    TOGGLE_APP_LOADING,
+    SET_ANCHOR_ELEMENT,
+    SET_NOTIFICATION_ELEMENT
 }
 
 export interface IAppAction extends Action<ActionType> {
