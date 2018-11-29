@@ -4,10 +4,11 @@ const randomColor = require('randomcolor');
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { DataState } from '../state/DataState';
+import { User } from '../state/User';
 
 const materialItemsSelector = (state: AppState): any => [];
 const mailSelector = (state: AppState): any => ({items: []});
-const usersSelector = (state: AppState): DataState => state.users;
+const usersSelector = (state: AppState): DataState<User> => state.users;
 
 export const getMaterialChartItems = createSelector(materialItemsSelector, (items: any[]) => {
     const categories = _.groupBy(items, x => x.category);
@@ -21,6 +22,6 @@ export const getMailitems = createSelector(mailSelector, (mail: any) => {
     _.assign({}, item, {createdAt: moment(item.createdAt)}), (i: any) => i.createdAt));
 });
 
-export const getUsers = createSelector(usersSelector, (users: DataState) => {
+export const getUsers = createSelector(usersSelector, (users: DataState<User>) => {
     return users;
 });

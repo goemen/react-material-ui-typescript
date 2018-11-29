@@ -8,7 +8,7 @@ import { DataState } from './DataState';
 export interface IAppState {
     utility?: Utility;
     authentication?: User;
-    users?: DataState;
+    users?: DataState<User>;
     materials?: any;
     mail?: any;
 }
@@ -16,7 +16,7 @@ export interface IAppState {
 export const AppStateModel = Model<IAppState>({
     utility: new Utility(),
     authentication: null,
-    users: new DataState(),
+    users: new DataState<User>(),
     materials: null,
     mail: null
 });
@@ -27,7 +27,7 @@ export class AppState extends AppStateModel {
 
     public utility: Utility;
     public authentication: User;
-    public users: DataState;
+    public users: DataState<User>;
     public materials: any;
     public mail: any;
 }

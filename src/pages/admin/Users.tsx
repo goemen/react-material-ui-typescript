@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Theme, withStyles, Typography } from '@material-ui/core';
 import { DataState } from '../../state/DataState';
+import { User } from '../../state/User';
 
 interface IUserManagementPageProps {
     fetchUsers: () => void;
-    users?: DataState;
+    users?: DataState<User>;
     location?: any;
     classes?: any;
 }

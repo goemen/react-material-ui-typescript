@@ -41,7 +41,7 @@ export interface IApplicationProps {
     history: any;
     utility: Utility;
     authentication: User;
-    users: DataState;
+    users: DataState<User>;
     materials: any;
     mail: any[];
     materialCharts: Array<{ name: string, value: number, fill: string }>;

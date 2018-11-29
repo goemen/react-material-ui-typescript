@@ -3,11 +3,12 @@ import { Switch, Route } from 'react-router';
 import DashboardPage from './Dashboard';
 import UserManagementPage from './Users';
 import { DataState } from '../../state/DataState';
+import { User } from '../../state/User';
 
 interface IAdminProps {
     location?: any;
     fetchUsers: () => void;
-    users: DataState;
+    users: DataState<User>;
     materialCharts: any;
 }
 
