@@ -14,7 +14,7 @@ export const UsersReducer = (state: DataState<User> = new DataState(), action: I
       return state.set(DataState.LOADING, false) as DataState<User>;
     case ActionType.GET_USERS_SUCCESS: {
       const items = (action.payload as any[])
-      .map(i => new User(_.assign({}, i, {claims: i.customClaims})))
+      .map(i => new User(_.assign({}, i, {claims: i.customClaims || {}})))
       .reduce((acc: Map<string, User>, user: User) => {
         return acc.set(user.uid, user);
       }, Map<string, User>());

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Theme, withStyles, Typography, Paper, Button, FormGroup, FormControlLabel, Checkbox } from '@material-ui/core';
+import { Theme, withStyles, Typography, Paper } from '@material-ui/core';
 import { DataState } from '../../state/DataState';
 import { User } from '../../state/User';
 import { Grid, Table, TableHeaderRow, TableSelection, PagingPanel, TableRowDetail } from '@devexpress/dx-react-grid-material-ui';
 import { SelectionState, PagingState, IntegratedPaging, RowDetailState } from '@devexpress/dx-react-grid';
+import { RowDetailComponent } from './UserDetailsRow';
 
 interface IUserManagementPageProps {
     fetchUsers: () => void;
@@ -17,46 +18,6 @@ interface IState {
     expandedRows?: number[];
 }
 
-const RowDetail = ({ row, classes }: { row: User, classes: any }) => (
-    <div className={classes.container}>
-        <Typography className={classes.title}>Edit claims</Typography>
-        <div className={classes.claims}>
-            <FormGroup row={true}>
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={row.claims.admin}
-                            value='admin'
-                        />
-                    }
-                    label='Administrator'
-                />
-            </FormGroup>
-        </div>
-        <Button size='small' color='primary'>Save</Button>
-    </div>
-);
-
-const rowDetailStyle = (theme: Theme) => ({
-    container: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    claims: {
-        display: 'flex',
-        flexDirection: 'column',
-        margin: 15,
-        [theme.breakpoints.up('sm')]: {
-            flexDirection: 'row'
-        }
-    },
-    title: {
-        fontSize: 15
-    }
-});
-
-const RowDetailComponent = withStyles(rowDetailStyle as any)(RowDetail as any) as any;
-
 class UserManagementPage extends React.Component<IUserManagementPageProps, IState> {
 
     public state: IState = { selection: [] as number[], expandedRows: [] };
@@ -68,7 +29,8 @@ class UserManagementPage extends React.Component<IUserManagementPageProps, IStat
     }
 
     private changeSelection = (selection: number[]) => {
-        this.setState({ selection });
+        this.setState({expandedRows: [selection[selection.length - 1]]});
+        this.setState({ selection: [selection[selection.length -1]] });
     }
 
     public render(): JSX.Element {
@@ -90,10 +52,10 @@ class UserManagementPage extends React.Component<IUserManagementPageProps, IStat
                         />
                         <PagingState
                             defaultCurrentPage={0}
-                            pageSize={rows.length}
+                            pageSize={1}
                         />
                         <RowDetailState
-                            defaultExpandedRowIds={[2, 5]}
+                            expandedRowIds={this.state.expandedRows}
                         />
                         <IntegratedPaging />
 
