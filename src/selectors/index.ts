@@ -6,8 +6,8 @@ import * as moment from 'moment';
 import { DataState } from '../state/DataState';
 import { User } from '../state/User';
 
-const materialItemsSelector = (state: AppState): any => [];
-const mailSelector = (state: AppState): any => ({items: []});
+const materialItemsSelector = (state: AppState): any => state.materials.items;
+const mailSelector = (state: AppState): any => state.mail;
 const usersSelector = (state: AppState): DataState<User> => state.users;
 
 export const getMaterialChartItems = createSelector(materialItemsSelector, (items: any[]) => {

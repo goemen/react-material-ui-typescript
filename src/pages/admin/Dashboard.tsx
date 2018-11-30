@@ -9,7 +9,6 @@ import GroupIcon from '@material-ui/icons/Group';
 import MailIcon from '@material-ui/icons/Mail';
 import SettingsIcon from '@material-ui/icons/Settings';
 import BusinessIcon from '@material-ui/icons/BusinessCenter';
-// import { isAuthenticated } from '../../state/AppState';
 import { List } from 'immutable';
 import { User } from '../../state/User';
 
@@ -63,11 +62,11 @@ class DashboardPage extends React.Component<IDashboardProps, IPageState> {
                         {users.slice(this.state.usersTablePage * this.state.usersTableRowsPerPage,
                             this.state.usersTablePage * this.state.usersTableRowsPerPage + this.state.usersTableRowsPerPage).map((n: any) => {
                                 return (
-                                    <TableRow key={n.id}>
+                                    <TableRow key={n.uid}>
                                         <TableCell component='th' scope='row'>
-                                            {n.id}
+                                            {n.uid}
                                         </TableCell>
-                                        <TableCell>{n.name}</TableCell>
+                                        <TableCell>{n.displayName}</TableCell>
                                         <TableCell>{n.email}</TableCell>
                                     </TableRow>
                                 );

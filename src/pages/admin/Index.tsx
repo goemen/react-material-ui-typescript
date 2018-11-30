@@ -27,7 +27,7 @@ export default class AdminPage extends React.Component<IAdminProps, {}> {
         return (
             <DashboardPage
                 fetchUsers={this.props.fetchUsers}
-                users={this.props.users}
+                users={this.props.users.items.toList()}
                 materialChartData={this.props.materialCharts}
             />
         );

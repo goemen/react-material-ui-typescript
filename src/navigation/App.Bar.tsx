@@ -49,9 +49,17 @@ interface IAppProps extends IApplicationProps {
 class MiniDrawer extends React.Component<IAppProps, {}> {
 
   public componentDidMount() {
-    // this.props.fetchUsers();
-    // this.props.fetchMaterials();
-    // this.props.fetchMails();
+    if (!this.props.users.loading && !this.props.users.doneLoading) {
+      this.props.fetchUsers();
+    }
+
+    if (!this.props.materials.isFetching && !this.props.materials.items.length) {
+      this.props.fetchMaterials();
+    }
+
+    if (!this.props.mail.length) {
+      this.props.fetchMails();
+    }
   }
 
   private handleNotificationMenu = (event: any) => {
@@ -289,8 +297,8 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
 
     return (
       <div className={classes.root}>
-        {this.renderAppBar()}
         {this.renderDrawer()}
+        {this.renderAppBar()}
 
         <main className={classes.content}>
           <div className={classes.toolbar} />

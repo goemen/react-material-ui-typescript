@@ -8,7 +8,7 @@ interface IDataState {
 }
 
 const DataStateModel = Model<IDataState>({
-    items: null,
+    items: Map<string, any>(),
     loading: false,
     doneLoading: false
 });
