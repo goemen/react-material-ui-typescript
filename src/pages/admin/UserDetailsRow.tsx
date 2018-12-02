@@ -19,7 +19,7 @@ class RowDetail extends React.Component<IProps, {}> {
         this.props.editUser(User.CUSTOM_CLAIMS, claims);
     }
 
-    saveChanges = () => {
+    private saveChanges = () => {
         const { selectedUser } = this.props;
         this.props.setUserCustomClaims(selectedUser.uid, selectedUser.claims);
     }
