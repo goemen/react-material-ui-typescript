@@ -23,6 +23,15 @@ export const UsersReducer = (state: DataState<User> = new DataState(), action: I
       state = state.set(DataState.DONE_LOADING, true) as DataState<User>;
       return state.set(DataState.LOADING, false) as DataState<User>;
     }
+    case ActionType.SELECT_USER:
+      state = state.set(DataState.SELECTION_INDEX, action.payload.index) as DataState<User>;
+      return state.set(DataState.SELECTION, action.payload.user) as DataState<User>;
+    case ActionType.SET_USER_TABLE_PAGE:
+      return state.set(DataState.PAGE_INDEX, action.payload) as DataState<User>;
+    case ActionType.EDIT_USER:
+      return state.setIn([DataState.SELECTION, action.payload.path], action.payload.value) as DataState<User>;
+    case ActionType.SET_USER_CLAIMS_SUCCESS:
+      return state.setIn([DataState.ITEMS, action.payload.userId], state.get(DataState.SELECTION) as User) as DataState<User>;
     default:
       return state;
   }

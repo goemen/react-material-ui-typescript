@@ -9,18 +9,16 @@ import { RowDetailComponent } from './UserDetailsRow';
 interface IUserManagementPageProps {
     fetchUsers: () => void;
     users?: DataState<User>;
+    selectUser: (user: User, index: number) => void;
+    deselectUser: () => void;
+    setUserTablePage: (page: number) => void;
+    setUserCustomClaims: (userId: string, claims: any) => void;
+    editUser: (path: any, value: any) => void;
     location?: any;
     classes?: any;
 }
 
-interface IState {
-    selection?: number[];
-    expandedRows?: number[];
-}
-
-class UserManagementPage extends React.Component<IUserManagementPageProps, IState> {
-
-    public state: IState = { selection: [] as number[], expandedRows: [] };
+class UserManagementPage extends React.Component<IUserManagementPageProps, {}> {
 
     public componentDidMount() {
         if (!this.props.users.loading && !this.props.users.doneLoading) {
@@ -29,12 +27,30 @@ class UserManagementPage extends React.Component<IUserManagementPageProps, IStat
     }
 
     private changeSelection = (selection: number[]) => {
-        this.setState({expandedRows: [selection[selection.length - 1]]});
-        this.setState({ selection: [selection[selection.length -1]] });
+        const rows = this.props.users.items.toArray();
+        const index = selection[selection.length - 1];
+        const user = rows[index];
+
+        this.props.selectUser(user, index);
+    }
+
+    private changePage = (page: number) => {
+        this.props.setUserTablePage(page);
+    }
+
+    private UserDetailsComponent = () => {
+        return (
+            <RowDetailComponent
+                editUser={this.props.editUser}
+                selectedUser={this.props.users.selection}
+                setUserCustomClaims={this.props.setUserCustomClaims}
+            />
+        );
     }
 
     public render(): JSX.Element {
         const rows = this.props.users.items.toArray();
+        const selection = this.props.users.selectionIndex > -1 ? [this.props.users.selectionIndex] : [];
 
         return (
             <div className={this.props.classes.main}>
@@ -47,22 +63,23 @@ class UserManagementPage extends React.Component<IUserManagementPageProps, IStat
                             { name: 'displayName', title: 'Name' },
                         ]}>
                         <SelectionState
-                            selection={this.state.selection}
+                            selection={selection}
                             onSelectionChange={this.changeSelection}
                         />
                         <PagingState
-                            defaultCurrentPage={0}
+                            currentPage={this.props.users.pageIndex}
+                            onCurrentPageChange={this.changePage}
                             pageSize={1}
                         />
                         <RowDetailState
-                            expandedRowIds={this.state.expandedRows}
+                            expandedRowIds={selection}
                         />
                         <IntegratedPaging />
 
                         <Table />
                         <TableHeaderRow />
                         <TableRowDetail
-                            contentComponent={RowDetailComponent}
+                            contentComponent={this.UserDetailsComponent}
                         />
                         <TableSelection
                             selectByRowClick={true}

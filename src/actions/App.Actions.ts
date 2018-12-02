@@ -24,6 +24,9 @@ export interface IApplicationProps {
     createUser: (content: any) => any;
     getUser: (id: any) => any;
     fetchUsers: () => any;
+    selectUser: (user?: User, index?: number) => any;
+    deselectUser: () => any;
+    setUserTablePage: (page: number) => any;
     setUserCustomClaims: (userId: string, claims: any) => any;
     updateUser: (context: any) => any;
     deleteUser: (context: any) => any;
@@ -47,6 +50,7 @@ export interface IApplicationProps {
     materialCharts: Array<{ name: string, value: number, fill: string }>;
     toggleAnchor: (payload: any) => void;
     toggleNotification: (payload: any) => void;
+    editUserSelection: (path: any, value: any) => void;
 }
 
 export const openDrawer = (): IAppAction => {
@@ -181,12 +185,28 @@ export const setUserCustomClaims = (userId: string, claims: any) => {
     };
 };
 
+export const selectUser = (user?: User, index?: number): IAppAction => {
+    return { type: ActionType.SELECT_USER, payload: { user, index} };
+};
+
+export const deselectUser = (): IAppAction => {
+    return selectUser();
+};
+
+export const setUserTablePage = (page: number): IAppAction => {
+    return { type: ActionType.SET_USER_TABLE_PAGE, payload: page};
+}
+
 export const toggleAnchor = (payload: any) => {
     return { type: ActionType.SET_ANCHOR_ELEMENT, payload };
 }
 
 export const toggleNotification = (payload: any) => {
     return { type: ActionType.SET_ANCHOR_ELEMENT, payload };
+}
+
+export const editUserSelection = (path: string, value: any) => {
+    return { type: ActionType.EDIT_USER, payload:  {path: value}};
 }
 
 

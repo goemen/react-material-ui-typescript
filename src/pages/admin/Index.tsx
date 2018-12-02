@@ -8,6 +8,11 @@ import { User } from '../../state/User';
 interface IAdminProps {
     location?: any;
     fetchUsers: () => void;
+    selectUser: (user?: User, index?: number) => void;
+    deselectUser: () => void;
+    setUserTablePage: (page: number) => void;
+    setUserCustomClaims: (userId: string, claims: any) => void;
+    editUser: (path: any, value: any) => void;
     users: DataState<User>;
     materialCharts: any;
 }
@@ -19,6 +24,11 @@ export default class AdminPage extends React.Component<IAdminProps, {}> {
                 fetchUsers={this.props.fetchUsers}
                 users={this.props.users}
                 location={this.props.location}
+                selectUser={this.props.selectUser}
+                deselectUser={this.props.deselectUser}
+                setUserTablePage={this.props.setUserTablePage}
+                setUserCustomClaims={this.props.setUserCustomClaims}
+                editUser={this.props.editUser}
             />
         );
     }

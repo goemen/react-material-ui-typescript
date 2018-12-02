@@ -3,14 +3,33 @@ import * as React from 'react';
 import { User } from '../../state/User';
 
 interface IProps {
+    selectedUser: User;
+    setUserCustomClaims: (userId: string, claims: any) => void;
+    editUser: (path: any, value: any) => void;
     row: User;
     classes: any;
 }
 
 class RowDetail extends React.Component<IProps, {}> {
 
+    private editClaims = (event: any) => {
+        const claims = this.props.selectedUser.claims;
+        const editedClaim = event.target.value;
+        claims[editedClaim] = !claims[editedClaim];
+        this.props.editUser(User.CUSTOM_CLAIMS, claims);
+    }
+
+    saveChanges = () => {
+        const { selectedUser } = this.props;
+        this.props.setUserCustomClaims(selectedUser.uid, selectedUser.claims);
+    }
+
     public render(): JSX.Element {
-        const { row, classes } = this.props;
+        const { selectedUser, classes } = this.props;
+        if (!selectedUser) {
+            return null;
+        }
+
         return (
             <div className={classes.container}>
                 <Typography className={classes.title}>Edit claims</Typography>
@@ -19,7 +38,8 @@ class RowDetail extends React.Component<IProps, {}> {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={row.claims.admin}
+                                    onChange={this.editClaims}
+                                    checked={selectedUser.claims.admin}
                                     value='admin'
                                 />
                             }
@@ -27,7 +47,7 @@ class RowDetail extends React.Component<IProps, {}> {
                         />
                     </FormGroup>
                 </div>
-                <Button size='small' color='primary'>Save</Button>
+                <Button size='small' color='primary' onClick={this.saveChanges}>Save</Button>
             </div>
         );
     }

@@ -283,6 +283,11 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
           users={this.props.users}
           location={this.props.location}
           materialCharts={this.props.materialCharts}
+          selectUser={this.props.selectUser}
+          deselectUser={this.props.deselectUser}
+          setUserTablePage={this.props.setUserTablePage}
+          setUserCustomClaims={this.props.setUserCustomClaims}
+          editUser={this.props.editUserSelection}
         />
       );
     });
