@@ -1,12 +1,13 @@
 import axios, { AxiosInstance } from 'axios';
 import { IRegisterModel } from 'src/models';
 import * as firebase from 'firebase';
+import { CONFIG } from '../firebase-config';
 
 class CloudFunctionsApi {
   private handler: AxiosInstance;
   constructor() {
     this.handler = axios.create({
-      baseURL: 'https://us-central1-tomahawk-da413.cloudfunctions.net',
+      baseURL: CONFIG.API_URL,
     });
 
     this.handler.interceptors.request.use(async config =>  {

@@ -1,16 +1,12 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+import { CONFIG } from '../.config';
+import * as _ from 'lodash';
 admin.initializeApp(functions.config().firebase);
 
-exports.createProfile = functions.auth.user().onCreate(event => {
-    const data = {
-        displayName: event.displayName,
-        email: event.email,
-        photoUrl: event.photoURL,
-        uid: event.uid
-    };
+exports.addAdminClaimToUser = functions.auth.user().onCreate(event => {
     
-    if (user.email === 'gnthomiwa@gmail.com') {
+    if (_.includes(CONFIG.adminUsersEmails, event.email)) {
         return admin.auth().setCustomUserClaims(event.uid, {
             admin: true
         });
