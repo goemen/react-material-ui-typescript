@@ -11,7 +11,6 @@
     "build": "babel . --out-dir ../functions --copy-files --ignore node_modules --include .*.json",
     "prebuild": "node node_modules/rimraf/bin ../functions",
     "postbuild": "cd ../functions && npm install"
-    
   },
   "dependencies": {
     "@babel/cli": "^7.1.5",

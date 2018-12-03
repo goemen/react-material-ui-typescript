@@ -206,7 +206,7 @@ export const toggleNotification = (payload: any) => {
 }
 
 export const editUserSelection = (path: string, value: any) => {
-    return { type: ActionType.EDIT_USER, payload:  {path: value}};
+    return { type: ActionType.EDIT_USER, payload:  {path, value}};
 }
 
 

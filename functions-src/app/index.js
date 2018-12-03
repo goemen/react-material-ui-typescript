@@ -39,7 +39,7 @@ app.post('/users/:uid/custom-claims', administratorsOnly, async (req, res) => {
   try {
     const user = await admin.auth().getUser(req.params.uid);
     if (user) {
-      await admin.auth().setCustomUserClaims(user.uid, req.params);
+      await admin.auth().setCustomUserClaims(user.uid, req.body);
       res.json({message: 'Users claims have been updated.'})
     } else {
       res.status(404).json({error: true, message: 'User not found'});

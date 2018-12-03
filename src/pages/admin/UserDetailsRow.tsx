@@ -1,6 +1,7 @@
 import { Button, Checkbox, FormControlLabel, FormGroup, Theme, Typography, withStyles } from '@material-ui/core';
 import * as React from 'react';
 import { User } from '../../state/User';
+import { UserClaims } from '../../state/Claims';
 
 interface IProps {
     selectedUser: User;
@@ -13,15 +14,15 @@ interface IProps {
 class RowDetail extends React.Component<IProps, {}> {
 
     private editClaims = (event: any) => {
-        const claims = this.props.selectedUser.claims;
+        let claims = this.props.selectedUser.get(User.CUSTOM_CLAIMS);
         const editedClaim = event.target.value;
-        claims[editedClaim] = !claims[editedClaim];
-        this.props.editUser(User.CUSTOM_CLAIMS, claims);
+        claims = claims.set(editedClaim, !claims[editedClaim]);
+        this.props.editUser(User.CUSTOM_CLAIMS, new UserClaims(claims));
     }
 
     private saveChanges = () => {
         const { selectedUser } = this.props;
-        this.props.setUserCustomClaims(selectedUser.uid, selectedUser.claims);
+        this.props.setUserCustomClaims(selectedUser.uid, selectedUser.claims.toJS());
     }
 
     public render(): JSX.Element {

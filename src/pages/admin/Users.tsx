@@ -5,6 +5,7 @@ import { User } from '../../state/User';
 import { Grid, Table, TableHeaderRow, TableSelection, PagingPanel, TableRowDetail } from '@devexpress/dx-react-grid-material-ui';
 import { SelectionState, PagingState, IntegratedPaging, RowDetailState } from '@devexpress/dx-react-grid';
 import { RowDetailComponent } from './UserDetailsRow';
+import * as _ from 'lodash';
 
 interface IUserManagementPageProps {
     fetchUsers: () => void;
@@ -18,6 +19,13 @@ interface IUserManagementPageProps {
     classes?: any;
 }
 
+const TableRow = ({row, ...restProps}: any) => {
+    return (<Table.Row
+        {...restProps}
+        onClick={() => {console.log(row)}}
+    />);
+}
+
 class UserManagementPage extends React.Component<IUserManagementPageProps, {}> {
 
     public componentDidMount() {
@@ -27,20 +35,23 @@ class UserManagementPage extends React.Component<IUserManagementPageProps, {}> {
     }
 
     private changeSelection = (selection: number[]) => {
-        const rows = this.props.users.items.toArray();
-        const index = selection[selection.length - 1];
-        const user = rows[index];
-
-        this.props.selectUser(user, index);
+        if (selection.length) {
+            const rows = this.props.users.items.toArray();
+            const index = selection[selection.length - 1];
+            const user = this.props.users.items.get(rows[index].uid);
+    
+            this.props.selectUser(_.clone(user), index);
+        }
     }
 
     private changePage = (page: number) => {
         this.props.setUserTablePage(page);
     }
 
-    private UserDetailsComponent = () => {
+    private UserDetailsComponent = (props: any) => {
         return (
             <RowDetailComponent
+                row={props.row}
                 editUser={this.props.editUser}
                 selectedUser={this.props.users.selection}
                 setUserCustomClaims={this.props.setUserCustomClaims}
@@ -76,7 +87,7 @@ class UserManagementPage extends React.Component<IUserManagementPageProps, {}> {
                         />
                         <IntegratedPaging />
 
-                        <Table />
+                        <Table rowComponent={TableRow}/>
                         <TableHeaderRow />
                         <TableRowDetail
                             contentComponent={this.UserDetailsComponent}

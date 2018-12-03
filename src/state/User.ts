@@ -1,5 +1,6 @@
 import { Model } from './Helpers';
 import * as _ from 'lodash';
+import { UserClaims } from './Claims';
 
 export const ADMIN_ROLE = 'Admin';
 
@@ -9,7 +10,7 @@ export interface IUser {
     photoUrl: string;
     uid: string;
     roles?: string[];
-    claims?: any;
+    claims?: UserClaims;
 }
 
 const UserModel = Model<IUser>({
@@ -34,7 +35,7 @@ export class User extends UserModel {
     public displayName: string;
     public roles: string[];
     public photoUrl: string;
-    public claims: any;
+    public claims: UserClaims;
 
     public isInRole(candidate: string) {
         return _.intersection(this.roles, [candidate]).length > 0;

@@ -11,6 +11,7 @@ import * as firebase from 'firebase';
 import { ActionType } from './actions/Helpers';
 import { IUser, ADMIN_ROLE } from './state/User';
 import Loading from './components/Loading';
+import { UserClaims } from './state/Claims';
 
 const theme = createMuiTheme({
   palette: {
@@ -38,7 +39,7 @@ class App extends React.Component<{}, { loading: boolean }> {
 
         if (identity && identity.claims) {
           const claims = identity.claims;
-          userInfo.claims = claims;
+          userInfo.claims = new UserClaims(claims);
           if (claims.admin) {
             userInfo.roles.push(ADMIN_ROLE);
           }
