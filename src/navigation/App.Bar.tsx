@@ -14,7 +14,7 @@ import Hidden from '@material-ui/core/Hidden';
 import { styles } from './styles';
 import { IApplicationProps } from '../actions/App.Actions';
 import * as AppActionCreators from '../actions/App.Actions';
-import { AppState, isAuthenticated } from '../state/AppState';
+import { AppState, isAdmin } from '../state/AppState';
 import { Dispatch, connect } from 'react-redux';
 import * as _ from 'lodash';
 import { bindActionCreators } from 'redux';
@@ -46,7 +46,7 @@ interface IAppProps extends IApplicationProps {
   theme?: any;
 }
 
-class MiniDrawer extends React.Component<IAppProps, {}> {
+class Application extends React.Component<IAppProps, {}> {
 
   public componentDidMount() {
     if (!this.props.users.loading && !this.props.users.doneLoading) {
@@ -276,7 +276,7 @@ class MiniDrawer extends React.Component<IAppProps, {}> {
 
   public render() {
     const { classes } = this.props;
-    const Dashboard = isAuthenticated((): any => {
+    const Dashboard = isAdmin((): any => {
       return (
         <AdminPage 
           fetchUsers={this.props.fetchUsers}
@@ -332,5 +332,5 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchtoProps = (dispatch: Dispatch) =>
   bindActionCreators(_.assign({}, AppActionCreators, MailActionCreators, MaterialActionCreators), dispatch);
-export default withStyles(styles as any, { withTheme: true })(withRouter(connect(mapStateToProps, mapDispatchtoProps)(MiniDrawer as any) as any) as any) as any;
+export default withStyles(styles as any, { withTheme: true })(withRouter(connect(mapStateToProps, mapDispatchtoProps)(Application as any) as any) as any) as any;
 
