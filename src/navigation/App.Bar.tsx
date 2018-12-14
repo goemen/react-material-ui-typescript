@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { ListItemText, Menu, MenuItem, Badge, Avatar } from '@material-ui/core';
+import { ListItemText, Menu, MenuItem, Badge, Avatar, LinearProgress } from '@material-ui/core';
 import { Route, withRouter, Switch } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { styles } from './styles';
@@ -39,6 +39,8 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import GroupIcon from '@material-ui/icons/Group';
 import HomeIcon from '@material-ui/icons/Home';
 import HomePage from '../pages/home/Index';
+import { EventsPageRouter } from 'src/pages/events/Index';
+import * as EventsActions from "../actions/Event.Actions";
 //#endregion
 
 interface IAppProps extends IApplicationProps {
@@ -183,10 +185,10 @@ class Application extends React.Component<IAppProps, {}> {
             >
               <MenuIcon />
             </IconButton>
-            <Typography className={classes.fillSpace} variant='title' color='inherit' noWrap={true}>
-              Tomahawk
+            <Typography className={classNames(classes.fillSpace)} variant='title' color='inherit' noWrap={true}>
+              <p className={classNames(utility.drawerOpen && classes.hideTitle)}>Tomahawk</p>
             </Typography>
-            <div>
+            <div className={classes.barActions}>
               <IconButton
                 aria-owns={notificationsOpen ? 'notifications' : null}
                 aria-haspopup='true'
@@ -225,6 +227,7 @@ class Application extends React.Component<IAppProps, {}> {
               </Menu>
             </div>
           </Toolbar>
+          { this.props.utility.appLoading ?  (<LinearProgress/>) : null }
         </AppBar>
       );
     }
@@ -300,6 +303,14 @@ class Application extends React.Component<IAppProps, {}> {
       );
     };
 
+    const EventsPage = (): any => {
+      return (
+        <EventsPageRouter
+          events={this.props.events}
+        />
+      );
+    };
+
     return (
       <div className={classes.root}>
         {this.renderDrawer()}
@@ -312,6 +323,7 @@ class Application extends React.Component<IAppProps, {}> {
             <Route path='/admin' component={Dashboard} />
             <Route path='/mail' component={MailBoard} />
             <Route path='/account' render={this.renderAccount} />
+            <Route path='/events' component={EventsPage} />
           </Switch>
           {this.renderAlert()}
           {this.renderSpinner()}
@@ -327,10 +339,11 @@ const mapStateToProps = (state: AppState) => ({
   users: getUsers(state),
   materials: state.materials,
   materialCharts: getMaterialChartItems(state),
-  mail: getMailitems(state)
+  mail: getMailitems(state),
+  events: state.events
 });
 
 const mapDispatchtoProps = (dispatch: Dispatch) =>
-  bindActionCreators(_.assign({}, AppActionCreators, MailActionCreators, MaterialActionCreators), dispatch);
+  bindActionCreators(_.assign({}, AppActionCreators, MailActionCreators, MaterialActionCreators, EventsActions), dispatch);
 export default withStyles(styles as any, { withTheme: true })(withRouter(connect(mapStateToProps, mapDispatchtoProps)(Application as any) as any) as any) as any;
 

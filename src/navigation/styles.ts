@@ -30,7 +30,7 @@ export const styles = (theme: Theme) => ({
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
-      }),
+      })
     },
     menuButton: {
       marginLeft: 12,
@@ -64,8 +64,13 @@ export const styles = (theme: Theme) => ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'flex-end',
+      overflow: 'hidden',
       padding: '0 8px',
       ...theme.mixins.toolbar,
+    },
+    barActions: {
+      display: 'flex',
+      flexDirection: 'row'
     },
     content: {
       flexGrow: 1,
@@ -90,6 +95,11 @@ export const styles = (theme: Theme) => ({
     },
     fillSpace: {
       flex: '1 1 auto'
+    },
+    hideTitle: {
+      [theme.breakpoints.down('sm')]: {
+        display: 'none'
+      }
     }
   });
   

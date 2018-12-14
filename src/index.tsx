@@ -7,6 +7,7 @@ import * as firebase from 'firebase';
 import { CONFIG } from './firebase-config';
 
 firebase.initializeApp(CONFIG.firebaseConfig);
+
 ReactDOM.render(
   <App />,
   document.getElementById('root') as HTMLElement);

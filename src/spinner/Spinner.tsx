@@ -43,4 +43,4 @@ class SpinnerDialog extends React.Component<ISpinnerProps & WithStyles<"progress
 
 
 
-export default withStyles(styles)(SpinnerDialog);
+export default withStyles(styles)(SpinnerDialog) as any;

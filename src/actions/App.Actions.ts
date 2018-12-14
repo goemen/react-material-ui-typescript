@@ -9,6 +9,7 @@ import { Dispatch } from 'react-redux';
 import { IRegisterModel, ILoginModel, IResetPasswordModel } from 'src/models';
 import { CFAPI } from '../helpers/cf_api';
 import { DataState } from '../state/DataState';
+import { Event } from 'src/state/Event';
 
 export interface IApplicationProps {
     openDrawer: () => IAppAction;
@@ -45,6 +46,7 @@ export interface IApplicationProps {
     utility: Utility;
     authentication: User;
     users: DataState<User>;
+    events: DataState<Event>;
     materials: any;
     mail: any[];
     materialCharts: Array<{ name: string, value: number, fill: string }>;

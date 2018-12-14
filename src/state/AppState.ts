@@ -4,11 +4,13 @@ import { Model } from './Helpers';
 import { User, ADMIN_ROLE } from './User';
 import { IApplicationProps } from '../actions/App.Actions';
 import { DataState } from './DataState';
+import { Event } from './Event';
 
 export interface IAppState {
     utility?: Utility;
     authentication?: User;
     users?: DataState<User>;
+    events?: DataState<Event>
     materials?: any;
     mail?: any;
 }
@@ -17,6 +19,7 @@ export const AppStateModel = Model<IAppState>({
     utility: new Utility(),
     authentication: null,
     users: new DataState<User>(),
+    events: new DataState<Event>(),
     materials: null,
     mail: null
 });
@@ -28,6 +31,7 @@ export class AppState extends AppStateModel {
     public utility: Utility;
     public authentication: User;
     public users: DataState<User>;
+    public events: DataState<Event>;
     public materials: any;
     public mail: any;
 }
