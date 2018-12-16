@@ -3,7 +3,6 @@ import './App.css';
 import AppNavBar from './navigation/App.Bar';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store } from './store/Store';
 import blue from '@material-ui/core/colors/blue';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import { pink } from '@material-ui/core/colors';
@@ -12,6 +11,8 @@ import { ActionType } from './actions/Helpers';
 import { IUser, ADMIN_ROLE } from './state/User';
 import Loading from './components/Loading';
 import { UserClaims } from './state/Claims';
+import { initializeStore } from './store/Store';
+import { firebaseApp } from './firebase-init';
 
 const theme = createMuiTheme({
   palette: {
@@ -20,11 +21,13 @@ const theme = createMuiTheme({
   }
 });
 
+const store = initializeStore(firebaseApp());
+
 class App extends React.Component<{}, { loading: boolean }> {
   public removeAuthListener: firebase.Unsubscribe;
   public state = { loading: true };
 
-  public componentDidMount() {
+  public componentWillMount() {
     this.removeAuthListener = firebase.auth().onAuthStateChanged(async user => {
 
       if (user && user.emailVerified) {

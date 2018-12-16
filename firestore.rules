@@ -1,0 +1,25 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{user} {
+      allow read, write: if false;
+    }
+
+    function isAdmin() {
+      return request.auth.uid != null && request.auth.token.admin == true 
+    }
+
+    function isLoggedIn() {
+      return request.auth.uid != null;
+    }
+
+    function isOwner(ownerKey) {
+      return isLoggedIn() && resource.data[ownerKey] == request.auth.uid;
+    }
+
+    match /events/{event} {
+      allow get: if true;
+      allow update, delete: if isAdmin() || isOwner();
+      allow create: if isLoggedIn();
+    }
+  }
+}

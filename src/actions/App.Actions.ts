@@ -53,6 +53,11 @@ export interface IApplicationProps {
     toggleAnchor: (payload: any) => void;
     toggleNotification: (payload: any) => void;
     editUserSelection: (path: any, value: any) => void;
+    saveEvent: (event: Event) => void;
+    startCreateEvent: () => void;
+    editEvent: (property: string, value: any) =>  void;
+    loadEvents: () =>  void;
+    firestore: any;
 }
 
 export const openDrawer = (): IAppAction => {

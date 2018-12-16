@@ -7,21 +7,29 @@ import { Switch, Route } from 'react-router';
 
 interface IProps {
     events: DataState<Event>;
+    createInit: () => void;
+    editEvent: (prop: string, value: any) => void;
+    match: any,
+    saveEvent: (event: Event) => void;
 }
 
 export class EventsPageRouter extends React.Component<IProps, {}> {
 
-    private renderEditor = () => {
-        return (<EditPage
+    private renderEditor = (props: any) => {
+        return (<EditPage {...props}
+            createInit={this.props.createInit}
+            edit={this.props.editEvent}
+            formTitle={"Post new event"}
             event={this.props.events.selection}
+            save={this.props.saveEvent}
         />)
     }
 
     public render(): JSX.Element {
         return (
             <Switch>
-                <Route path="/events" exact={true} component={ListPage}/>
-                <Route path="/events/edit/:id" component={this.renderEditor}/>
+                <Route path="/events" exact={true} render={ListPage}/>
+                <Route path="/events/edit/:id" render={this.renderEditor}/>
             </Switch>
         );
     }

@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-import { CONFIG } from '../.config';
+import { CONFIG } from './config';
 import * as _ from 'lodash';
 admin.initializeApp(functions.config().firebase);
 
@@ -12,6 +12,16 @@ exports.addAdminClaimToUser = functions.auth.user().onCreate(event => {
         });
     } else {
         return;
+    }
+});
+
+exports.auditEvents = functions.firestore.document('{document}/{id}').onCreate(async event => {
+    try {
+        const user = await admin.auth().getUser(event.auth.uid);
+        await event.data.ref.update({createdAt: new Date(), createdBy: user.uid});
+        
+    } catch (error) {
+        await event.data.ref.update({createdAt: new Date(), createdBy: event.auth.uid});
     }
 });
 

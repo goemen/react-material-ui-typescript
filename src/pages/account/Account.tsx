@@ -21,45 +21,41 @@ interface IAccountProps {
 }
 
 export class AccountPage extends React.Component<IAccountProps, {}> {
-    private renderLogin = () => {
+    private renderLogin = (props: any) => {
         return (
             <LoginPage
                 user={this.props.user}
                 login={this.props.login}
-                match={this.props.match}
-                history={this.props.history}
-                location={this.props.location}
+                {...props}
             />
         );
     }
 
-    private renderRegister = () => {
+    private renderRegister = (props: any) => {
         return (
             <RegisterPage
                 register={this.props.register}
-                match={this.props.match}
-                location={this.props.location} />
+                {...props} />
         );
     }
 
-    private renderRequestPasswordReset = () => {
+    private renderRequestPasswordReset = (props: any) => {
         return (
             <RequestPasswordReset
                 requestPasswordReset={this.props.requestPasswordReset}
-                match={this.props.match}
-                location={this.props.location} />
+                {...props} />
         );
     }
 
-    private renderProfilePage = () => {
+    private renderProfilePage = (props: any) => {
         return (
-            <ProfilePage {...this.props}/>
+            <ProfilePage {...props} {...this.props}/>
         );
     }
 
     public render(): JSX.Element {
         return (<Switch>
-            <Route path="/account" exact={true} component={this.renderProfilePage} />
+            <Route path="/account" exact={true} render={this.renderProfilePage} />
             <Route path={'/account/login'} render={this.renderLogin} />
             <Route path={'/account/register'} render={this.renderRegister} />
             <Route path={'/account/request-password-reset'} render={this.renderRequestPasswordReset} />

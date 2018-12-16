@@ -4,6 +4,7 @@ import DashboardPage from './Dashboard';
 import UserManagementPage from './Users';
 import { DataState } from '../../state/DataState';
 import { User } from '../../state/User';
+import { isAdmin } from 'src/state/AppState';
 
 interface IAdminProps {
     location?: any;
@@ -17,13 +18,13 @@ interface IAdminProps {
     materialCharts: any;
 }
 
-export default class AdminPage extends React.Component<IAdminProps, {}> {
-    private renderUserManagementPage = () => {
+export default isAdmin(class AdminPage extends React.Component<IAdminProps, {}> {
+    private renderUserManagementPage = (props: any) => {
         return (
             <UserManagementPage
+            {...props}
                 fetchUsers={this.props.fetchUsers}
                 users={this.props.users}
-                location={this.props.location}
                 selectUser={this.props.selectUser}
                 deselectUser={this.props.deselectUser}
                 setUserTablePage={this.props.setUserTablePage}
@@ -33,9 +34,10 @@ export default class AdminPage extends React.Component<IAdminProps, {}> {
         );
     }
 
-    private renderDashboardPage = () => {
+    private renderDashboardPage = (props: any) => {
         return (
             <DashboardPage
+            {...props}
                 fetchUsers={this.props.fetchUsers}
                 users={this.props.users.items.toList()}
                 materialChartData={this.props.materialCharts}
@@ -45,10 +47,11 @@ export default class AdminPage extends React.Component<IAdminProps, {}> {
 
     public render(): JSX.Element {
         return (
-        <Switch location={this.props.location}>
-            <Route path='/admin' exact={true} component={this.renderDashboardPage} />
-            <Route path='/admin/dashboard' component={this.renderDashboardPage} />
-            <Route path={'/admin/user-management'} component={this.renderUserManagementPage} />
+        <Switch>
+            <Route path='/admin' exact={true} render={this.renderDashboardPage} />
+            <Route path='/admin/dashboard' render={this.renderDashboardPage} />
+            <Route path={'/admin/user-management'} render={this.renderUserManagementPage} />
         </Switch>);
     }
-}
+});
+

@@ -14,7 +14,7 @@ import Hidden from '@material-ui/core/Hidden';
 import { styles } from './styles';
 import { IApplicationProps } from '../actions/App.Actions';
 import * as AppActionCreators from '../actions/App.Actions';
-import { AppState, isAdmin } from '../state/AppState';
+import { AppState } from '../state/AppState';
 import { Dispatch, connect } from 'react-redux';
 import * as _ from 'lodash';
 import { bindActionCreators } from 'redux';
@@ -51,6 +51,7 @@ interface IAppProps extends IApplicationProps {
 class Application extends React.Component<IAppProps, {}> {
 
   public componentDidMount() {
+    this.props.loadEvents();
     if (!this.props.users.loading && !this.props.users.doneLoading) {
       this.props.fetchUsers();
     }
@@ -141,7 +142,7 @@ class Application extends React.Component<IAppProps, {}> {
     return (
       <Menu
         id='notifications'
-        anchorEl={this.props.utility.anchorEl}
+        anchorEl={this.props.utility.notificationEl}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'right',
@@ -235,16 +236,14 @@ class Application extends React.Component<IAppProps, {}> {
     return null;
   }
 
-  private renderAccount = () => {
+  private renderAccount = (props: any) => {
     return (
       <AccountPage
+      {...props}
         register={this.props.register}
         requestPasswordReset={this.props.requestPasswordReset}
         user={this.props.authentication}
         login={this.props.login}
-        match={this.props.match}
-        location={this.props.location}
-        history={this.props.history}
       />
     );
   }
@@ -279,21 +278,21 @@ class Application extends React.Component<IAppProps, {}> {
 
   public render() {
     const { classes } = this.props;
-    const Dashboard = isAdmin((): any => {
+    const Dashboard = (props: any): any => {
       return (
         <AdminPage 
           fetchUsers={this.props.fetchUsers}
           users={this.props.users}
-          location={this.props.location}
           materialCharts={this.props.materialCharts}
           selectUser={this.props.selectUser}
           deselectUser={this.props.deselectUser}
           setUserTablePage={this.props.setUserTablePage}
           setUserCustomClaims={this.props.setUserCustomClaims}
           editUser={this.props.editUserSelection}
+          {...props}
         />
       );
-    });
+    };
 
     const MailBoard = (): any => {
       return (
@@ -303,10 +302,14 @@ class Application extends React.Component<IAppProps, {}> {
       );
     };
 
-    const EventsPage = (): any => {
+    const EventsPage = (props: any): any => {
       return (
         <EventsPageRouter
+        {...props}
           events={this.props.events}
+          createInit={this.props.startCreateEvent}
+          editEvent={this.props.editEvent}
+          saveEvent={this.props.saveEvent}
         />
       );
     };
@@ -320,10 +323,10 @@ class Application extends React.Component<IAppProps, {}> {
           <div className={classes.toolbar} />
           <Switch>
             <Route path='/' exact={true} component={HomePage} />
-            <Route path='/admin' component={Dashboard} />
-            <Route path='/mail' component={MailBoard} />
+            <Route path='/admin' render={Dashboard} />
+            <Route path='/mail' render={MailBoard} />
             <Route path='/account' render={this.renderAccount} />
-            <Route path='/events' component={EventsPage} />
+            <Route path='/events' render={EventsPage} />
           </Switch>
           {this.renderAlert()}
           {this.renderSpinner()}
@@ -340,10 +343,14 @@ const mapStateToProps = (state: AppState) => ({
   materials: state.materials,
   materialCharts: getMaterialChartItems(state),
   mail: getMailitems(state),
-  events: state.events
+  events: state.events,
+  firestore: state.firestore
 });
 
 const mapDispatchtoProps = (dispatch: Dispatch) =>
   bindActionCreators(_.assign({}, AppActionCreators, MailActionCreators, MaterialActionCreators, EventsActions), dispatch);
+
+
+  
 export default withStyles(styles as any, { withTheme: true })(withRouter(connect(mapStateToProps, mapDispatchtoProps)(Application as any) as any) as any) as any;
 

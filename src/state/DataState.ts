@@ -7,6 +7,7 @@ interface IDataState {
     doneLoading?: boolean;
     selection?: any;
     pageIndex: number;
+    editSelection: any;
     selectionIndex?: number;
     saveInProgress?: boolean;
 }
@@ -18,7 +19,8 @@ const DataStateModel = Model<IDataState>({
     selectionIndex: null,
     selection: null,
     pageIndex: 0,
-    saveInProgress: false
+    saveInProgress: false,
+    editSelection: null
 });
 
 export class DataState<M> extends DataStateModel {
@@ -28,7 +30,7 @@ export class DataState<M> extends DataStateModel {
     public static SELECTION = 'selection';
     public static SELECTION_INDEX = 'selectionIndex';
     public static PAGE_INDEX = 'pageIndex';
-    public static SAVE_IN_PROGRESS = 'saveInProgress'
+    public static SAVE_IN_PROGRESS = 'saveInProgress';
 
     public items: Map<string, M>;
     public loading: boolean;

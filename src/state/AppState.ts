@@ -5,6 +5,7 @@ import { User, ADMIN_ROLE } from './User';
 import { IApplicationProps } from '../actions/App.Actions';
 import { DataState } from './DataState';
 import { Event } from './Event';
+import { Firestore } from '@google-cloud/firestore';
 
 export interface IAppState {
     utility?: Utility;
@@ -34,6 +35,7 @@ export class AppState extends AppStateModel {
     public events: DataState<Event>;
     public materials: any;
     public mail: any;
+    public firestore: Firestore;
 }
 
 export const isAuthenticated = connectedRouterRedirect<IApplicationProps, IAppState>({
