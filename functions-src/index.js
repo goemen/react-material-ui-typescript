@@ -15,15 +15,42 @@ exports.addAdminClaimToUser = functions.auth.user().onCreate(event => {
     }
 });
 
-exports.auditEvents = functions.firestore.document('{document}/{id}').onCreate(async event => {
+exports.addEventToUser = functions.firestore.document('events/{id}').onCreate(async (event, context)=> {
     try {
-        const user = await admin.auth().getUser(event.auth.uid);
-        await event.data.ref.update({createdAt: new Date(), createdBy: user.uid});
+        const data = event.data();
+        if (!data.createdBy) {
+            return;
+        }
+        const userDoc = await admin.firestore().doc('users/' + data.createdBy).get();
+
+        if (!userDoc.exists) {
+            return;
+        }
+
+        const user = userDoc.data();
+
+        const createdEvents = user.createdEvents || {};
+        createdEvents[event.id] = true;
+        return await admin.firestore().doc('users/' + userDoc.id).update({createdEvents});
         
     } catch (error) {
-        await event.data.ref.update({createdAt: new Date(), createdBy: event.auth.uid});
+        return;
     }
 });
+
+// exports.onUpdateEvent = functions.firestore.document('events/{id}').onUpdate(async (event, context)=> {
+//     try {
+//         const original = event.val();
+//         const newData = event.data();
+        
+//         if (original.photo !== newData.photo && original.photo !== 'http://placehold.jp/dde1e6/a3a5a8/150x150.png?text=change%20me') {
+//             await admin.storage().bucket('default').
+//         }
+        
+//     } catch (error) {
+//         return;
+//     }
+// });
 
 exports.auth = functions.https.onRequest(require('./app'));
 

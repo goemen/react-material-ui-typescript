@@ -9,9 +9,9 @@ import { Dispatch } from 'react-redux';
 import { IRegisterModel, ILoginModel, IResetPasswordModel } from 'src/models';
 import { CFAPI } from '../helpers/cf_api';
 import { DataState } from '../state/DataState';
-import { Event } from 'src/state/Event';
+import { IEventProps } from './Event.Actions';
 
-export interface IApplicationProps {
+export interface IApplicationProps extends IEventProps {
     openDrawer: () => IAppAction;
     closeDrawer: () => IAppAction;
     showPopup: (alert: Alert) => IAppAction;
@@ -46,18 +46,14 @@ export interface IApplicationProps {
     utility: Utility;
     authentication: User;
     users: DataState<User>;
-    events: DataState<Event>;
     materials: any;
     mail: any[];
     materialCharts: Array<{ name: string, value: number, fill: string }>;
     toggleAnchor: (payload: any) => void;
     toggleNotification: (payload: any) => void;
     editUserSelection: (path: any, value: any) => void;
-    saveEvent: (event: Event) => void;
-    startCreateEvent: () => void;
-    editEvent: (property: string, value: any) =>  void;
-    loadEvents: () =>  void;
-    firestore: any;
+    toggleProgress: () => void;
+  
 }
 
 export const openDrawer = (): IAppAction => {
@@ -97,6 +93,10 @@ export const hideSpinner = (): IAppAction => {
         type: ActionType.CLOSE_SPINNER
     };
 };
+
+export const toggleProgress = () => {
+    return {type: ActionType.TOGGLE_APP_LOADING};
+}
 
 export const login = (data: ILoginModel) => {
 

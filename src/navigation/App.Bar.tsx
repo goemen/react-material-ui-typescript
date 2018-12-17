@@ -27,7 +27,7 @@ import AdminPage from '../pages/admin/Index';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { actions as MailActionCreators } from '../data/mail';
 import { actions as MaterialActionCreators } from '../data/material';
-import { getMaterialChartItems, getMailitems, getUsers } from '../selectors';
+import { getMaterialChartItems, getMailitems, getUsers, getEvents } from '../selectors';
 import AppDrawer, { IRoute } from './App.Drawer';
 import NotificationIcon from '@material-ui/icons/Notifications';
 import { ADMIN_ROLE } from '../state/User';
@@ -37,7 +37,7 @@ import SendIcon from '@material-ui/icons/Send';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import GroupIcon from '@material-ui/icons/Group';
-import HomeIcon from '@material-ui/icons/Home';
+import ExploreIcon from '@material-ui/icons/Explore';
 import HomePage from '../pages/home/Index';
 import { EventsPageRouter } from 'src/pages/events/Index';
 import * as EventsActions from "../actions/Event.Actions";
@@ -51,7 +51,6 @@ interface IAppProps extends IApplicationProps {
 class Application extends React.Component<IAppProps, {}> {
 
   public componentDidMount() {
-    this.props.loadEvents();
     if (!this.props.users.loading && !this.props.users.doneLoading) {
       this.props.fetchUsers();
     }
@@ -257,7 +256,7 @@ class Application extends React.Component<IAppProps, {}> {
     }
 
     routes = _.concat(routes, [
-      { path: '/', title: 'Inbox', icon: () => <HomeIcon /> },
+      { path: '/events', title: 'Explore', icon: () => <ExploreIcon /> },
       { path: '/mail/inbox', title: 'Inbox', icon: () => <InboxIcon /> },
       { path: '/mail/sent', title: 'Sent', icon: () => <SendIcon /> },
       { path: '/mail/drafts', title: 'Drafts', icon: () => <DraftsIcon /> },
@@ -306,10 +305,13 @@ class Application extends React.Component<IAppProps, {}> {
       return (
         <EventsPageRouter
         {...props}
+          load={this.props.loadEvents}
           events={this.props.events}
           createInit={this.props.startCreateEvent}
           editEvent={this.props.editEvent}
           saveEvent={this.props.saveEvent}
+          changeSelection={this.props.changeSelection}
+          toggleProgress={this.props.toggleProgress}
         />
       );
     };
@@ -319,7 +321,7 @@ class Application extends React.Component<IAppProps, {}> {
         {this.renderDrawer()}
         {this.renderAppBar()}
 
-        <main className={classes.content}>
+        <main className={classNames(classes.content, this.props.utility.drawerOpen && classes.fillContent)}>
           <div className={classes.toolbar} />
           <Switch>
             <Route path='/' exact={true} component={HomePage} />
@@ -343,7 +345,7 @@ const mapStateToProps = (state: AppState) => ({
   materials: state.materials,
   materialCharts: getMaterialChartItems(state),
   mail: getMailitems(state),
-  events: state.events,
+  events: getEvents(state),
   firestore: state.firestore
 });
 

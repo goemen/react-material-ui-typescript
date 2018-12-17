@@ -100,6 +100,11 @@ export const styles = (theme: Theme) => ({
       [theme.breakpoints.down('sm')]: {
         display: 'none'
       }
+    },
+    fillContent: {
+      [theme.breakpoints.down('sm')]: {
+        minWidth: '100%'
+      }
     }
   });
   

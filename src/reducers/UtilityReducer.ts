@@ -23,6 +23,8 @@ export const UtilityReducer = (state: Utility = new Utility(), action: IAppActio
             return state.set(Utility.NOTIFICATION_EL, !state.appLoading) as Utility;
         case ActionType.CURRENT_USER:
             return state.set(Utility.APP_LOADING, false) as Utility;
+        case ActionType.TOGGLE_APP_LOADING:
+            return state.set(Utility.APP_LOADING, !state.appLoading) as Utility;
         default:
             return state;
     }

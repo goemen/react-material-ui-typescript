@@ -16,10 +16,16 @@ service cloud.firestore {
       return isLoggedIn() && resource.data[ownerKey] == request.auth.uid;
     }
 
+    function isValidEvent() {
+      return request.resource.data.title && request.resource.data.title.length < 255
+      && request.resource.data.description && request.resource.data.description.length < 500 && 
+      request.resource.data.location && request.resource.data.location.length < 255;
+    }
+
     match /events/{event} {
-      allow get: if true;
-      allow update, delete: if isAdmin() || isOwner();
-      allow create: if isLoggedIn();
+      allow get, read: if true;
+      allow update, delete: if isOwner() || isAdmin();
+      allow create: if isLoggedIn() && isValidEvent();
     }
   }
 }

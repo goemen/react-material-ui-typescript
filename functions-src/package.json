@@ -8,7 +8,7 @@
     "start": "npm run shell",
     "deploy": "npm run build && firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "build": "babel . --out-dir ../functions --copy-files --ignore node_modules --include .*.json",
+    "build": "rm -rf ../functions && babel . --out-dir ../functions --copy-files --ignore node_modules --include .*.json",
     "prebuild": "node node_modules/rimraf/bin ../functions",
     "postbuild": "cd ../functions && npm install"
   },

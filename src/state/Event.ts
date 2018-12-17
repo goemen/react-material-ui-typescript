@@ -1,6 +1,7 @@
 import { Model } from "./Helpers";
 import { IDbEntity } from "./DbEntity";
 import { isNotSet } from "src/helpers/misc";
+import { User } from "./User";
 
 export interface IEvent extends IDbEntity {
     id: string;
@@ -11,6 +12,7 @@ export interface IEvent extends IDbEntity {
     location?: string;
     date?: Date;
     photo?: string;
+    createdBy?: User;
 }
 
 const EventModel = Model<IEvent>({
@@ -20,8 +22,9 @@ const EventModel = Model<IEvent>({
     closed: false,
     location: null,
     price: 0,
-    photo: null,
-    date: new Date()
+    photo: 'http://placehold.jp/dde1e6/a3a5a8/150x150.png?text=change%20me',
+    date: new Date(),
+    createdBy: null
 });
 
 export class Event extends EventModel implements IEvent {
@@ -42,11 +45,13 @@ export class Event extends EventModel implements IEvent {
     public photo: string;
     public location: string;
     public date: Date;
+    public createdBy: User;
 
 
     public toSaveable() {
         const data = this.toJS();
         delete data.id;
+        delete data.createdBy;
         return data;
     }
 

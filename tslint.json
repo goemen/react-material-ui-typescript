@@ -4,7 +4,8 @@
     "exclude": [
       "config/**/*.js",
       "node_modules/**/*.ts",
-      "functions/**/*.js"
+      "functions/**/*.js",
+      "functions-src/**/*.js"
     ]
   },
   "rules": {
