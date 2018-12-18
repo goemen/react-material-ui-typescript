@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
+import 'firebase/storage';
 import * as uuid from 'node-uuid';
 import * as moment from 'moment';
 

@@ -3,6 +3,9 @@ import { Dispatch } from "react-redux";
 import { IAppAction, ActionType } from "./Helpers";
 import { IEventSelect, IThunkArgs as IContext } from "src/helpers/misc";
 import { DataState } from "src/state/DataState";
+import * as _ from 'lodash';
+import { User } from "../state/User";
+import { Map } from "immutable";
 
 export interface IEventProps {
     events: DataState<Event>;
@@ -49,9 +52,20 @@ export const loadEvents = () => {
 
                 for (const event of events) {
                     event.createdBy = await context.db.doc(`users/${event.createdBy}`).get().then(x => x.data());
+
+                    const attendancyPromises = _.keys(event.attendancy || {}).map(uid => {
+                        return context.db.doc(`users/${uid}`).get().then(u => { 
+                            const data = u.data();
+                            
+                            return new User({uid: data.uid, displayName: data.displayName, photoUrl: data.photoUrl});
+                        });
+                    });
+
+                    const users = await Promise.all(attendancyPromises);
+                    event.attendancy = users.reduce((acc, user) => {
+                        return acc.set(user.uid, user);
+                    }, Map<string, User>())
                 }
-
-
 
                 dispatch({ type: ActionType.GET_EVENTS_SUCCESS, payload: {events: events.map(e => new Event(e))} });
             });

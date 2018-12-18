@@ -6,7 +6,7 @@ export const styles = (theme: Theme) => ({
     root: {
       flexGrow: 1,
       height: '100vh',
-      minHeight: '100%',
+      minHeight: '100vh',
       zIndex: 1,
       overflow: 'hidden',
       position: 'relative',
@@ -76,10 +76,11 @@ export const styles = (theme: Theme) => ({
       flexGrow: 1,
       backgroundColor: theme.palette.background.default,
       padding: theme.spacing.unit * 3,
-      minHeight: '100%',
-      height: '100%',
-      flex: '1 1 auto',
-      overflowY: 'scroll'
+      overflow: 'scroll',
+      [theme.breakpoints.down('md')]: {
+        padding: 0
+      },
+      marginBottom: 20
     },
     button: {
       margin: theme.spacing.unit,

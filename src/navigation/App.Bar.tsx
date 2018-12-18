@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { ListItemText, Menu, MenuItem, Badge, Avatar, LinearProgress } from '@material-ui/core';
+import { ListItemText, Menu, MenuItem, Badge, Avatar, LinearProgress, Button } from '@material-ui/core';
 import { Route, withRouter, Switch } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { styles } from './styles';
@@ -164,6 +164,10 @@ class Application extends React.Component<IAppProps, {}> {
     );
   }
 
+  private postNewEvent = () => {
+    this.props.history.push('/events/create');
+  }
+
   private renderAppBar() {
     if (this.props.authentication) {
       const { classes, utility } = this.props;
@@ -189,6 +193,9 @@ class Application extends React.Component<IAppProps, {}> {
               <p className={classNames(utility.drawerOpen && classes.hideTitle)}>Tomahawk</p>
             </Typography>
             <div className={classes.barActions}>
+              <Button color='inherit' onClick={this.postNewEvent}>
+                Post Event
+              </Button>
               <IconButton
                 aria-owns={notificationsOpen ? 'notifications' : null}
                 aria-haspopup='true'

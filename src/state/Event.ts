@@ -2,6 +2,7 @@ import { Model } from "./Helpers";
 import { IDbEntity } from "./DbEntity";
 import { isNotSet } from "src/helpers/misc";
 import { User } from "./User";
+import { Map } from 'immutable';
 
 export interface IEvent extends IDbEntity {
     id: string;
@@ -13,6 +14,7 @@ export interface IEvent extends IDbEntity {
     date?: Date;
     photo?: string;
     createdBy?: User;
+    attendancy?: Map<string, User>;
 }
 
 const EventModel = Model<IEvent>({
@@ -24,7 +26,8 @@ const EventModel = Model<IEvent>({
     price: 0,
     photo: 'http://placehold.jp/dde1e6/a3a5a8/150x150.png?text=change%20me',
     date: new Date(),
-    createdBy: null
+    createdBy: null,
+    attendancy: Map<string, User>()
 });
 
 export class Event extends EventModel implements IEvent {
@@ -46,19 +49,24 @@ export class Event extends EventModel implements IEvent {
     public location: string;
     public date: Date;
     public createdBy: User;
-
+    public attendancy: Map<string, User>;
 
     public toSaveable() {
         const data = this.toJS();
         delete data.id;
         delete data.createdBy;
+        delete data.attendancy;
         return data;
     }
 
-    get valid(): boolean {
+    public get valid(): boolean {
         return !isNotSet(this.title) &&
         !isNotSet(this.description) &&
         !isNotSet(this.location) &&
         !isNotSet(this.date);
+    }
+
+    public isUserGoing(id: string): boolean {
+        return this.attendancy.has(id);
     }
 }

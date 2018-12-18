@@ -5,7 +5,9 @@ import {
 } from '@material-ui/core';
 import { Event } from '../../state/Event';
 import * as moment from 'moment';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 import { IEventSelect, uploadPhoto, formatDate } from '../../helpers/misc';
 import UploadIcon from '@material-ui/icons/FileUpload';
 import * as _ from 'lodash';

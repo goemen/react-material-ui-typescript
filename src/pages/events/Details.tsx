@@ -90,8 +90,15 @@ class Details extends React.Component<IDetailsProps, {}> {
 }
 
 const styles = (theme: Theme) => ({
+    container: {
+        display: 'flex',
+        width: '100%'
+    },
     card: {
-        maxWidth: 400,
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+            width: '50%'
+        }
     },
     media: {
         height: 0,

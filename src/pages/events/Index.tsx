@@ -37,11 +37,7 @@ export class EventsPageRouter extends React.Component<IProps, {}> {
             toggleProgress={this.props.toggleProgress}
         />)
     }
-
-    public componentWillUpdate() {
-        console.log(this.props);
-    }
-
+    
     private renderDetails = (props: any) => {
         return (
             <Details
@@ -55,7 +51,8 @@ export class EventsPageRouter extends React.Component<IProps, {}> {
 
     private renderList = (props: any) => {
         return (<ListPage
-
+            {...props}
+            events={this.props.events.items.toList()}
         />);
     }
 

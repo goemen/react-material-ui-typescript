@@ -6,7 +6,6 @@ import { createBrowserHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-// import { CONFIG } from '../firebase-config';
 
 export const initializeStore = (app: firebase.app.App) => {
     const history = createBrowserHistory();

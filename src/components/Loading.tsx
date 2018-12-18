@@ -4,17 +4,20 @@ import { ComponentType } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Zoom from '@material-ui/core/Zoom';
 
-class LoadingPage extends React.Component<{ classes?: any }, {}> {
+class LoadingPage extends React.Component<{ classes?: any, hideTitle?: boolean }, {}> {
   public render(): JSX.Element {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
         <div className={classes.content}>
-          <div className={classes.titleContent}>
+        {
+          !this.props.hideTitle ? 
+          (<div className={classes.titleContent}>
             <Zoom in={true}>
               <Typography className={classes.title}>Tomahawk</Typography>
             </Zoom>
-          </div>
+          </div>) : null
+        }
           <div className={classes.loader}>
             <CircularProgress className={classes.loading} />
             <Typography>Loading...</Typography>
