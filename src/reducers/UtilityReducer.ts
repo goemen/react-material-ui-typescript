@@ -20,8 +20,10 @@ export const UtilityReducer = (state: Utility = new Utility(), action: IAppActio
         case ActionType.SET_ANCHOR_ELEMENT:
             return state.set(Utility.ANCHOR_EL, action.payload) as Utility;
         case ActionType.SET_NOTIFICATION_ELEMENT:
-            return state.set(Utility.NOTIFICATION_EL, !state.appLoading) as Utility;
+            return state.set(Utility.NOTIFICATION_EL, action.payload) as Utility;
         case ActionType.CURRENT_USER:
+            return state.set(Utility.APP_LOADING, false) as Utility;
+        case ActionType.GET_EVENTS_SUCCESS:
             return state.set(Utility.APP_LOADING, false) as Utility;
         case ActionType.TOGGLE_APP_LOADING:
             return state.set(Utility.APP_LOADING, !state.appLoading) as Utility;

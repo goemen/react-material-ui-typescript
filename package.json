@@ -22,11 +22,15 @@
     "@types/redux-thunk": "^2.1.0",
     "@types/reselect": "^2.2.0",
     "axios": "^0.18.0",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.4",
     "classnames": "^2.2.5",
     "connected-react-router": "^6.0.0",
+    "create-react-app": "^2.1.1",
     "express": "^4.16.3",
     "firebase": "^5.5.9",
     "immutable": "^3.8.2",
+    "jest": "^23.6.0",
     "lodash": "^4.17.10",
     "material-ui-datetimepicker": "^1.0.7",
     "material-ui-upload": "^1.2.1",
@@ -42,6 +46,7 @@
     "react-redux": "^5.0.7",
     "react-redux-firebase": "^2.2.4",
     "react-router-dom": "^4.2.2",
+    "react-scripts": "^2.1.1",
     "react-scripts-ts": "2.16.0",
     "react-transition-group": "^2.5.0",
     "recharts": "^1.0.0-beta.10",
@@ -51,16 +56,17 @@
     "redux-firestore": "^0.6.0",
     "redux-rest-resource": "^0.18.0",
     "redux-thunk": "^2.3.0",
-    "reselect": "^3.0.1"
+    "reselect": "^3.0.1",
+    "webpack": "^4.19.1",
+    "webpack-dev-server": "^3.1.9"
   },
   "scripts": {
-    "start": "react-scripts-ts start",
-    "start:local": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
-    "test": "react-scripts-ts test --env=jsdom",
+    "start": "APPNAME=Tomahawk react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scriptstest --env=jsdom",
     "postinstall": "npm run build",
     "deploy": "node server.js",
-    "eject": "react-scripts-ts eject",
+    "eject": "react-scripts eject",
     "build:functions": "babel functions-app --out-dir functions --copy-files --ignore funcations-app/node_modules"
   },
   "devDependencies": {
@@ -78,5 +84,11 @@
     "presets": [
       "react-app"
     ]
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

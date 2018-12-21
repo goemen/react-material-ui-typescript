@@ -1,6 +1,6 @@
 import { Model } from "./Helpers";
 import { IDbEntity } from "./DbEntity";
-import { isNotSet } from "src/helpers/misc";
+import { isNotSet } from "../helpers/misc";
 import { User } from "./User";
 import { Map } from 'immutable';
 

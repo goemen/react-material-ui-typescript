@@ -2,7 +2,7 @@ import { AppState } from '../state/AppState';
 import { createSelector } from 'reselect';
 const randomColor = require('randomcolor');
 import * as _ from 'lodash';
-import * as moment from 'moment';
+const moment = require('moment');
 import { DataState } from '../state/DataState';
 import { User } from '../state/User';
 import { Event } from '../state/Event';

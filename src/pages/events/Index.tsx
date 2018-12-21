@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { DataState } from 'src/state/DataState';
+import { DataState } from '../../state/DataState';
 import { Event } from '../../state/Event';
 import EditPage from './Edit';
 import ListPage from './List';
 import { Switch, Route } from 'react-router';
-import { IEventSelect } from 'src/helpers/misc';
+import { IEventSelect } from '../../helpers/misc';
 import Details from './Details';
 
 interface IProps {
@@ -53,6 +53,7 @@ export class EventsPageRouter extends React.Component<IProps, {}> {
         return (<ListPage
             {...props}
             events={this.props.events.items.toList()}
+            toggleProgress={this.props.toggleProgress}
         />);
     }
 

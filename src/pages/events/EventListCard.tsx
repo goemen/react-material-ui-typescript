@@ -1,9 +1,9 @@
-import { Event } from "src/state/Event";
+import { Event } from "../../state/Event";
 import { Card, CardHeader, Avatar, IconButton, CardMedia, CardActions, CardContent, Typography, Button } from "@material-ui/core";
 import * as React from "react";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { formatDate } from "src/helpers/misc";
+import { formatDate } from "../../helpers/misc";
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';

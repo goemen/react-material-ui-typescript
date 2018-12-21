@@ -2,10 +2,8 @@ import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect';
 import { Utility } from './Utility';
 import { Model } from './Helpers';
 import { User, ADMIN_ROLE } from './User';
-import { IApplicationProps } from '../actions/App.Actions';
 import { DataState } from './DataState';
 import { Event } from './Event';
-import { Firestore } from '@google-cloud/firestore';
 
 export interface IAppState {
     utility?: Utility;
@@ -35,16 +33,15 @@ export class AppState extends AppStateModel {
     public events: DataState<Event>;
     public materials: any;
     public mail: any;
-    public firestore: Firestore;
 }
 
-export const isAuthenticated = connectedRouterRedirect<IApplicationProps, IAppState>({
+export const isAuthenticated = connectedRouterRedirect({
     redirectPath: '/account/login',
     authenticatedSelector: (state: AppState) => state.authentication !== null,
     wrapperDisplayName: 'Authenticated'
-}) as any;
+} as any) as any;
 
-export const isAdmin = connectedRouterRedirect<IApplicationProps, IAppState>({
+export const isAdmin = connectedRouterRedirect({
     redirectPath: '/account/login',
     authenticatedSelector: (state: AppState) => state.authentication !== null && state.authentication.isInRole(ADMIN_ROLE),
     wrapperDisplayName: 'Authenticated'

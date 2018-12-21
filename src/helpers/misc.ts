@@ -2,8 +2,7 @@ import * as _ from 'lodash';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import * as uuid from 'node-uuid';
-import * as moment from 'moment';
-
+const moment = require('moment');
 export const isNotSet = (value: any) => {
     const notSet = _.isNull(value) || _.isUndefined(value) || _.isEmpty(value);
     return notSet;

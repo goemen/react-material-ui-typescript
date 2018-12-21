@@ -1,8 +1,8 @@
 
 import * as React from 'react';
 import { Typography, Card, CardHeader, Avatar, IconButton, CardMedia, CardContent, CardActions, Theme } from '@material-ui/core';
-import { IEventSelect, formatDate } from 'src/helpers/misc';
-import Loading from 'src/components/Loading';
+import { IEventSelect, formatDate } from '../../helpers/misc';
+import Loading from '../../components/Loading';
 import { Event } from '../../state/Event';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';

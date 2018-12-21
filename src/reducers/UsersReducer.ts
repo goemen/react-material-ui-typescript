@@ -1,6 +1,6 @@
 import { Map } from 'immutable';
 import { User } from '../state/User';
-import { IAppAction, ActionType } from 'src/actions/Helpers';
+import { IAppAction, ActionType } from '../actions/Helpers';
 import * as _ from 'lodash';
 import { DataState } from '../state/DataState';
 import { UserClaims } from '../state/Claims';

@@ -4,7 +4,7 @@ import DashboardPage from './Dashboard';
 import UserManagementPage from './Users';
 import { DataState } from '../../state/DataState';
 import { User } from '../../state/User';
-import { isAdmin } from 'src/state/AppState';
+import { isAdmin } from '../../state/AppState';
 
 interface IAdminProps {
     location?: any;

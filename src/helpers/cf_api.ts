@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { IRegisterModel } from 'src/models';
+import { IRegisterModel } from '../models';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import { CONFIG } from '../firebase-config';

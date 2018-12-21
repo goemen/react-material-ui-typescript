@@ -4,7 +4,7 @@ import {
     Avatar, CardMedia, CardContent, CardActions
 } from '@material-ui/core';
 import { Event } from '../../state/Event';
-import * as moment from 'moment';
+const moment = require('moment');
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';

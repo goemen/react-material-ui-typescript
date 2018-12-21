@@ -34,13 +34,13 @@ class UserManagementPage extends React.Component<IUserManagementPageProps, {}> {
         }
     }
 
-    private changeSelection = (selection: number[]) => {
+    private changeSelection = (selection: (string | number)[]) => {
         if (selection.length) {
             const rows = this.props.users.items.toArray();
             const index = selection[selection.length - 1];
             const user = this.props.users.items.get(rows[index].uid);
     
-            this.props.selectUser(_.clone(user), index);
+            this.props.selectUser(_.clone(user), index as number);
         }
     }
 

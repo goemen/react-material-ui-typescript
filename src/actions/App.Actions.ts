@@ -8,7 +8,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import { Dispatch } from 'react-redux';
-import { IRegisterModel, ILoginModel, IResetPasswordModel } from 'src/models';
+import { IRegisterModel, ILoginModel, IResetPasswordModel } from '../models';
 import { CFAPI } from '../helpers/cf_api';
 import { DataState } from '../state/DataState';
 import { IEventProps } from './Event.Actions';

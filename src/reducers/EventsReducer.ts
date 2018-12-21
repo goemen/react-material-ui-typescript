@@ -1,6 +1,6 @@
-import { IAppAction, ActionType } from 'src/actions/Helpers';
+import { IAppAction, ActionType } from '../actions/Helpers';
 import { DataState } from '../state/DataState';
-import { Event } from 'src/state/Event';
+import { Event } from '../state/Event';
 import { Map } from 'immutable';
 
 export const EventsReducer = (state: DataState<Event> = new DataState(), action: IAppAction): DataState<Event> => {

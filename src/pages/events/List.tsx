@@ -12,9 +12,14 @@ interface IListProps {
     location?: any;
     classes: any;
     events: List<Event>;
+    toggleProgress: () => void;
 }
 
 class ListPage extends React.Component<IListProps, {}> {
+
+    public componentWillMount() {
+        this.props.toggleProgress();
+    }
 
     private navigate = (id: string) => {
         this.props.history.push(`/events/details/${id}`);

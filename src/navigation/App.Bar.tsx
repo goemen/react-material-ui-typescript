@@ -39,7 +39,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import GroupIcon from '@material-ui/icons/Group';
 import ExploreIcon from '@material-ui/icons/Explore';
 import HomePage from '../pages/home/Index';
-import { EventsPageRouter } from 'src/pages/events/Index';
+import { EventsPageRouter } from '../pages/events/Index';
 import * as EventsActions from "../actions/Event.Actions";
 //#endregion
 
@@ -190,7 +190,9 @@ class Application extends React.Component<IAppProps, {}> {
               <MenuIcon />
             </IconButton>
             <Typography className={classNames(classes.fillSpace)} variant='title' color='inherit' noWrap={true}>
-              <p className={classNames(utility.drawerOpen && classes.hideTitle)}>Tomahawk</p>
+              <p className={classNames(utility.drawerOpen && classes.hideTitle)}>
+                {process.env.REACT_APP_APPNAME}
+              </p>
             </Typography>
             <div className={classes.barActions}>
               <Button color='inherit' onClick={this.postNewEvent}>
@@ -353,7 +355,6 @@ const mapStateToProps = (state: AppState) => ({
   materialCharts: getMaterialChartItems(state),
   mail: getMailitems(state),
   events: getEvents(state),
-  firestore: state.firestore
 });
 
 const mapDispatchtoProps = (dispatch: Dispatch) =>

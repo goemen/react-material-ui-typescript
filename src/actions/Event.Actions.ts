@@ -1,8 +1,8 @@
 import { Event } from "../state/Event";
 import { Dispatch } from "react-redux";
 import { IAppAction, ActionType } from "./Helpers";
-import { IEventSelect, IThunkArgs as IContext } from "src/helpers/misc";
-import { DataState } from "src/state/DataState";
+import { IEventSelect, IThunkArgs as IContext } from "../helpers/misc";
+import { DataState } from "../state/DataState";
 import * as _ from 'lodash';
 import { User } from "../state/User";
 import { Map } from "immutable";
