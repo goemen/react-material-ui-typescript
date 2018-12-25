@@ -29,3 +29,10 @@ export const administratorsOnly = (req, res, next) => {
     next({error: true, message: 'Not authorized.'});
   }
 }
+export const isAuthenticated = (req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
+    next({error: true, message: 'Not authorized.'});
+  }
+}

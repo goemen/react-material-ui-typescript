@@ -12,6 +12,7 @@ interface IEventCardProps {
     event: Event;
     classes: any;
     details: (id: string) => void;
+    manageTicketReservations: (eventId: string) => void;
 }
 export default class EventListCard extends React.Component<IEventCardProps, {}> {
 
@@ -43,8 +44,12 @@ export default class EventListCard extends React.Component<IEventCardProps, {}> 
         }
     }
 
+    private manageTicketReservations = () => {
+        this.props.manageTicketReservations(this.props.event.id);
+    }
+
     public render() {
-        const user = firebase.auth().currentUser;
+        const user = firebase.auth().currentUser || {} as any;
         const { event, classes } = this.props;
         return (<Card className={classes.card}>
             <CardHeader onClick={this.details}
@@ -71,10 +76,10 @@ export default class EventListCard extends React.Component<IEventCardProps, {}> 
             </CardContent>
             <CardActions className={classes.actions} disableActionSpacing={true}>
                 <Button onClick={this.going}>
-                    <FavoriteIcon color={event.isUserGoing(user.uid) ? 'secondary' : 'default' }/>
-                    Going?
+                    <FavoriteIcon color={event.isUserGoing(user.uid) ? 'secondary' : 'inherit' }/>
+                    Like?
                 </Button>
-                <Button aria-label="Share">
+                <Button aria-label="Share" onClick={this.manageTicketReservations}>
                     Reserve tickets
                 </Button>
             </CardActions>

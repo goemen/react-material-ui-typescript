@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { ListItemText, Menu, MenuItem, Badge, Avatar, LinearProgress, Button } from '@material-ui/core';
+import { Menu, MenuItem, Badge, LinearProgress, Button } from '@material-ui/core';
 import { Route, withRouter, Switch } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { styles } from './styles';
@@ -22,25 +22,22 @@ import { Alert } from '../state/Alert';
 import { AlertDialog } from '../alert/Alert';
 import SpinnerDialog from '../spinner/Spinner';
 import { AccountPage } from '../pages/account/Account';
-import { MailPage } from '../pages/mail/Mail';
 import AdminPage from '../pages/admin/Index';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { actions as MailActionCreators } from '../data/mail';
 import { actions as MaterialActionCreators } from '../data/material';
-import { getMaterialChartItems, getMailitems, getUsers, getEvents } from '../selectors';
+import { getMaterialChartItems, getUsers, getEvents } from '../selectors';
 import AppDrawer, { IRoute } from './App.Drawer';
 import NotificationIcon from '@material-ui/icons/Notifications';
 import { ADMIN_ROLE } from '../state/User';
-import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
+import AddIcon from '@material-ui/icons/Add';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import GroupIcon from '@material-ui/icons/Group';
 import ExploreIcon from '@material-ui/icons/Explore';
-import HomePage from '../pages/home/Index';
 import { EventsPageRouter } from '../pages/events/Index';
 import * as EventsActions from "../actions/Event.Actions";
+import { AppMetaTags } from '../components/MetaTags';
+import NotFoundPage from '../pages/NotFound';
 //#endregion
 
 interface IAppProps extends IApplicationProps {
@@ -58,18 +55,13 @@ class Application extends React.Component<IAppProps, {}> {
     if (!this.props.materials.isFetching && !this.props.materials.items.length) {
       this.props.fetchMaterials();
     }
-
-    if (!this.props.mail.length) {
-      this.props.fetchMails();
+    if (this.props.utility.appLoading) {
+      this.props.toggleProgress();
     }
   }
 
   private handleNotificationMenu = (event: any) => {
     this.props.toggleNotification(event.currentTarget);
-  }
-
-  private handleNotificationMenuClose = () => {
-    this.props.toggleNotification(null);
   }
 
   private handleMenu = (event: any) => {
@@ -81,8 +73,12 @@ class Application extends React.Component<IAppProps, {}> {
     this.navigate(path);
   }
 
-  public handleLogout = () => {
-    this.props.logout();
+  public handleAuth = () => {
+    if (!this.props.authentication) {
+      this.props.history.push('/account/login');
+    } else {
+      this.props.logout();
+    }
     this.handleMenuClose();
   }
 
@@ -136,122 +132,97 @@ class Application extends React.Component<IAppProps, {}> {
     return null;
   }
 
-  private renderNotifications(notifications: any[]) {
-    const { classes } = this.props;
-    return (
-      <Menu
-        id='notifications'
-        anchorEl={this.props.utility.notificationEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        className={classes.notifications}
-        open={Boolean(this.props.utility.notificationEl)}
-        onClose={this.handleNotificationMenuClose}
-      >
-        {notifications.map((n: any) => (
-          <MenuItem key={n.id} onClick={this.handleNotificationMenuClose} dense={true} button={true} className={classes.notificationListItem}>
-            <Avatar src={n.avatar} />
-            <ListItemText primary={n.subject} />
-          </MenuItem>
-        ))}
-      </Menu>
-    );
-  }
-
   private postNewEvent = () => {
     this.props.history.push('/events/create');
   }
 
   private renderAppBar() {
-    if (this.props.authentication) {
-      const { classes, utility } = this.props;
-      const open = Boolean(utility.anchorEl);
-      const notificationsOpen = Boolean(utility.notificationEl);
-      const unreadMessages = this.props.mail.filter(x => x.seen === false);
+    const { authentication, classes, utility } = this.props;
+    const open = Boolean(utility.anchorEl);
+    const notificationsOpen = Boolean(utility.notificationEl);
 
-      return (
-        <AppBar
-          position='fixed'
-          className={classNames(classes.appBar, utility.drawerOpen && classes.appBarShift)}
-        >
-          <Toolbar disableGutters={!utility.drawerOpen}>
+    return (
+      <AppBar
+        position='fixed'
+        className={classNames(classes.appBar, utility.drawerOpen && classes.appBarShift)}
+      >
+        <Toolbar disableGutters={!utility.drawerOpen}>
+          <IconButton
+            color='inherit'
+            aria-label='open drawer'
+            onClick={this.handleDrawerOpen}
+            className={classNames(classes.menuButton, utility.drawerOpen && classes.hide)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography className={classNames(classes.fillSpace)} variant='title' color='inherit' noWrap={true}>
+            <p className={classNames(utility.drawerOpen && classes.hideTitle)}>
+              {utility.title || process.env.REACT_APP_APPNAME}
+            </p>
+          </Typography>
+          <div className={classes.barActions}>
+            {authentication && authentication.isInRole(ADMIN_ROLE) ? (<Button className={classes.shownew} color='inherit' onClick={this.postNewEvent}>
+              Post Event
+              </Button>) : null
+            }
+            {
+              authentication ? (
+                <IconButton
+                  aria-owns={notificationsOpen ? 'notifications' : null}
+                  aria-haspopup='true'
+                  color='inherit'
+                  onClick={this.handleNotificationMenu}
+                >
+                  <Badge badgeContent={10} color='secondary'>
+                    <NotificationIcon />
+                  </Badge>
+                </IconButton>
+              ) : null
+            }
+
             <IconButton
+              aria-owns={open ? 'menu-appbar' : null}
+              aria-haspopup='true'
+              onClick={this.handleMenu}
               color='inherit'
-              aria-label='open drawer'
-              onClick={this.handleDrawerOpen}
-              className={classNames(classes.menuButton, utility.drawerOpen && classes.hide)}
             >
-              <MenuIcon />
+              <AccountCircle />
             </IconButton>
-            <Typography className={classNames(classes.fillSpace)} variant='title' color='inherit' noWrap={true}>
-              <p className={classNames(utility.drawerOpen && classes.hideTitle)}>
-                {process.env.REACT_APP_APPNAME}
-              </p>
-            </Typography>
-            <div className={classes.barActions}>
-              <Button color='inherit' onClick={this.postNewEvent}>
-                Post Event
-              </Button>
-              <IconButton
-                aria-owns={notificationsOpen ? 'notifications' : null}
-                aria-haspopup='true'
-                color='inherit'
-                onClick={this.handleNotificationMenu}
-              >
-                <Badge badgeContent={unreadMessages.length} color='secondary'>
-                  <NotificationIcon />
-                </Badge>
-              </IconButton>
-              {this.renderNotifications(unreadMessages)}
-              <IconButton
-                aria-owns={open ? 'menu-appbar' : null}
-                aria-haspopup='true'
-                onClick={this.handleMenu}
-                color='inherit'
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id='menu-appbar'
-                anchorEl={utility.anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={open}
-                onClose={this.handleMenuClose.bind(this, null)}
-              >
-                <MenuItem onClick={this.handleMenuClose.bind(this, '/account')}>{this.props.authentication.displayName}</MenuItem>
-                <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-              </Menu>
-            </div>
-          </Toolbar>
-          { this.props.utility.appLoading ?  (<LinearProgress/>) : null }
-        </AppBar>
-      );
-    }
+            <Menu
+              id='menu-appbar'
+              anchorEl={utility.anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={open}
+              onClose={this.handleMenuClose.bind(this, null)}
+            >
+              {this.props.authentication ? (<MenuItem onClick={this.handleMenuClose.bind(this, '/account')}>
+                {this.props.authentication.displayName}</MenuItem>) : null}
+              <MenuItem onClick={this.handleAuth}> {this.props.authentication ? 'Logout' : 'Login'}</MenuItem>
+            </Menu>
+          </div>
+        </Toolbar>
+        {this.props.utility.appLoading ? (<LinearProgress />) : null}
+      </AppBar>
+    );
 
-    return null;
   }
 
   private renderAccount = (props: any) => {
     return (
       <AccountPage
-      {...props}
+        {...props}
         register={this.props.register}
         requestPasswordReset={this.props.requestPasswordReset}
         user={this.props.authentication}
         login={this.props.login}
+        setTitle={this.props.setTitle}
       />
     );
   }
@@ -262,14 +233,15 @@ class Application extends React.Component<IAppProps, {}> {
     if (authentication && authentication.isInRole(ADMIN_ROLE)) {
       routes.push({ path: '/admin', title: 'Dashboard', icon: () => <DashboardIcon /> });
       routes.push({ path: '/admin/user-management', title: 'User Management', icon: () => <GroupIcon /> });
+      routes.push({ path: '/events/create', title: 'Post new event', icon: () => <AddIcon /> });
+    }
+
+    if (authentication) {
+      routes.push({ path: '/account', title: 'Profile', icon: () => <AccountCircleIcon /> });
     }
 
     routes = _.concat(routes, [
       { path: '/events', title: 'Explore', icon: () => <ExploreIcon /> },
-      { path: '/mail/inbox', title: 'Inbox', icon: () => <InboxIcon /> },
-      { path: '/mail/sent', title: 'Sent', icon: () => <SendIcon /> },
-      { path: '/mail/drafts', title: 'Drafts', icon: () => <DraftsIcon /> },
-      { path: '/account', title: 'Profile', icon: () => <AccountCircleIcon /> }
     ]);
 
     return (
@@ -288,7 +260,7 @@ class Application extends React.Component<IAppProps, {}> {
     const { classes } = this.props;
     const Dashboard = (props: any): any => {
       return (
-        <AdminPage 
+        <AdminPage
           fetchUsers={this.props.fetchUsers}
           users={this.props.users}
           materialCharts={this.props.materialCharts}
@@ -297,15 +269,8 @@ class Application extends React.Component<IAppProps, {}> {
           setUserTablePage={this.props.setUserTablePage}
           setUserCustomClaims={this.props.setUserCustomClaims}
           editUser={this.props.editUserSelection}
+          setTitle={this.props.setTitle}
           {...props}
-        />
-      );
-    };
-
-    const MailBoard = (): any => {
-      return (
-        <MailPage
-          mail={this.props.mail}
         />
       );
     };
@@ -313,7 +278,7 @@ class Application extends React.Component<IAppProps, {}> {
     const EventsPage = (props: any): any => {
       return (
         <EventsPageRouter
-        {...props}
+          {...props}
           load={this.props.loadEvents}
           events={this.props.events}
           createInit={this.props.startCreateEvent}
@@ -321,7 +286,14 @@ class Application extends React.Component<IAppProps, {}> {
           saveEvent={this.props.saveEvent}
           changeSelection={this.props.changeSelection}
           toggleProgress={this.props.toggleProgress}
+          setTitle={this.props.setTitle}
         />
+      );
+    };
+
+    const NotFound = () => {
+      return (
+        <NotFoundPage setTitle={this.props.setTitle} />
       );
     };
 
@@ -331,13 +303,14 @@ class Application extends React.Component<IAppProps, {}> {
         {this.renderAppBar()}
 
         <main className={classNames(classes.content, this.props.utility.drawerOpen && classes.fillContent)}>
+          <AppMetaTags title={this.props.utility.title} />
           <div className={classes.toolbar} />
           <Switch>
-            <Route path='/' exact={true} component={HomePage} />
+            <Route path='/' exact={true} render={EventsPage} />
             <Route path='/admin' render={Dashboard} />
-            <Route path='/mail' render={MailBoard} />
             <Route path='/account' render={this.renderAccount} />
             <Route path='/events' render={EventsPage} />
+            <Route render={NotFound}/>
           </Switch>
           {this.renderAlert()}
           {this.renderSpinner()}
@@ -353,14 +326,13 @@ const mapStateToProps = (state: AppState) => ({
   users: getUsers(state),
   materials: state.materials,
   materialCharts: getMaterialChartItems(state),
-  mail: getMailitems(state),
   events: getEvents(state),
 });
 
 const mapDispatchtoProps = (dispatch: Dispatch) =>
-  bindActionCreators(_.assign({}, AppActionCreators, MailActionCreators, MaterialActionCreators, EventsActions), dispatch);
+  bindActionCreators(_.assign({}, AppActionCreators, MaterialActionCreators, EventsActions), dispatch);
 
 
-  
+
 export default withStyles(styles as any, { withTheme: true })(withRouter(connect(mapStateToProps, mapDispatchtoProps)(Application as any) as any) as any) as any;
 

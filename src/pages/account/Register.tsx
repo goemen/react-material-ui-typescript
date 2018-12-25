@@ -2,12 +2,14 @@ import * as React from 'react';
 import { Theme, withStyles, FormControl, InputLabel, Input, InputAdornment, Button, Icon, FormHelperText } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import { IRegisterModel } from '../../models';
+import { Page } from '../Page';
 
 interface IRegisterProps {
     register?: (data: IRegisterModel) => void;
     match?: any;
     location?: any;
     classes?: any;
+    setTitle: (title: string) => void;
 }
 
 interface IField {
@@ -24,13 +26,17 @@ interface IRegisterState {
     displayName: IField;
 }
 
-class RegisterPage extends React.Component<IRegisterProps, IRegisterState> {
+class RegisterPage extends Page<IRegisterProps, IRegisterState> {
     public state = {
         displayName: {value: '', dirty: false},
         email: {value: '', dirty: false} ,
         password: {value: '', dirty: false},
         confirmPassword: {value: '', errorMessage: '', dirty: false, hasError: false}
     };
+
+    public componentWillMount() {
+        this.setTitle('Create account');
+    }
 
     private handleEmailAddressChange = (event: any) => {
         this.setState({ email: { value: event.target.value, dirty: true }});

@@ -5,6 +5,9 @@ import red from '@material-ui/core/colors/red';
 import { Event } from '../../state/Event';
 import EventListCard from './EventListCard';
 import { Theme, withStyles } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import TicketReservationModal from './TicketReservationModal';
+import { Page } from '../Page';
 
 interface IListProps {
     match?: any;
@@ -13,12 +16,25 @@ interface IListProps {
     classes: any;
     events: List<Event>;
     toggleProgress: () => void;
+    setTitle: (title: string) => void;
 }
 
-class ListPage extends React.Component<IListProps, {}> {
 
+interface IState {
+    reserveTicket: boolean;
+    event: Event;
+}
+
+class ListPage extends Page<IListProps, IState> {
+    public state: IState = {
+        reserveTicket: false,
+        event: null
+    };
     public componentWillMount() {
-        this.props.toggleProgress();
+        this.props.setTitle('Explore events')
+        if (this.props.events.isEmpty()) {
+            this.props.toggleProgress();
+        }
     }
 
     private navigate = (id: string) => {
@@ -27,16 +43,37 @@ class ListPage extends React.Component<IListProps, {}> {
 
     private get events(): JSX.Element {
         return (<div className={this.props.classes.cards}>
-            {this.props.events.map(e => (
-                <EventListCard
-                    details={this.navigate}
-                    key={e.id}
-                    event={e}
-                    classes={this.props.classes}
-                />
-            ))}
+
+            <Grid container={true} spacing={24}>
+
+                {this.props.events.map(e => (
+
+                    <Grid key={e.id} item={true} xs={12} sm={12} md={3} lg={3}>
+
+                        <EventListCard
+                            details={this.navigate}
+                            event={e}
+                            classes={this.props.classes}
+                            manageTicketReservations={this.manageTicketReservations}
+                        />
+                    </Grid>
+                ))}
+            </Grid>
+
         </div>)
     }
+
+    private closeTicketReservationModal = () => {
+        this.setState({
+            reserveTicket: false,
+            event: null
+        });
+    }
+
+    private manageTicketReservations = (id: string) => {
+        this.setState({reserveTicket: true, event: this.props.events.find(x => x.id === id)});
+    }
+
 
     public render(): JSX.Element {
         const classes = this.props.classes;
@@ -44,6 +81,11 @@ class ListPage extends React.Component<IListProps, {}> {
         return (
             <div className={classes.container}>
                 {this.events}
+                <TicketReservationModal
+                    open={this.state.reserveTicket}
+                    onClose={this.closeTicketReservationModal}
+                    event={this.state.event}
+                />
             </div>
         );
     }
@@ -53,21 +95,11 @@ const styles = (theme: Theme) => ({
     container: {
         display: 'flex',
         justifyContent: 'left',
-        width: '100%'
+        width: '100%',
+        flexGrow: 1
     },
     card: {
-        maxWidth: 400,
-        minWidth: '24.01%',
-        width: '24.01%',
-        marginLeft: 13,
-        marginBottom: 6,
-        [theme.breakpoints.down('md')]: {
-            minWidth: '48.3%',
-            marginLeft: 0,
-        },
-        [theme.breakpoints.down('sm')]: {
-            minWidth: '100%',
-        }
+        width: '100%'
     },
     media: {
         height: 0,
@@ -99,7 +131,8 @@ const styles = (theme: Theme) => ({
     cards: {
         display: 'flex',
         flexWrap: 'wrap',
-        width: '100%'
+        width: '100%',
+        flexGrow: 1
     }
 });
 

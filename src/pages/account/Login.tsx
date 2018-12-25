@@ -6,6 +6,7 @@ import { User } from '../../state/User';
 import { Redirect } from 'react-router';
 import { ILoginModel } from '../../models';
 import { Location } from 'history';
+import { Page } from '../Page';
 
 interface ILoginProps {
     login?: (data: any) => void;
@@ -14,13 +15,18 @@ interface ILoginProps {
     classes?: any;
     user: User;
     history: any;
+    setTitle: (title: string) => void;
 }
 
-class LoginPage extends React.Component<ILoginProps, ILoginModel> {
+class LoginPage extends Page<ILoginProps, ILoginModel> {
     public state = {
         email: '',
         password: ''
     };
+
+    public componentWillMount() {
+        this.setTitle('Login');
+    }
 
     private handleEmailAddressChange = (event: any) => {
         this.setState({ email: event.target.value })

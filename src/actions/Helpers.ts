@@ -41,7 +41,8 @@ export enum ActionType {
     SET_NOTIFICATION_ELEMENT,
     EDIT_EVENT,
     CHANGE_EVENT_SELECTION,
-    TOOGLE_PROGRESS
+    TOOGLE_PROGRESS,
+    SET_TITLE
 }
 
 export interface IAppAction extends Action<ActionType | string> {

@@ -11,6 +11,7 @@ import 'firebase/firestore';
 import { IEventSelect, uploadPhoto, formatDate } from '../../helpers/misc';
 import UploadIcon from '@material-ui/icons/FileUpload';
 import * as _ from 'lodash';
+import { Page } from '../Page';
 
 interface IEditProps {
     match?: any;
@@ -24,14 +25,18 @@ interface IEditProps {
     classes: any;
     event: Event;
     formTitle: string;
+    setTitle: (title: string) => void;
 }
 
-class Edit extends React.Component<IEditProps, {}> {    
+class Edit extends Page<IEditProps, {}> {    
     private uploadInput = React.createRef();
     constructor(props: IEditProps) {
         super(props);
     }
+
     public componentWillMount() {
+        super.componentWillMount();
+        this.props.setTitle(this.props.formTitle);
         const { id } = this.props.match.params;
         if (!id) {
             this.props.createInit();

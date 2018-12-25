@@ -38,10 +38,6 @@ export interface IApplicationProps extends IEventProps {
     fetchMaterials: (context?: any) => any;
     updateMaterial: (context: any) => any;
     deleteMaterial: (context: any) => any;
-    getMail: (id: any) => any;
-    fetchMails: (context?: any) => any;
-    updateMail: (context: any) => any;
-    deleteMail: (context: any) => any;
     match: match<any>;
     location: any;
     history: any;
@@ -49,12 +45,12 @@ export interface IApplicationProps extends IEventProps {
     authentication: User;
     users: DataState<User>;
     materials: any;
-    mail: any[];
     materialCharts: Array<{ name: string, value: number, fill: string }>;
     toggleAnchor: (payload: any) => void;
     toggleNotification: (payload: any) => void;
     editUserSelection: (path: any, value: any) => void;
     toggleProgress: () => void;
+    setTitle: (title: string) => void;
   
 }
 
@@ -211,11 +207,13 @@ export const toggleAnchor = (payload: any) => {
 }
 
 export const toggleNotification = (payload: any) => {
-    return { type: ActionType.SET_ANCHOR_ELEMENT, payload };
+    return { type: ActionType.SET_NOTIFICATION_ELEMENT, payload };
 }
 
 export const editUserSelection = (path: string, value: any) => {
     return { type: ActionType.EDIT_USER, payload:  {path, value}};
 }
+
+export const setTitle = (title: string): IAppAction => ({ type: ActionType.SET_TITLE, payload: title })
 
 

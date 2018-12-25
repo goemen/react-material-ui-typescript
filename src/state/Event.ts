@@ -24,7 +24,7 @@ const EventModel = Model<IEvent>({
     closed: false,
     location: null,
     price: 0,
-    photo: 'http://placehold.jp/dde1e6/a3a5a8/150x150.png?text=change%20me',
+    photo: 'https://firebasestorage.googleapis.com/v0/b/tomahawk-da413.appspot.com/o/app%2Fmonyakeng.jpg?alt=media&token=fe716745-fe38-4ded-85b2-3514cc60679a',
     date: new Date(),
     createdBy: null,
     attendancy: Map<string, User>()

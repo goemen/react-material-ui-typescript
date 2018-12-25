@@ -1,8 +1,9 @@
-import { Typography, Theme, withStyles, WithStyles } from '@material-ui/core';
+import { Theme, withStyles, WithStyles, Avatar } from '@material-ui/core';
 import * as React from 'react';
 import { ComponentType } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Zoom from '@material-ui/core/Zoom';
+import { blue } from "@material-ui/core/colors";
 
 class LoadingPage extends React.Component<{ classes?: any, hideTitle?: boolean }, {}> {
   public render(): JSX.Element {
@@ -14,14 +15,14 @@ class LoadingPage extends React.Component<{ classes?: any, hideTitle?: boolean }
           !this.props.hideTitle ? 
           (<div className={classes.titleContent}>
             <Zoom in={true}>
-              <Typography className={classes.title}>Tomahawk</Typography>
+              <div className={classes.wrapper}>
+                <CircularProgress size={50} className={classes.fabProgress} />
+                <Avatar className={classes.logo} 
+                src={process.env.REACT_APP_APP_ICON}/>
+              </div>
             </Zoom>
           </div>) : null
         }
-          <div className={classes.loader}>
-            <CircularProgress className={classes.loading} />
-            <Typography>Loading...</Typography>
-          </div>
         </div>
       </div>
     );
@@ -46,17 +47,28 @@ const styles = (theme: Theme) => ({
     justifyContent: 'center',
     flexDirection: 'column'
   },
-  loader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row'
+  logo: {
+    position: 'absolute',
+    top: '50%',
+    width: 50,
+    height: 50
   },
   titleContent: {
     marginBottom: 30,
   },
   title: {
     fontSize: 30
+  },
+  wrapper: {
+    margin: theme.spacing.unit,
+    position: 'relative',
+  },
+  fabProgress: {
+    color: blue,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1,
   },
 });
 

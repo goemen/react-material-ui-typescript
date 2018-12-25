@@ -6,6 +6,7 @@ import { Grid, Table, TableHeaderRow, TableSelection, PagingPanel, TableRowDetai
 import { SelectionState, PagingState, IntegratedPaging, RowDetailState } from '@devexpress/dx-react-grid';
 import { RowDetailComponent } from './UserDetailsRow';
 import * as _ from 'lodash';
+import { Page } from '../Page';
 
 interface IUserManagementPageProps {
     fetchUsers: () => void;
@@ -17,6 +18,7 @@ interface IUserManagementPageProps {
     editUser: (path: any, value: any) => void;
     location?: any;
     classes?: any;
+    setTitle: (title: string) => void;
 }
 
 const TableRow = ({row, ...restProps}: any) => {
@@ -26,8 +28,11 @@ const TableRow = ({row, ...restProps}: any) => {
     />);
 }
 
-class UserManagementPage extends React.Component<IUserManagementPageProps, {}> {
+class UserManagementPage extends Page<IUserManagementPageProps, {}> {
 
+    public componentWillMount() {
+        this.setTitle('Manage users');
+    }
     public componentDidMount() {
         if (!this.props.users.loading && !this.props.users.doneLoading) {
             this.props.fetchUsers();

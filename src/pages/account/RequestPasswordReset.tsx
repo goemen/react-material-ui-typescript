@@ -3,6 +3,7 @@ import { Theme, withStyles, FormControl, InputLabel, Input, InputAdornment, Butt
 import Paper from '@material-ui/core/Paper';
 import { User } from '../../state/User';
 import { IResetPasswordModel } from '../../models';
+import { Page } from '../Page';
 
 interface IRequestPasswordResetProps {
     requestPasswordReset: (data: IResetPasswordModel) => void;
@@ -10,12 +11,17 @@ interface IRequestPasswordResetProps {
     location?: any;
     classes?: any;
     user: User;
+    setTitle: (title: string) => void;
 }
 
-class RequestPasswordResetPage extends React.Component<IRequestPasswordResetProps, IResetPasswordModel> {
+class RequestPasswordResetPage extends Page<IRequestPasswordResetProps, IResetPasswordModel> {
     public state = {
         email: '',
     };
+
+    public componentWillMount() {
+        this.setTitle('Request Password Reset Link');
+    }
 
     private handleEmailAddressChange = (event: any) => {
         this.setState({ email: event.target.value })

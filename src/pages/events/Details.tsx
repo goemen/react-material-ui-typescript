@@ -11,6 +11,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { withStyles } from '@material-ui/core/styles';
 const classnames = require('classnames');
 import red from '@material-ui/core/colors/red';
+import { Page } from '../Page';
 
 interface IDetailsProps {
     match?: any;
@@ -18,15 +19,23 @@ interface IDetailsProps {
     toggleProgress: () => void;
     event: Event;
     classes: any;
+    setTitle: (title: string) => void;
 }
 
-class Details extends React.Component<IDetailsProps, {}> {
+class Details extends Page<IDetailsProps, {}> {
 
     public componentWillMount() {
+        super.componentWillMount();
         this.props.toggleProgress();
         const { id } = this.props.match.params;
         if (id) {
             this.props.changeSelection({ eventId: id });
+        }
+    }
+
+    public componentDidUpdate() {
+        if (this.props.event) {
+            this.props.setTitle(this.props.event.title);
         }
     }
 

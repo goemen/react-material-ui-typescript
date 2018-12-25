@@ -1,16 +1,18 @@
 import * as React from 'react';
 import {
     Theme, withStyles, Paper, Table, TableHead, TableRow,
-    TableCell, TableBody, TablePagination, Grid, Typography
+    TableCell, TableBody, TablePagination, Grid
 } from '@material-ui/core';
 import { BarChart, CartesianGrid, XAxis, YAxis, Bar, Tooltip, Legend, PieChart, Pie, ResponsiveContainer } from 'recharts';
 const classNames = require('classnames');
 import GroupIcon from '@material-ui/icons/Group';
-import MailIcon from '@material-ui/icons/Mail';
+import ListIcon from '@material-ui/icons/List';
 import SettingsIcon from '@material-ui/icons/Settings';
 import BusinessIcon from '@material-ui/icons/BusinessCenter';
 import { List } from 'immutable';
 import { User } from '../../state/User';
+import { Page } from '../Page';
+import { DashboardTile } from '../../components/DashboardTile';
 
 interface IDashboardProps {
     fetchUsers: (context?: any) => void;
@@ -19,6 +21,7 @@ interface IDashboardProps {
     classes?: any;
     theme?: any;
     children?: any;
+    setTitle: (title: string) => void;
 }
 
 interface IPageState {
@@ -26,7 +29,11 @@ interface IPageState {
     usersTableRowsPerPage: number;
 }
 
-class DashboardPage extends React.Component<IDashboardProps, IPageState> {
+class DashboardPage extends Page<IDashboardProps, IPageState> {
+
+    public componentWillMount() {
+        this.setTitle('Dashboard')
+    }
 
     public state: IPageState = {
         usersTablePage: 0,
@@ -136,28 +143,33 @@ class DashboardPage extends React.Component<IDashboardProps, IPageState> {
             <div className={classes.root}>
                 <Grid container={true} spacing={24}>
                     <Grid item={true} lg={3} xs={12} sm={6}>
-                        <Paper className={classNames(classes.paper, classes.headerTiles)}>
-                            <GroupIcon className={classes.headerTileIcon} />
-                            <Typography className={classes.tileText}> {this.props.users.size} Customers</Typography>
-                        </Paper>
+                        <DashboardTile
+                            icon={<GroupIcon className={classes.headerTileIcon} />}
+                            classes={classes}
+                            label={`${this.props.users.size} Customers`}
+                        />
                     </Grid>
                     <Grid item={true} lg={3} xs={12} sm={6}>
-                        <Paper className={classNames(classes.paper, classes.headerTiles)}>
-                            <MailIcon className={classes.headerTileIcon} />
-                            <Typography className={classes.tileText}>Inbox</Typography>
-                        </Paper>
+                        <DashboardTile
+                            icon={<ListIcon className={classes.headerTileIcon} />}
+                            classes={classes}
+                            label={'Reservations'}
+                        />
                     </Grid>
                     <Grid item={true} lg={3} xs={12} sm={6}>
-                        <Paper className={classNames(classes.paper, classes.headerTiles)}>
-                            <BusinessIcon className={classes.headerTileIcon} />
-                            <Typography className={classes.tileText}>Purchases</Typography>
-                        </Paper>
+
+                        <DashboardTile
+                            icon={<BusinessIcon className={classes.headerTileIcon} />}
+                            classes={classes}
+                            label={'Purchases'}
+                        />
                     </Grid>
                     <Grid item={true} lg={3} xs={12} sm={6}>
-                        <Paper className={classNames(classes.paper, classes.headerTiles)}>
-                            <SettingsIcon className={classes.headerTileIcon} />
-                            <Typography className={classes.tileText}>Settings</Typography>
-                        </Paper>
+                        <DashboardTile
+                            icon={<SettingsIcon className={classes.headerTileIcon} />}
+                            classes={classes}
+                            label={'Settings'}
+                        />
                     </Grid>
                     <Grid item={true} xs={12} md={6}>
                         {this.renderBarChart()}
@@ -212,4 +224,4 @@ const styles = (theme: Theme) => ({
     },
 });
 
-export default  withStyles(styles as any, {withTheme: true})(DashboardPage as any) as any;
+export default withStyles(styles as any, { withTheme: true })(DashboardPage as any) as any;

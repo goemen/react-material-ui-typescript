@@ -1,13 +1,19 @@
 import * as React from 'react';
 import { Theme, withStyles, Avatar, Typography, Paper } from '@material-ui/core';
 import { User } from '../../state/User';
+import { Page } from '../Page';
 
 interface IProfilePageProps {
     user: User;
     classes?: any;
+    setTitle: (title: string) => void;
 }
 
-class ProfilePage extends React.Component<IProfilePageProps, {}> {
+class ProfilePage extends Page<IProfilePageProps, {}> {
+
+    public componentWillMount() {
+        this.props.setTitle('My profile')
+    }
 
     public render(): JSX.Element {
 

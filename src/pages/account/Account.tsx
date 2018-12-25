@@ -18,6 +18,7 @@ interface IAccountProps {
     classes?: any;
     history?: History;
     user: User;
+    setTitle: (title: string) => void;
 }
 
 export class AccountPage extends React.Component<IAccountProps, {}> {
@@ -26,6 +27,7 @@ export class AccountPage extends React.Component<IAccountProps, {}> {
             <LoginPage
                 user={this.props.user}
                 login={this.props.login}
+                setTitle={this.props.setTitle}
                 {...props}
             />
         );
@@ -35,6 +37,7 @@ export class AccountPage extends React.Component<IAccountProps, {}> {
         return (
             <RegisterPage
                 register={this.props.register}
+                setTitle={this.props.setTitle}
                 {...props} />
         );
     }
@@ -43,6 +46,7 @@ export class AccountPage extends React.Component<IAccountProps, {}> {
         return (
             <RequestPasswordReset
                 requestPasswordReset={this.props.requestPasswordReset}
+                setTitle={this.props.setTitle}
                 {...props} />
         );
     }

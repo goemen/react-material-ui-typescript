@@ -9,6 +9,7 @@ export interface IUtility {
     appLoading?: boolean;
     anchorEl?: any;
     notificationEl?: any;
+    title?: string;
 }
 
 export const UtilityModel = Model<IUtility>({
@@ -17,7 +18,8 @@ export const UtilityModel = Model<IUtility>({
     spinner: null,
     appLoading: true,
     anchorEl: null,
-    notificationEl: null
+    notificationEl: null,
+    title: process.env.REACT_APP_APPNAME
 });
 
 export class Utility extends UtilityModel {
@@ -27,6 +29,7 @@ export class Utility extends UtilityModel {
     public static APP_LOADING = 'appLoading';
     public static ANCHOR_EL = 'anchorEl';
     public static NOTIFICATION_EL = 'notificationEl';
+    public static TITLE = 'title';
 
     public drawerOpen: boolean;
     public alert: Alert;
@@ -34,4 +37,5 @@ export class Utility extends UtilityModel {
     public appLoading: boolean;
     public anchorEl: any;
     public notificationEl: any;
+    public title: string;
 }

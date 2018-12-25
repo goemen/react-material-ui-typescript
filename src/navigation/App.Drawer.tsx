@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Drawer, IconButton, Divider, Theme, ListItem, ListItemIcon, ListItemText, withStyles } from '@material-ui/core';
+import { Drawer, IconButton, Divider, Theme, ListItem, ListItemIcon, ListItemText, withStyles, Avatar } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { User } from '../state/User';
@@ -27,10 +27,10 @@ interface IAppDrawer {
 class AppDrawer extends React.Component<IAppDrawer, {}> {
 
     public render(): JSX.Element {
-        const { authentication, classes, utility, theme, routes } = this.props;
+        const { classes, utility, theme, routes } = this.props;
         return (
             <Drawer
-                hidden={!authentication}
+                hidden={false}
                 variant='permanent'
                 classes={{
                     paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),
@@ -38,6 +38,9 @@ class AppDrawer extends React.Component<IAppDrawer, {}> {
                 open={utility.drawerOpen}
             >
                 <div className={classes.toolbar}>
+                    <Avatar className={classes.logo}
+                        src={process.env.REACT_APP_APP_ICON} />
+                    <span className={classes.fillSpace}></span>
                     <IconButton onClick={this.props.handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>

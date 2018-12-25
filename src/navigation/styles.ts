@@ -17,7 +17,7 @@ export const styles = (theme: Theme) => ({
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
       transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
+        easing: theme.transitions.easing.easeIn,
         duration: theme.transitions.duration.leavingScreen,
       }),
       [theme.breakpoints.up('md')]: {
@@ -105,6 +105,12 @@ export const styles = (theme: Theme) => ({
     fillContent: {
       [theme.breakpoints.down('sm')]: {
         minWidth: '100%'
+      }
+    },
+    shownew: {
+      display: 'none',
+      [theme.breakpoints.up('md')]: {
+        display: 'flex'
       }
     }
   });

@@ -21,7 +21,8 @@
     "express-bearer-token": "^2.2.0",
     "firebase-admin": "~6.0.0",
     "firebase-functions": "^2.1.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "totp-generator": "0.0.6"
   },
   "devDependencies": {
     "eslint": "^4.12.0",

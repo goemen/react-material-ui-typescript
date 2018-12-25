@@ -16,6 +16,7 @@ interface IAdminProps {
     editUser: (path: any, value: any) => void;
     users: DataState<User>;
     materialCharts: any;
+    setTitle: (title: string) => void;
 }
 
 export default isAdmin(class AdminPage extends React.Component<IAdminProps, {}> {
@@ -30,6 +31,7 @@ export default isAdmin(class AdminPage extends React.Component<IAdminProps, {}> 
                 setUserTablePage={this.props.setUserTablePage}
                 setUserCustomClaims={this.props.setUserCustomClaims}
                 editUser={this.props.editUser}
+                setTitle={this.props.setTitle}
             />
         );
     }
@@ -41,6 +43,7 @@ export default isAdmin(class AdminPage extends React.Component<IAdminProps, {}> 
                 fetchUsers={this.props.fetchUsers}
                 users={this.props.users.items.toList()}
                 materialChartData={this.props.materialCharts}
+                setTitle={this.props.setTitle}
             />
         );
     }
