@@ -38,6 +38,8 @@ import { EventsPageRouter } from '../pages/events/Index';
 import * as EventsActions from "../actions/Event.Actions";
 import { AppMetaTags } from '../components/MetaTags';
 import NotFoundPage from '../pages/NotFound';
+import 'typeface-roboto';
+
 //#endregion
 
 interface IAppProps extends IApplicationProps {
@@ -155,7 +157,7 @@ class Application extends React.Component<IAppProps, {}> {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classNames(classes.fillSpace)} variant='title' color='inherit' noWrap={true}>
+          <Typography className={classNames(classes.fillSpace)} variant='h6' color='inherit' noWrap={true}>
             <p className={classNames(utility.drawerOpen && classes.hideTitle)}>
               {utility.title || process.env.REACT_APP_APPNAME}
             </p>

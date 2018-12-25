@@ -27,7 +27,7 @@ class ProfilePage extends Page<IProfilePageProps, {}> {
                     <Typography className={classes.infoTitle}>
                         {user.displayName}
                     </Typography>
-                    <Typography variant='subheading'>
+                    <Typography variant='h6'>
                         {user.email}
                     </Typography>
                 </Paper>

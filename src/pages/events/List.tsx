@@ -8,6 +8,9 @@ import { Theme, withStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import TicketReservationModal from './TicketReservationModal';
 import { Page } from '../Page';
+import Fab from '@material-ui/core/Fab';
+import SearchIcon from '@material-ui/icons/Search';
+import EventSearchModal from './EventSearchModal';
 
 interface IListProps {
     match?: any;
@@ -23,11 +26,13 @@ interface IListProps {
 interface IState {
     reserveTicket: boolean;
     event: Event;
+    openSearch: boolean;
 }
 
 class ListPage extends Page<IListProps, IState> {
     public state: IState = {
         reserveTicket: false,
+        openSearch: false,
         event: null
     };
     public componentWillMount() {
@@ -70,8 +75,20 @@ class ListPage extends Page<IListProps, IState> {
         });
     }
 
+    private closeSearchModal = () => {
+        this.setState({
+            openSearch: false
+        });
+    }
+
+    private openSearchModal = () => {
+        this.setState({
+            openSearch: true
+        });
+    }
+
     private manageTicketReservations = (id: string) => {
-        this.setState({reserveTicket: true, event: this.props.events.find(x => x.id === id)});
+        this.setState({ reserveTicket: true, event: this.props.events.find(x => x.id === id) });
     }
 
 
@@ -80,11 +97,18 @@ class ListPage extends Page<IListProps, IState> {
 
         return (
             <div className={classes.container}>
+                <Fab onClick={this.openSearchModal} color="primary" aria-label="search" className={classes.fab}>
+                    <SearchIcon />
+                </Fab>
                 {this.events}
                 <TicketReservationModal
                     open={this.state.reserveTicket}
                     onClose={this.closeTicketReservationModal}
                     event={this.state.event}
+                />
+                <EventSearchModal
+                    open={this.state.openSearch}
+                    onClose={this.closeSearchModal}
                 />
             </div>
         );
@@ -96,7 +120,14 @@ const styles = (theme: Theme) => ({
         display: 'flex',
         justifyContent: 'left',
         width: '100%',
-        flexGrow: 1
+        flexGrow: 1,
+        position: 'relative'
+    },
+    fab: {
+        position: 'fixed',
+        top: theme.spacing.unit * 10,
+        right: theme.spacing.unit * 2,
+        zIndex: 1000
     },
     card: {
         width: '100%'

@@ -22,11 +22,11 @@ class EnhancedTableToolbar extends React.Component<IEnhancedTableToolbarProps, {
             >
                 <div className={classes.title}>
                     {selected > 0 ? (
-                        <Typography color="inherit" variant="subheading">
+                        <Typography color="inherit" variant="subtitle1">
                             {selected} selected
             </Typography>
                     ) : (
-                            <Typography variant="title" id="tableTitle">
+                            <Typography variant="h6" id="tableTitle">
                                 Nutrition
             </Typography>
                         )}

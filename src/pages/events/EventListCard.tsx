@@ -61,7 +61,12 @@ export default class EventListCard extends React.Component<IEventCardProps, {}> 
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title={event.title}
+
+                title={
+                    <Typography variant='subtitle2'>
+                        {event.title}
+                    </Typography>
+                    }
                 subheader={`${event.price ? `P${event.price}` : 'Free'}` }
             />
             <CardMedia

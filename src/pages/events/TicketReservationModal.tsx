@@ -28,10 +28,10 @@ class TicketReservationModal extends React.Component<ITicketReservationModalProp
                 onClose={this.props.onClose}
             >
                 <Paper className={classes.paper} elevation={24}>
-                    <Typography component='h3' variant='title'>
+                    <Typography variant='h6'>
                         Manage Ticket Reservation
             </Typography>
-                    <Typography component='h3' variant='subheading'>
+                    <Typography variant='subtitle2'>
                         {event.title}
             </Typography>
                 <Typography>

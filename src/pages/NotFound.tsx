@@ -23,7 +23,7 @@ class NotFoundPage extends Page<INotFoundProps, {}> {
             <div className={classes.container}>
                 <Paper className={classes.paper}>
                     <ErrorIcon color='error' className={classes.icon}/>
-                   <Typography variant={'headline'}>
+                   <Typography variant={'h4'}>
                        Page not found. 
                    </Typography>
                 </Paper>

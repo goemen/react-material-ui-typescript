@@ -16,6 +16,9 @@ import { initializeStore } from './store/Store';
 import { firebaseApp } from './firebase-init';
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
   palette: {
     primary: blue,
     secondary: pink
