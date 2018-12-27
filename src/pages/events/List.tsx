@@ -106,6 +106,7 @@ class ListPage extends Page<IListProps, IState> {
                     onClose={this.closeTicketReservationModal}
                     event={this.state.event}
                 />
+
                 <EventSearchModal
                     open={this.state.openSearch}
                     onClose={this.closeSearchModal}
