@@ -15,6 +15,7 @@
     "no-var-requires": false,
     "no-console": false,
     "jsx-no-lambda": false,
-    "no-debugger": false
+    "no-debugger": false,
+    "no-implicit-this": true
   }
 }

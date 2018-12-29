@@ -64,7 +64,7 @@ export const loadEvents = () => {
                     const users = await Promise.all(attendancyPromises);
                     event.attendancy = users.reduce((acc, user) => {
                         return acc.set(user.uid, user);
-                    }, Map<string, User>())
+                    }, Map<string, User>());
                 }
 
                 dispatch({ type: ActionType.GET_EVENTS_SUCCESS, payload: {events: events.map(e => new Event(e))} });

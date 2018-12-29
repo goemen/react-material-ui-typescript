@@ -18,7 +18,6 @@ import { AppState } from '../state/AppState';
 import { Dispatch, connect } from 'react-redux';
 import * as _ from 'lodash';
 import { bindActionCreators } from 'redux';
-import { Alert } from '../state/Alert';
 import { AlertDialog } from '../alert/Alert';
 import SpinnerDialog from '../spinner/Spinner';
 import { AccountPage } from '../pages/account/Account';
@@ -39,6 +38,7 @@ import * as EventsActions from "../actions/Event.Actions";
 import { AppMetaTags } from '../components/MetaTags';
 import NotFoundPage from '../pages/NotFound';
 import 'typeface-roboto';
+import { IAlertButtonOptions } from '../pages/Page';
 
 //#endregion
 
@@ -47,7 +47,28 @@ interface IAppProps extends IApplicationProps {
   theme?: any;
 }
 
-class Application extends React.Component<IAppProps, {}> {
+interface IAlertOptions {
+  open: boolean;
+  buttons?: IAlertButtonOptions[];
+  title?: string;
+  message?: string;
+  contents?: React.ComponentType
+}
+
+interface IAppState {
+  alert: IAlertOptions;
+}
+
+class Application extends React.Component<IAppProps, IAppState> {
+
+  public state: IAppState = {
+    alert: {
+      open: false,
+      buttons: [],
+      title: null,
+      message: null
+    }
+  };
 
   public componentDidMount() {
     if (!this.props.users.loading && !this.props.users.doneLoading) {
@@ -98,11 +119,20 @@ class Application extends React.Component<IAppProps, {}> {
     this.props.closeDrawer();
   }
 
-  public showPopup = () => {
-    this.props.showPopup(new Alert({
-      title: 'Testing title',
-      message: 'This is a very long message, expect alert to be very wide'
-    }));
+  public dismissAlert = () => {
+    this.setState({ alert: { open: false } })
+  }
+
+  public showPopup = (title: string, message: string, buttons: IAlertButtonOptions[], contents?: React.ComponentType) => {
+    this.setState({
+      alert: {
+        open: true,
+        title,
+        message,
+        contents,
+        buttons
+      }
+    });
   }
 
   public showSpinner = () => {
@@ -110,16 +140,16 @@ class Application extends React.Component<IAppProps, {}> {
   }
 
   private renderAlert(): JSX.Element {
-    if (this.props.utility.alert) {
+
       return (
         <AlertDialog
+          open={this.state.alert.open}
           handleClose={this.props.closePopup}
-          data={this.props.utility.alert}
+          data={{ title: this.state.alert.title, message: this.state.alert.message, contents: this.state.alert.contents }}
+          buttons={this.state.alert.buttons}
         />
       );
-    }
 
-    return null;
   }
 
   private renderSpinner(): JSX.Element {
@@ -289,6 +319,9 @@ class Application extends React.Component<IAppProps, {}> {
           changeSelection={this.props.changeSelection}
           toggleProgress={this.props.toggleProgress}
           setTitle={this.props.setTitle}
+          auth={this.props.authentication}
+          alert={this.showPopup}
+          dismissAlert={this.dismissAlert}
         />
       );
     };
@@ -312,7 +345,7 @@ class Application extends React.Component<IAppProps, {}> {
             <Route path='/admin' render={Dashboard} />
             <Route path='/account' render={this.renderAccount} />
             <Route path='/events' render={EventsPage} />
-            <Route render={NotFound}/>
+            <Route render={NotFound} />
           </Switch>
           {this.renderAlert()}
           {this.renderSpinner()}

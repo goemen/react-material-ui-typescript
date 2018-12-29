@@ -22,6 +22,7 @@ interface IDashboardProps {
     theme?: any;
     children?: any;
     setTitle: (title: string) => void;
+    history: any;
 }
 
 interface IPageState {

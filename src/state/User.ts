@@ -1,6 +1,8 @@
 import { Model } from './Helpers';
 import * as _ from 'lodash';
 import { UserClaims } from './Claims';
+import { Map } from 'immutable';
+import { TicketDraw } from './TicketDraw';
 
 export const ADMIN_ROLE = 'Admin';
 
@@ -11,6 +13,7 @@ export interface IUser {
     uid: string;
     roles?: string[];
     claims?: UserClaims;
+    ticketDraws?: Map<string, TicketDraw>;
 }
 
 const UserModel = Model<IUser>({
@@ -19,7 +22,8 @@ const UserModel = Model<IUser>({
     photoUrl: null,
     uid: null,
     roles: null,
-    claims: null
+    claims: null,
+    ticketDraws: Map<string, TicketDraw>()
 });
 
 export class User extends UserModel {
@@ -29,6 +33,7 @@ export class User extends UserModel {
     public static PHOTO_URL = 'photoUrl';
     public static ROLES = 'roles';
     public static CUSTOM_CLAIMS = 'claims';
+    public static TICKET_DRAWS = 'ticketDraws';
 
     public uid: string;
     public email: string;
@@ -36,8 +41,13 @@ export class User extends UserModel {
     public roles: string[];
     public photoUrl: string;
     public claims: UserClaims;
+    public ticketDraws: Map<string, TicketDraw>;
 
     public isInRole(candidate: string) {
-        return _.intersection(this.roles, [candidate]).length > 0;
+        return this.hasRoles([candidate]);
+    }
+    
+    public hasRoles(candidates: string[]): boolean {
+        return _.intersection(this.roles, candidates).length > 0;
     }
 }

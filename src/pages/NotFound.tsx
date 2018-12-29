@@ -8,6 +8,7 @@ import red from '@material-ui/core/colors/red';
 interface INotFoundProps {
     setTitle: (title: string) => void;
     classes: any;
+    history: any;
 }
 
 class NotFoundPage extends Page<INotFoundProps, {}> {

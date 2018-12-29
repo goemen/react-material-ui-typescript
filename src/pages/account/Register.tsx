@@ -10,6 +10,7 @@ interface IRegisterProps {
     location?: any;
     classes?: any;
     setTitle: (title: string) => void;
+    history: any;
 }
 
 interface IField {

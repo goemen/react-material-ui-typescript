@@ -5,12 +5,15 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Alert } from '../state/Alert';
+import { IAlertButtonOptions } from '../pages/Page';
+import { Slide } from '@material-ui/core';
+import { noop } from 'lodash';
 
 interface IAlertProps {
-    data?: Alert;
+    data: any;
+    buttons?: IAlertButtonOptions[];
     handleClose: () => void;
-    children?: any;
+    open: boolean;
 }
 export class AlertDialog extends React.Component<IAlertProps, {}> {
 
@@ -18,29 +21,40 @@ export class AlertDialog extends React.Component<IAlertProps, {}> {
         this.props.handleClose();
     };
 
-    public render() {
-        return (
+    private renderButtons() {
+        return (this.props.buttons || []).map((b: IAlertButtonOptions, index: number) => (
+            <Button key={index} onClick={b.handler} color="primary">
+                {b.label}
+            </Button>
+        ));
+    }
 
+    private Transition = (props: any) => {
+        return (<Slide direction='up' {...props}/>);
+    }
+
+    public render() {
+        
+        return (
             <Dialog
-                open={this.props.data !== null}
+                open={this.props.open}
                 onClose={this.handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+                TransitionComponent={this.Transition}
+                TransitionProps={{mountOnEnter: true, unmountOnExit: true, in: this.props.open}}
             >
-                <DialogTitle id="alert-dialog-title">{this.props.data.title}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                    { this.props.data.message }
-            </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleClose} color="primary">
-                        Disagree
-            </Button>
-                    <Button onClick={this.handleClose} color="primary" autoFocus={true}>
-                        Agree
-            </Button>
-                </DialogActions>
+
+                    <DialogTitle id="alert-dialog-title">{this.props.data.title || ''}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            {this.props.data.message}
+                        </DialogContentText>
+                        {(this.props.data.contents || noop )()}
+                    </DialogContent>
+                    <DialogActions>
+                        {this.renderButtons()}
+                    </DialogActions>
             </Dialog>
         );
     }

@@ -7,6 +7,7 @@ interface IProfilePageProps {
     user: User;
     classes?: any;
     setTitle: (title: string) => void;
+    history: any;
 }
 
 class ProfilePage extends Page<IProfilePageProps, {}> {

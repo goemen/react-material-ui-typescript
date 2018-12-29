@@ -12,6 +12,7 @@ interface IRequestPasswordResetProps {
     classes?: any;
     user: User;
     setTitle: (title: string) => void;
+    history: any;
 }
 
 class RequestPasswordResetPage extends Page<IRequestPasswordResetProps, IResetPasswordModel> {

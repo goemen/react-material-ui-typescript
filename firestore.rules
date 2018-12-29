@@ -1,7 +1,7 @@
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{user} {
-      allow read, write: if false;
+      allow read, write: if true;
     }
 
     function isAdmin() {
@@ -17,15 +17,21 @@ service cloud.firestore {
     }
 
     function isValidEvent() {
-      return request.resource.data.title && request.resource.data.title.length < 255
-      && request.resource.data.description && request.resource.data.description.length < 500 && 
-      request.resource.data.location && request.resource.data.location.length < 255;
+      return true;
+      // request.resource.data.title && request.resource.data.title.length < 255
+      // && request.resource.data.description && request.resource.data.description.length < 500 && 
+      // request.resource.data.location && request.resource.data.location.length < 255;
     }
 
     match /events/{event} {
       allow get, read: if true;
-      allow update, delete: if isOwner() || isAdmin();
+      allow update, delete: if isAdmin();
       allow create: if isLoggedIn() && isValidEvent();
+    }
+
+    match /draws/{draw} {
+      allow get, read: if (isLoggedIn() && resource.data.userId == request.auth.uid) || isAdmin() ;
+      allow write: if false;
     }
   }
 }

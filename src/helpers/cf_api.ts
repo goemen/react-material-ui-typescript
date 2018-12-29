@@ -35,6 +35,10 @@ class CloudFunctionsApi {
   public async setUserCustomClaims(userId: string, claims: any) {
     return await this.handler.post(`/auth/users/${userId}/custom-claims`, claims);
   }
+
+  public async enterTicketDraw(eventId: string) {
+    return await this.handler.post('/events/enter-draw', {eventId});
+  }
 }
 
 export const CFAPI = new CloudFunctionsApi();

@@ -9,7 +9,6 @@ import 'firebase/firestore';
 
 export const initializeStore = (app: firebase.app.App) => {
     const history = createBrowserHistory();
-    firebase.firestore().settings({timestampsInSnapshots: true});
 
     return createStore(
         createReducers(history),

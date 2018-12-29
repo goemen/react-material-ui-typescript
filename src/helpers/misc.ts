@@ -1,8 +1,12 @@
 import * as _ from 'lodash';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
+import 'firebase/auth';
+import 'firebase/firestore';
 import * as uuid from 'node-uuid';
 const moment = require('moment');
+import { Event } from '../state/Event';
+
 export const isNotSet = (value: any) => {
     const notSet = _.isNull(value) || _.isUndefined(value) || _.isEmpty(value);
     return notSet;
@@ -44,3 +48,45 @@ export interface IEventSelect {
 export interface IThunkArgs {
     db: firebase.firestore.Firestore;
 }
+
+export const toggleGoing = async (event: Event) => {
+    const user = firebase.auth().currentUser;
+    const eventDocRef = firebase.firestore().doc(`events/${event.id}`);
+    try {
+        await firebase.firestore().runTransaction(async (tx) => {
+            const eventDoc = await tx.get(eventDocRef);
+            if (!eventDoc.exists) {
+                throw new Error('Event does not exist.');
+            }
+
+            const data = eventDoc.data();
+            const users = data.attendancy || {};
+            if (users[user.uid]) {
+                delete users[user.uid];
+            } else {
+                users[user.uid] = true;
+            }
+            return tx.update(eventDocRef, {attendancy: users});
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const setDate = (value: any) => {
+    if (value instanceof Date) {
+        return value;
+    } else if (typeof value === 'string') {
+        return moment(value).toDate();
+    } else if (typeof value.toDate === 'function') {
+        return value.toDate();
+    } else if (typeof value === 'number') {
+        return moment(value * 1000).toDate();
+    }else {
+        return new Date()
+    }
+}
+
+export const reserveTicketsModalTitle = 'Enter draw';
+export const reserveTicketsModalNote = (count: number = 0, nextDraw: Date = new Date()) =>
+ `Enter and stand a chance to win ${count} promotional tickets to this event. Next draw is ${formatDate(nextDraw)}`;

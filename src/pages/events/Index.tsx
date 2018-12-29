@@ -6,6 +6,8 @@ import ListPage from './List';
 import { Switch, Route } from 'react-router';
 import { IEventSelect } from '../../helpers/misc';
 import Details from './Details';
+import { User } from '../../state/User';
+import { IAlertButtonOptions } from '../Page';
 
 interface IProps {
     load: () => void;
@@ -17,6 +19,9 @@ interface IProps {
     changeSelection: (selection: IEventSelect) => void;
     toggleProgress: () => void;
     setTitle: (title: string) => void;
+    auth: User;
+    alert?: (title: string, message: string, buttons: IAlertButtonOptions[]) => void;
+    dismissAlert?: () => void;
 }
 
 export class EventsPageRouter extends React.Component<IProps, {}> {
@@ -31,11 +36,12 @@ export class EventsPageRouter extends React.Component<IProps, {}> {
             {...props}
             createInit={this.props.createInit}
             edit={this.props.editEvent}
-            formTitle={"Post new event"}
+            formTitle={"Edit event"}
             event={this.props.events.selection}
             save={this.props.saveEvent}
             changeSelection={this.props.changeSelection}
             toggleProgress={this.props.toggleProgress}
+            setTitle={this.props.setTitle}
         />)
     }
 
@@ -61,16 +67,22 @@ export class EventsPageRouter extends React.Component<IProps, {}> {
                 toggleProgress={this.props.toggleProgress}
                 changeSelection={this.props.changeSelection}
                 setTitle={this.props.setTitle}
-            />
-        );
-    }
-
-    private renderList = (props: any) => {
-        return (<ListPage
-            {...props}
-            events={this.props.events.items.sortBy(x => x.date).toList()}
-            toggleProgress={this.props.toggleProgress}
-            setTitle={this.props.setTitle}
+                auth={this.props.auth}
+                alert={this.props.alert}
+                dismissAlert={this.props.dismissAlert}
+                />
+                );
+            }
+            
+            private renderList = (props: any) => {
+                return (<ListPage
+                    {...props}
+                    events={this.props.events.items.sortBy(x => x.date).toList()}
+                    toggleProgress={this.props.toggleProgress}
+                    setTitle={this.props.setTitle}
+                    auth={this.props.auth}
+                    alert={this.props.alert}
+                    dismissAlert={this.props.dismissAlert}
         />);
     }
 

@@ -6,32 +6,46 @@ import { Event } from '../../state/Event';
 import EventListCard from './EventListCard';
 import { Theme, withStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import TicketReservationModal from './TicketReservationModal';
-import { Page } from '../Page';
+import { Page, IAlertButtonOptions } from '../Page';
 import Fab from '@material-ui/core/Fab';
 import SearchIcon from '@material-ui/icons/Search';
 import EventSearchModal from './EventSearchModal';
+import { User } from '../../state/User';
+import { Authorize } from '../../decorators/Authorize';
+import { CFAPI } from '../../helpers/cf_api';
+import green from '@material-ui/core/colors/green';
+import { reserveTicketsModalTitle, reserveTicketsModalNote } from '../../helpers/misc';
+import { orange } from '@material-ui/core/colors';
 
 interface IListProps {
     match?: any;
-    history?: any;
+    history: any;
     location?: any;
     classes: any;
     events: List<Event>;
     toggleProgress: () => void;
     setTitle: (title: string) => void;
+    auth: User;
+    alert: (title: string, message: string, buttons: IAlertButtonOptions[], contents?: React.ComponentType) => void;
+    dismissAlert: () => void;
 }
 
+interface IReservation {
+    eventId?: string;
+    count?: number;
+    processing?: boolean;
+}
 
 interface IState {
-    reserveTicket: boolean;
+
+    reserveTicket: IReservation;
     event: Event;
     openSearch: boolean;
 }
 
 class ListPage extends Page<IListProps, IState> {
     public state: IState = {
-        reserveTicket: false,
+        reserveTicket: {},
         openSearch: false,
         event: null
     };
@@ -59,20 +73,14 @@ class ListPage extends Page<IListProps, IState> {
                             details={this.navigate}
                             event={e}
                             classes={this.props.classes}
-                            manageTicketReservations={this.manageTicketReservations}
+                            processingReservation={this.state.reserveTicket.eventId === e.id && this.state.reserveTicket.processing}
+                            manageTicketReservations={this.manageTicketReservations.bind(this, e.id)}
                         />
                     </Grid>
                 ))}
             </Grid>
 
         </div>)
-    }
-
-    private closeTicketReservationModal = () => {
-        this.setState({
-            reserveTicket: false,
-            event: null
-        });
     }
 
     private closeSearchModal = () => {
@@ -87,8 +95,37 @@ class ListPage extends Page<IListProps, IState> {
         });
     }
 
-    private manageTicketReservations = (id: string) => {
-        this.setState({ reserveTicket: true, event: this.props.events.find(x => x.id === id) });
+    @Authorize()
+    private manageTicketReservations(id: string) {
+
+        const clearReservation = () => {
+            this.setState({
+                reserveTicket: {
+                    eventId: null,
+                    count: null,
+                    processing: null
+                }
+            });
+        }
+
+        this.alert(reserveTicketsModalTitle,
+            reserveTicketsModalNote(0),
+            [
+                {
+                    label: 'Cancel', handler: () => {
+                        clearReservation();
+                        this.dismissAlert();
+                    }
+                },
+                {
+                    label: 'Enter', handler: async () => {
+                        this.dismissAlert();
+                        this.setState({ reserveTicket: { ...this.state.reserveTicket, processing: true } });
+                        await CFAPI.enterTicketDraw(this.state.reserveTicket.eventId);
+                        clearReservation();
+                    }
+                }
+            ]);
     }
 
 
@@ -101,11 +138,6 @@ class ListPage extends Page<IListProps, IState> {
                     <SearchIcon />
                 </Fab>
                 {this.events}
-                <TicketReservationModal
-                    open={this.state.reserveTicket}
-                    onClose={this.closeTicketReservationModal}
-                    event={this.state.event}
-                />
 
                 <EventSearchModal
                     open={this.state.openSearch}
@@ -165,6 +197,28 @@ const styles = (theme: Theme) => ({
         flexWrap: 'wrap',
         width: '100%',
         flexGrow: 1
+    },
+    btnWrapper: {
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center'
+    },
+    buttonProgress: {
+        color: green[500],
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
+    },
+    casino: {
+        color: green['500']
+    },
+    free: {
+        color: green['500']
+    },
+    notfree: {
+        color: orange['500']
     }
 });
 

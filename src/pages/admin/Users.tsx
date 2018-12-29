@@ -19,6 +19,7 @@ interface IUserManagementPageProps {
     location?: any;
     classes?: any;
     setTitle: (title: string) => void;
+    history: any;
 }
 
 const TableRow = ({row, ...restProps}: any) => {

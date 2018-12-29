@@ -14,6 +14,8 @@ import Loading from './components/Loading';
 import { UserClaims } from './state/Claims';
 import { initializeStore } from './store/Store';
 import { firebaseApp } from './firebase-init';
+import { TicketDraw } from './state/TicketDraw';
+import { Map } from 'immutable';
 
 const theme = createMuiTheme({
   typography: {
@@ -29,6 +31,7 @@ const store = initializeStore(firebaseApp());
 
 class App extends React.Component<{}, { loading: boolean }> {
   public removeAuthListener: firebase.Unsubscribe;
+  public removeReservationsListener: firebase.Unsubscribe;
   public state = { loading: true };
 
   public componentWillMount() {
@@ -52,6 +55,15 @@ class App extends React.Component<{}, { loading: boolean }> {
           }
         }
         store.dispatch({ type: ActionType.CURRENT_USER, payload: userInfo });
+
+        firebase.firestore().collection('draws')
+        .where('userId', '==', user.uid).onSnapshot(snapshot => {
+          const reservations = snapshot.docs.map(x => new TicketDraw({id: x.id, ...x.data()}))
+          .filter(x => !x.isExpired);
+          store.dispatch({type: ActionType.DRAWS, payload: reservations.reduce(
+            (acc: Map<string, TicketDraw>, value: TicketDraw) => acc.set(value.eventId, value),
+            Map<string, TicketDraw>())})
+        });
       }
       setTimeout(() =>
         this.setState({ loading: false }), 2000
