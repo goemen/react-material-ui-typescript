@@ -21,44 +21,40 @@ app.post('/enter-draw', isAuthenticated, async (req, res) => {
       throw new Error('Event ID is missing.');
     }
 
-
     data.userId = user.uid;
     const eventRef = await admin.firestore().doc('events/' + data.eventId).get();
     if (!eventRef.exists) {
       throw new Error('Event not found.');
     }
 
-    const drawRate = eventRef.data().drawRate;
-    const lastDrawDate = moment(eventRef.data().lastDrawDate);
+    const nextDrawDate = moment(eventRef.data().nextDraw);
 
-    // check if user has reservation for this event
-    const existingReservationRef = await admin.firestore().collection('draws')
+    // check if user has draws for this event
+    const existingDrawsRef = await admin.firestore().collection('draws')
       .where('userId', '==', user.uid)
-      .where('eventId', '==', data.eventId).orderBy('dateEntered').startAt(
-        moment().startOf(drawRate).unix()
-      ).endAt(lastDrawDate.unix()).limit(1).get();
+      .where('eventId', '==', data.eventId).orderBy('dateEntered').endAt(nextDrawDate.unix()).limit(1).get();
 
-    let reservationRef;
-    if (existingReservationRef.empty) {
+    let drawsRef;
+    if (existingDrawsRef.empty) {
       const token = totpGenerator(CONFIG.secret);
       data.code = token;
       data.dateEntered = moment().unix();
+      data.drawDate = nextDrawDate.unix();
 
-      reservationRef = await admin.firestore().collection('draws').add(data);
+      drawsRef = await admin.firestore().collection('draws').add(data);
 
-      const eventReservation = eventRef.data().reservations || {};
-      eventReservation[reservationRef.id] = true;
-      await eventRef.ref.update({ reservations: eventReservation });
-
+      const eventDraws = eventRef.data().draws || {};
+      eventDraws[drawsRef.id] = true;
+      await eventRef.ref.update({ draws: eventDraws });
       const userRef = await admin.firestore().doc('users/' + user.uid).get();
-      const userReservation = userRef.data().reservations || {};
-      userReservation[reservationRef.id] = true;
-      await userRef.ref.update({ reservations: eventReservation });
+      const userTicketDraws = userRef.data().draws || {};
+      userTicketDraws[drawsRef.id] = true;
+      await userRef.ref.update({ draws: userTicketDraws });
     } else {
-      throw new Error({message: 'Already entered for this ' + drawRate + '.'});
+      throw new Error({ message: 'Already entered for this ' + drawRate + '.' });
     }
 
-    data.id = reservationRef.id;
+    data.id = drawsRef.id;
     return res.json(data);
   } catch (err) {
     return res.status(500).json({ error: err });

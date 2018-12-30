@@ -16,13 +16,13 @@ import GroupIcon from '@material-ui/icons/Group';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import CasinoIcon from '@material-ui/icons/Casino';
-import TimerIcon from '@material-ui/icons/Timer';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import { Authorize } from '../../decorators/Authorize';
 import { User, ADMIN_ROLE } from '../../state/User';
 import { CFAPI } from '../../helpers/cf_api';
 import { green, orange } from '@material-ui/core/colors';
+import { TicketDraw } from '../../state/TicketDraw';
 const classnames = require('classnames');
 
 interface IDetailsProps {
@@ -81,6 +81,24 @@ class Details extends Page<IDetailsProps, IPageState> {
                         />
                     </ListItemAvatar>
                     <ListItemText primary={user.displayName} />
+                </ListItem>
+            ))}
+        </List>);
+    }
+
+    private renderDraws(): JSX.Element {
+        const { classes, auth, event } = this.props;
+        const draws = auth.ticketDraws.get(event.id);
+
+        return (<List dense className={classes.root}>
+            {draws.map((draw: TicketDraw, index: number) => (
+                <ListItem key={index} button={true}>
+                    <ListItemAvatar>
+                    <Avatar className={classes.avatar}>{index + 1   }</Avatar>
+                    </ListItemAvatar>
+                    <ListItemText secondary={formatDate(draw.drawDate)} primary={
+                        <Typography variant='h5'>{draw.code}</Typography>
+                    }/>
                 </ListItem>
             ))}
         </List>);
@@ -208,10 +226,13 @@ class Details extends Page<IDetailsProps, IPageState> {
         const {auth, event} = this.props;
 
         if (!auth.ticketDraws.has(event.id)) {
-            return (<Typography>Ticket reservation</Typography>);
+            return (<Typography>Ticket Draws</Typography>);
         }
 
-        return (<Typography>Ticket reservation Timer</Typography>);
+        return (
+
+            this.renderDraws()
+        );
     }
 
     public render(): JSX.Element {
@@ -242,7 +263,7 @@ class Details extends Page<IDetailsProps, IPageState> {
                                 >
                                     <Tab icon={<GroupIcon />} label="WHO IS GOING?" />
                                     <Tab icon={<QuestionAnswerIcon />} label="FAQs" />
-                                    {this.props.auth !== null && <Tab icon={<TimerIcon />} label="TICKET DRAW" />}
+                                    {this.props.auth !== null && <Tab icon={<CasinoIcon />} label="TICKET DRAW" />}
                                 </Tabs>
                             </Paper>
                             {activeTab === 0 && (this.WhoIsGoing())}

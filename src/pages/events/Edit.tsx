@@ -54,10 +54,10 @@ class Edit extends Page<IEditProps, IPageSate> {
                 if (ref.exists) {
                     const data: any = ref.data();
                     const event = new Event({
-                        ...data, 
+                        ...data,
                         id
                     });
-                    this.props.changeSelection({event});
+                    this.props.changeSelection({ event });
                 } else {
                     this.props.history.replace('/not-found');
                 }
@@ -221,6 +221,9 @@ class Edit extends Page<IEditProps, IPageSate> {
                         <FormControl required={true} fullWidth={true} className={classes.field}>
                             <InputLabel htmlFor="description">Description</InputLabel>
                             <Input
+                                multiline={true}
+                                rowsMax={6}
+                                rows={6}
                                 defaultValue={this.props.event.description}
                                 id="description"
                                 onChange={this.edit.bind(this, 'description')}

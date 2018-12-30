@@ -1,7 +1,7 @@
 import { Model } from './Helpers';
 import * as _ from 'lodash';
 import { UserClaims } from './Claims';
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 import { TicketDraw } from './TicketDraw';
 
 export const ADMIN_ROLE = 'Admin';
@@ -13,7 +13,7 @@ export interface IUser {
     uid: string;
     roles?: string[];
     claims?: UserClaims;
-    ticketDraws?: Map<string, TicketDraw>;
+    ticketDraws?: Map<string, List<TicketDraw>>;
 }
 
 const UserModel = Model<IUser>({
@@ -23,7 +23,7 @@ const UserModel = Model<IUser>({
     uid: null,
     roles: null,
     claims: null,
-    ticketDraws: Map<string, TicketDraw>()
+    ticketDraws: Map<string, List<TicketDraw>>()
 });
 
 export class User extends UserModel {
@@ -41,7 +41,7 @@ export class User extends UserModel {
     public roles: string[];
     public photoUrl: string;
     public claims: UserClaims;
-    public ticketDraws: Map<string, TicketDraw>;
+    public ticketDraws: Map<string, List<TicketDraw>>;
 
     public isInRole(candidate: string) {
         return this.hasRoles([candidate]);

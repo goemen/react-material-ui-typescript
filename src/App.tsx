@@ -15,7 +15,8 @@ import { UserClaims } from './state/Claims';
 import { initializeStore } from './store/Store';
 import { firebaseApp } from './firebase-init';
 import { TicketDraw } from './state/TicketDraw';
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
+import { groupBy, keys } from 'lodash';
 
 const theme = createMuiTheme({
   typography: {
@@ -58,11 +59,12 @@ class App extends React.Component<{}, { loading: boolean }> {
 
         firebase.firestore().collection('draws')
         .where('userId', '==', user.uid).onSnapshot(snapshot => {
-          const reservations = snapshot.docs.map(x => new TicketDraw({id: x.id, ...x.data()}))
-          .filter(x => !x.isExpired);
-          store.dispatch({type: ActionType.DRAWS, payload: reservations.reduce(
-            (acc: Map<string, TicketDraw>, value: TicketDraw) => acc.set(value.eventId, value),
-            Map<string, TicketDraw>())})
+          const draws = groupBy(snapshot.docs.map(x => new TicketDraw({id: x.id, ...x.data()})), d => d.eventId);
+          const eventIds = keys(draws);
+          console.log(draws);
+          store.dispatch({type: ActionType.DRAWS, payload: eventIds.reduce(
+            (acc: Map<string, List<TicketDraw>>, value: string) => acc.set(value, List<TicketDraw>(draws[value])),
+            Map<string, List<TicketDraw>>())})
         });
       }
       setTimeout(() =>

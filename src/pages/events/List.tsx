@@ -121,7 +121,7 @@ class ListPage extends Page<IListProps, IState> {
                     label: 'Enter', handler: async () => {
                         this.dismissAlert();
                         this.setState({ reserveTicket: { ...this.state.reserveTicket, processing: true } });
-                        await CFAPI.enterTicketDraw(this.state.reserveTicket.eventId);
+                        await CFAPI.enterTicketDraw(id);
                         clearReservation();
                     }
                 }
