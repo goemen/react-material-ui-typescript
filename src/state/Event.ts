@@ -90,6 +90,8 @@ export class Event extends EventModel implements IEvent {
             {},
             data,
             {
+                ticketsCountPerDraw: parseInt(data.ticketsCountPerDraw),
+                date: data.date ? Event.setDate(data.date) : new Date(),
                 firstDraw: data.firstDraw ? Event.setDate(data.firstDraw) : new Date(),
                 lastDrawDate: data.lastDrawDate ? Event.setDate(data.lastDrawDate) : new Date(),
                 nextDraw: data.nextDraw ? Event.setDate(data.nextDraw) : new Date()
@@ -122,7 +124,7 @@ export class Event extends EventModel implements IEvent {
     }
 
     public get ticketDrawable(): boolean {
-        return this.drawSettings.drawTicketCount > 0;
+        return this.drawSettings.drawTicketCount > 0 && !moment(this.nextDraw).isAfter(moment(this.lastDrawDate));
     }
 
     public toSaveable(preserveId: boolean = false) {
@@ -130,8 +132,15 @@ export class Event extends EventModel implements IEvent {
         if (!preserveId) {
             delete data.id;
         }
+    
         delete data.createdBy;
         delete data.attendancy;
+
+        data.date = moment(data.date).toDate();
+        data.firstDraw = moment(data.firstDraw).toDate();
+        data.nextDraw = moment(data.nextDraw).toDate();
+        data.nextDraw = moment(data.nextDraw).toDate();
+        data.lastDrawDate = moment(data.lastDrawDate).toDate();
         return data;
     }
 

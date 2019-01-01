@@ -1,17 +1,19 @@
 import * as React from 'react';
 import {
-    Theme, withStyles, FormControl, InputLabel, Input, Button, TextField, Card, CardHeader,
+    Theme, withStyles, FormControl, InputLabel, Input, Button, Card, CardHeader,
     Avatar, CardMedia, CardContent, CardActions, Collapse, Typography, Select, MenuItem, Hidden
 } from '@material-ui/core';
 import { Event } from '../../state/Event';
-const moment = require('moment');
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import { IEventSelect, uploadPhoto, formatDate } from '../../helpers/misc';
 import UploadIcon from '@material-ui/icons/FileUpload';
 import * as _ from 'lodash';
+const moment = require('moment');
 import { Page } from '../Page';
+import { DatetimePicker } from '../../components/DatetimePicker';
+import { NumberInput } from '../../components/NumberInput';
 
 interface IEditProps {
     match?: any;
@@ -69,6 +71,10 @@ class Edit extends Page<IEditProps, IPageSate> {
 
     private edit = (prop: string, event: any) => {
         this.props.edit(prop, event.target.value);
+    }
+
+    private editDate = (prop: string, date: any) => {
+        this.props.edit(prop, moment(date).format('YYYY-MM-DDTHH:mm'));
     }
 
     private async save() {
@@ -190,15 +196,10 @@ class Edit extends Page<IEditProps, IPageSate> {
                             />
                         </FormControl>
                         <FormControl required={true} fullWidth={true} className={classes.field}>
-                            <TextField
+                            <DatetimePicker
+                                value={this.props.event.date}
+                                onChange={this.editDate.bind(this, Event.DATE)}
                                 label="When?"
-                                type='datetime-local'
-                                defaultValue={moment(this.props.event.date).format('YYYY-MM-DDTHH:mm')}
-                                onChange={this.edit.bind(this, 'date')}
-                                id="date"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
                             />
                         </FormControl>
                         <FormControl required={true} fullWidth={true} className={classes.field}>
@@ -212,7 +213,7 @@ class Edit extends Page<IEditProps, IPageSate> {
                         </FormControl>
                         <FormControl fullWidth={true} className={classes.field}>
                             <InputLabel htmlFor="fee">Door fee?</InputLabel>
-                            <Input
+                            <NumberInput
                                 defaultValue={this.props.event.price}
                                 id="fee"
                                 onChange={this.edit.bind(this, Event.PRICE)}
@@ -230,6 +231,7 @@ class Edit extends Page<IEditProps, IPageSate> {
 
                             />
                         </FormControl>
+
                     </CardContent>
 
                     <Collapse in={this.state.drawSettingsOpen} timeout="auto" unmountOnExit>
@@ -240,9 +242,10 @@ class Edit extends Page<IEditProps, IPageSate> {
                             </Typography>
                             <FormControl fullWidth={true} className={classes.field}>
                                 <InputLabel htmlFor="count">Number of tickets per draw</InputLabel>
-                                <Input
+
+                                <NumberInput
                                     defaultValue={this.props.event.ticketsCountPerDraw}
-                                    id="count"
+                                    id="number"
                                     onChange={this.edit.bind(this, Event.DRAW_TICKET_COUNT)}
                                 />
                             </FormControl>
@@ -262,28 +265,20 @@ class Edit extends Page<IEditProps, IPageSate> {
                                 </Select>
                             </FormControl>
                             <FormControl required={true} fullWidth={true} className={classes.field}>
-                                <TextField
+                                <DatetimePicker
+                                    value={this.props.event.firstDraw}
+                                    onChange={this.editDate.bind(this, Event.FIRST_DRAW_DATE)}
                                     label="First draw date"
-                                    type='datetime-local'
-                                    defaultValue={moment(this.props.event.firstDraw).format('YYYY-MM-DDTHH:mm')}
-                                    onChange={this.edit.bind(this, Event.FIRST_DRAW_DATE)}
-                                    id="firstDraw"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
                                 />
                             </FormControl>
                             <FormControl required={true} fullWidth={true} className={classes.field}>
-                                <TextField
+                                <DatetimePicker
+                                    value={this.props.event.lastDrawDate}
+                                    onChange={this.editDate.bind(this, Event.LAST_DRAW_DATE)}
                                     label="Last draw date"
-                                    type='datetime-local'
-                                    defaultValue={moment(this.props.event.lastDrawDate).format('YYYY-MM-DDTHH:mm')}
-                                    onChange={this.edit.bind(this, Event.LAST_DRAW_DATE)}
-                                    id="lasttDraw"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
                                 />
+                            </FormControl>
+                            <FormControl required={true} fullWidth={true} className={classes.field}>
                             </FormControl>
                         </CardContent>
                     </Collapse>

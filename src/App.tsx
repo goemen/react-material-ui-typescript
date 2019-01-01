@@ -61,7 +61,6 @@ class App extends React.Component<{}, { loading: boolean }> {
         .where('userId', '==', user.uid).onSnapshot(snapshot => {
           const draws = groupBy(snapshot.docs.map(x => new TicketDraw({id: x.id, ...x.data()})), d => d.eventId);
           const eventIds = keys(draws);
-          console.log(draws);
           store.dispatch({type: ActionType.DRAWS, payload: eventIds.reduce(
             (acc: Map<string, List<TicketDraw>>, value: string) => acc.set(value, List<TicketDraw>(draws[value])),
             Map<string, List<TicketDraw>>())})

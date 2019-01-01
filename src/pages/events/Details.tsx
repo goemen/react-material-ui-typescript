@@ -21,7 +21,7 @@ import 'firebase/auth';
 import { Authorize } from '../../decorators/Authorize';
 import { User, ADMIN_ROLE } from '../../state/User';
 import { CFAPI } from '../../helpers/cf_api';
-import { green, orange } from '@material-ui/core/colors';
+import { green, orange, lightGreen, blueGrey } from '@material-ui/core/colors';
 import { TicketDraw } from '../../state/TicketDraw';
 const classnames = require('classnames');
 
@@ -89,16 +89,17 @@ class Details extends Page<IDetailsProps, IPageState> {
     private renderDraws(): JSX.Element {
         const { classes, auth, event } = this.props;
         const draws = auth.ticketDraws.get(event.id);
+        const ticketsCount = event.ticketsCountPerDraw;
 
         return (<List dense className={classes.root}>
             {draws.map((draw: TicketDraw, index: number) => (
                 <ListItem key={index} button={true}>
                     <ListItemAvatar>
-                    <Avatar className={classes.avatar}>{index + 1   }</Avatar>
+                        <Avatar className={classnames(classes.avatar, draw.isFutureDrawable && classes.futureDraw, draw.winner && classes.won)}>{index + 1}</Avatar>
                     </ListItemAvatar>
-                    <ListItemText secondary={formatDate(draw.drawDate)} primary={
-                        <Typography variant='h5'>{draw.code}</Typography>
-                    }/>
+                    <ListItemText 
+                        secondary={`${draw.isFutureDrawable || draw.winner ?  ticketsCount + ' tickets' : 'No luck'} ${draw.isFutureDrawable ? ('-' + formatDate(draw.drawDate)) : ''}`}
+                        primary={<Typography variant='h5'>{draw.code}</Typography>} />
                 </ListItem>
             ))}
         </List>);
@@ -106,7 +107,7 @@ class Details extends Page<IDetailsProps, IPageState> {
 
     @Authorize()
     private manageTicketReservations() {
-        const {event} = this.props;
+        const { event } = this.props;
         const dismiss = () => {
             this.setState({ processingReservation: false });
             this.dismissAlert();
@@ -114,16 +115,16 @@ class Details extends Page<IDetailsProps, IPageState> {
 
         this.alert(reserveTicketsModalTitle, reserveTicketsModalNote(
             event.ticketsCountPerDraw || 0, event.nextDraw || new Date()), [
-            { label: 'Cancel', handler: () => dismiss() },
-            {
-                label: 'Enter', handler: async () => {
-                    this.setState({ processingReservation: true });
-                    await CFAPI.enterTicketDraw(this.props.event.id);
-                    this.setState({ processingReservation: false });
-                    this.dismissAlert();
+                { label: 'Cancel', handler: () => dismiss() },
+                {
+                    label: 'Enter', handler: async () => {
+                        this.setState({ processingReservation: true });
+                        await CFAPI.enterTicketDraw(this.props.event.id);
+                        this.setState({ processingReservation: false });
+                        this.dismissAlert();
+                    }
                 }
-            }
-        ]);
+            ]);
     }
 
     @Authorize()
@@ -167,7 +168,7 @@ class Details extends Page<IDetailsProps, IPageState> {
                             {event.title}
                         </Typography>
                     }
-                    subheader={<Typography variant='button' className={classnames( event.price ? classes.notfree : classes.free)}>{event.price ? `P${event.price}` : 'Free'}</Typography>}
+                    subheader={<Typography variant='button' className={classnames(event.price ? classes.notfree : classes.free)}>{event.price ? `P${event.price}` : 'Free'}</Typography>}
                 />
                 <CardMedia
                     className={classes.media}
@@ -183,15 +184,15 @@ class Details extends Page<IDetailsProps, IPageState> {
                         <FavoriteIcon color={event.isUserGoing(user.uid) ? 'secondary' : 'inherit'} />
                         Like?
                 </Button>
-                {
-                   event.ticketDrawable &&  (<div className={classes.btnWrapper}>
+                    {
+                        event.ticketDrawable && (<div className={classes.btnWrapper}>
 
-                        <Button aria-label="Draw" onClick={this.manageTicketReservations.bind(this)}>
-                            <CasinoIcon className={classes.casino} />
-                            Win tickets
+                            <Button aria-label="Draw" onClick={this.manageTicketReservations.bind(this)}>
+                                <CasinoIcon className={classes.casino} />
+                                Win tickets
                         </Button>
-                        {this.state.processingReservation && <CircularProgress size={24} className={classes.buttonProgress} />}
-                   </div> )}
+                            {this.state.processingReservation && <CircularProgress size={24} className={classes.buttonProgress} />}
+                        </div>)}
                     {
                         this.getUser() &&
 
@@ -223,7 +224,7 @@ class Details extends Page<IDetailsProps, IPageState> {
     }
 
     public renderReservationTimer() {
-        const {auth, event} = this.props;
+        const { auth, event } = this.props;
 
         if (!auth.ticketDraws.has(event.id)) {
             return (<Typography>Ticket Draws</Typography>);
@@ -263,7 +264,7 @@ class Details extends Page<IDetailsProps, IPageState> {
                                 >
                                     <Tab icon={<GroupIcon />} label="WHO IS GOING?" />
                                     <Tab icon={<QuestionAnswerIcon />} label="FAQs" />
-                                    {this.props.auth !== null && <Tab icon={<CasinoIcon />} label="TICKET DRAW" />}
+                                    {this.props.auth !== null && <Tab icon={<CasinoIcon />} label="TICKET DRAWS" />}
                                 </Tabs>
                             </Paper>
                             {activeTab === 0 && (this.WhoIsGoing())}
@@ -272,7 +273,7 @@ class Details extends Page<IDetailsProps, IPageState> {
                                 <div className={classes.reservation}>
                                     {this.renderReservationTimer()}
                                 </div>
-                            
+
                             )}
                         </div>
                     </Grid>
@@ -344,6 +345,12 @@ const styles = (theme: Theme) => ({
     },
     notfree: {
         color: orange['500']
+    },
+    won: {
+        backgroundColor: lightGreen['500']
+    },
+    futureDraw: {
+        backgroundColor: blueGrey['500']
     }
 });
 
