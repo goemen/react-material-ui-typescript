@@ -52,7 +52,9 @@ interface IAlertOptions {
   buttons?: IAlertButtonOptions[];
   title?: string;
   message?: string;
-  contents?: React.ComponentType
+  contents?: React.ComponentType;
+  fullscreen?: boolean;
+  searchable?: boolean;
 }
 
 interface IAppState {
@@ -66,7 +68,9 @@ class Application extends React.Component<IAppProps, IAppState> {
       open: false,
       buttons: [],
       title: null,
-      message: null
+      message: null,
+      fullscreen: false,
+      searchable: false
     }
   };
 
@@ -123,14 +127,17 @@ class Application extends React.Component<IAppProps, IAppState> {
     this.setState({ alert: { open: false } })
   }
 
-  public showPopup = (title: string, message: string, buttons: IAlertButtonOptions[], contents?: React.ComponentType) => {
+  public showPopup = (title: string, message: string, buttons: IAlertButtonOptions[], 
+    contents: React.ComponentType = _.noop as any, options: any = {}) => {
     this.setState({
       alert: {
         open: true,
         title,
         message,
         contents,
-        buttons
+        buttons,
+        fullscreen: options.fullscreen,
+        searchable: options.searchable,
       }
     });
   }
@@ -144,9 +151,10 @@ class Application extends React.Component<IAppProps, IAppState> {
       return (
         <AlertDialog
           open={this.state.alert.open}
-          handleClose={this.props.closePopup}
+          handleClose={this.dismissAlert}
           data={{ title: this.state.alert.title, message: this.state.alert.message, contents: this.state.alert.contents }}
           buttons={this.state.alert.buttons}
+          fullscreen={this.state.alert.fullscreen}
         />
       );
 
@@ -322,6 +330,7 @@ class Application extends React.Component<IAppProps, IAppState> {
           auth={this.props.authentication}
           alert={this.showPopup}
           dismissAlert={this.dismissAlert}
+          setQuery={this.props.setSearch}
         />
       );
     };

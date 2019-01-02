@@ -16,6 +16,8 @@ import { CFAPI } from '../../helpers/cf_api';
 import green from '@material-ui/core/colors/green';
 import { reserveTicketsModalTitle, reserveTicketsModalNote } from '../../helpers/misc';
 import { orange } from '@material-ui/core/colors';
+import { SearchQuery, ISearchQuery } from '../../state/SearchQuery';
+import * as firebase from 'firebase';
 
 interface IListProps {
     match?: any;
@@ -26,8 +28,9 @@ interface IListProps {
     toggleProgress: () => void;
     setTitle: (title: string) => void;
     auth: User;
-    alert: (title: string, message: string, buttons: IAlertButtonOptions[], contents?: React.ComponentType) => void;
+    alert: (title: string, message: string, buttons: IAlertButtonOptions[], contents?: React.ComponentType, fullscreen?: boolean) => void;
     dismissAlert: () => void;
+    setQuery: (query: SearchQuery) => void;
 }
 
 interface IReservation {
@@ -37,18 +40,23 @@ interface IReservation {
 }
 
 interface IState {
-
     reserveTicket: IReservation;
     event: Event;
     openSearch: boolean;
+    query: ISearchQuery
 }
 
 class ListPage extends Page<IListProps, IState> {
-    public state: IState = {
-        reserveTicket: {},
-        openSearch: false,
-        event: null
-    };
+    constructor(props: IListProps) {
+        super(props);
+        this.state = {
+            reserveTicket: {},
+            openSearch: false,
+            event: null,
+            query: (props.auth && props.auth.searchQuery) ? props.auth.searchQuery.toJS() : (new SearchQuery()).toJS()
+        };
+    }
+   
     public componentWillMount() {
         this.props.setTitle('Explore events')
         if (this.props.events.isEmpty()) {
@@ -83,16 +91,41 @@ class ListPage extends Page<IListProps, IState> {
         </div>)
     }
 
-    private closeSearchModal = () => {
-        this.setState({
-            openSearch: false
-        });
+    private onSearchChange = (field: string, value: any) => {
+        const query = this.state.query;
+        query[field] = value;
+        this.setState({query});
+    }
+
+    private applyQuery = async () => {
+        try {
+            const query = new SearchQuery(this.state.query);
+            const userRef = firebase.firestore().collection('users').doc(this.props.auth.uid);
+            const data = {};
+            data[User.SEARCH_QUERY] = query.saveable;
+            await userRef.update(data);
+            this.props.setQuery(query);
+            this.dismissAlert();
+        } catch (error) {
+            this.error('Failed to apply query. Please try again');
+        }
     }
 
     private openSearchModal = () => {
-        this.setState({
-            openSearch: true
-        });
+
+        this.alert(
+            'Search',
+            '',
+            [
+                {label: 'Dismiss', handler: () => this.dismissAlert()},
+                {label: 'Apply', primary: true, handler: () => this.applyQuery()}
+            ],
+            () => (<EventSearchModal
+                query={this.state.query}
+                onChange={this.onSearchChange}
+            />),
+            {fullscreen: true, searchable: true}
+        );
     }
 
     @Authorize()
@@ -109,7 +142,7 @@ class ListPage extends Page<IListProps, IState> {
         }
 
         this.alert(reserveTicketsModalTitle,
-            reserveTicketsModalNote(0),
+            reserveTicketsModalNote(this.props.events.find(x => x.id === id).ticketsCountPerDraw),
             [
                 {
                     label: 'Cancel', handler: () => {
@@ -134,15 +167,10 @@ class ListPage extends Page<IListProps, IState> {
 
         return (
             <div className={classes.container}>
-                <Fab onClick={this.openSearchModal} color="primary" aria-label="search" className={classes.fab}>
+                <Fab onClick={this.openSearchModal} color="secondary" aria-label="search" className={classes.fab}>
                     <SearchIcon />
                 </Fab>
                 {this.events}
-
-                <EventSearchModal
-                    open={this.state.openSearch}
-                    onClose={this.closeSearchModal}
-                />
             </div>
         );
     }

@@ -6,13 +6,14 @@ import { User } from '../state/User';
 interface IPageProps {
     setTitle: (title: string) => void;
     auth?: User;
-    alert?: (title: string, message: string, buttons: IAlertButtonOptions[], contents?: React.ComponentType) => void;
+    alert?: (title: string, message: string, buttons: IAlertButtonOptions[], contents?: React.ComponentType, options?: any) => void;
     dismissAlert?: () => void;
     history: any;
 }
 
 export interface IAlertButtonOptions {
     label: string;
+    primary?: boolean;
     handler: () => void;
 }
 
@@ -32,9 +33,9 @@ export class Page<P extends IPageProps, S> extends React.Component<P, S> {
         this.props.setTitle(title);
     }
 
-    public alert(title: string, message: string, buttons: IAlertButtonOptions[], contents?: React.ComponentType) {
+    public alert(title: string, message: string, buttons: IAlertButtonOptions[], contents?: React.ComponentType, options?: any) {
         if (this.props.alert) {
-            this.props.alert(title, message, buttons, contents);
+            this.props.alert(title, message, buttons, contents, options);
         } else {
             alert(message);
         }

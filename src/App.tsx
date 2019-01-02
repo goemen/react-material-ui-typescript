@@ -17,6 +17,8 @@ import { firebaseApp } from './firebase-init';
 import { TicketDraw } from './state/TicketDraw';
 import { Map, List } from 'immutable';
 import { groupBy, keys } from 'lodash';
+import { ISearchQuery, SearchQuery } from './state/SearchQuery';
+import { setDate } from './helpers/misc';
 
 const theme = createMuiTheme({
   typography: {
@@ -56,7 +58,13 @@ class App extends React.Component<{}, { loading: boolean }> {
           }
         }
         store.dispatch({ type: ActionType.CURRENT_USER, payload: userInfo });
-
+        firebase.firestore().collection('users').doc(user.uid).onSnapshot(snapshot => {
+          const data: ISearchQuery = snapshot.data().searchQuery;
+          data.fromDate = setDate(data.fromDate);
+          data.toDate = setDate(data.toDate);
+          console.log(data)
+          store.dispatch({type: ActionType.SET_QUERY, payload: new SearchQuery(data)});
+        });
         firebase.firestore().collection('draws')
         .where('userId', '==', user.uid).onSnapshot(snapshot => {
           const draws = groupBy(snapshot.docs.map(x => new TicketDraw({id: x.id, ...x.data()})), d => d.eventId);

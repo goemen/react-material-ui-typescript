@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { UserClaims } from './Claims';
 import { Map, List } from 'immutable';
 import { TicketDraw } from './TicketDraw';
+import { SearchQuery } from './SearchQuery';
 
 export const ADMIN_ROLE = 'Admin';
 
@@ -14,6 +15,7 @@ export interface IUser {
     roles?: string[];
     claims?: UserClaims;
     ticketDraws?: Map<string, List<TicketDraw>>;
+    searchQuery?: SearchQuery;
 }
 
 const UserModel = Model<IUser>({
@@ -23,7 +25,8 @@ const UserModel = Model<IUser>({
     uid: null,
     roles: null,
     claims: null,
-    ticketDraws: Map<string, List<TicketDraw>>()
+    ticketDraws: Map<string, List<TicketDraw>>(),
+    searchQuery: new SearchQuery()
 });
 
 export class User extends UserModel {
@@ -34,6 +37,7 @@ export class User extends UserModel {
     public static ROLES = 'roles';
     public static CUSTOM_CLAIMS = 'claims';
     public static TICKET_DRAWS = 'ticketDraws';
+    public static SEARCH_QUERY = 'searchQuery';
 
     public uid: string;
     public email: string;
@@ -42,6 +46,11 @@ export class User extends UserModel {
     public photoUrl: string;
     public claims: UserClaims;
     public ticketDraws: Map<string, List<TicketDraw>>;
+    public searchQuery: SearchQuery;
+
+    constructor(data: any) {
+        super(_.assign({}, data, {searchQuery: data.searchQuery ? new SearchQuery(data.searchQuery) : new SearchQuery()}));
+    }
 
     public isInRole(candidate: string) {
         return this.hasRoles([candidate]);

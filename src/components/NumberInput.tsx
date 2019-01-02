@@ -4,8 +4,9 @@ import { Input } from '@material-ui/core';
 interface INumberInputProps {
     onChange?: (...args: any) => void;
     defaultValue?: number;
-    id: string;
-
+    id?: string;
+    startAdornment?: React.ReactNode;
+    endAdornment?: React.ReactNode;
 }
 
 export class NumberInput extends React.Component<INumberInputProps> {
@@ -17,8 +18,11 @@ export class NumberInput extends React.Component<INumberInputProps> {
     public render(): JSX.Element {
         return (<Input
             defaultValue={this.props.defaultValue}
-            id="fee"
+            id={this.props.id}
+            type='number'
             onChange={this.onChange}
+            startAdornment={this.props.startAdornment}
+            endAdornment={this.props.endAdornment}
         />);
     }
 }

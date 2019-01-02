@@ -8,6 +8,7 @@ import { CONFIG } from '../config';
 const totpGenerator = require("totp-generator")
 import moment from 'moment';
 import { assign } from 'lodash';
+const cities = require("all-the-cities");
 
 app.use(require('body-parser').json());
 app.use(cors());
@@ -134,6 +135,15 @@ app.get('/draw/:eventId', administratorsOnly, async (req, res) => {
 
   } catch (error) {
     return res.status(500).json({ error, message: 'Whooops, sum ting weird happened.' });
+  }
+});
+
+app.get('/cities', async (req, res) => {
+  try {
+    const found = require('full-countries-cities').getCities('Botswana');;
+    return res.json(found)
+  } catch(error) {
+    res.status(500).json({error, message: 'Whooops, sum ting weird happened.'})
   }
 });
 

@@ -15,12 +15,14 @@
   "dependencies": {
     "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.6",
+    "all-the-cities": "^2.0.1",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "express-bearer-token": "^2.2.0",
     "firebase-admin": "~6.0.0",
     "firebase-functions": "^2.1.0",
+    "full-countries-cities": "0.0.9",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",
     "totp-generator": "0.0.6"

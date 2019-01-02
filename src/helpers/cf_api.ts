@@ -39,6 +39,9 @@ class CloudFunctionsApi {
   public async enterTicketDraw(eventId: string) {
     return await this.handler.post('/events/enter-draw', {eventId});
   }
+  public async getCities() {
+    return await this.handler.get('/events/cities');
+  }
 }
 
 export const CFAPI = new CloudFunctionsApi();
