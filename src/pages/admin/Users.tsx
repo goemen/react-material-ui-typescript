@@ -10,7 +10,7 @@ import { Page } from '../Page';
 
 interface IUserManagementPageProps {
     fetchUsers: () => void;
-    users?: DataState<User>;
+    users?: DataState<User, any>;
     selectUser: (user: User, index: number) => void;
     deselectUser: () => void;
     setUserTablePage: (page: number) => void;

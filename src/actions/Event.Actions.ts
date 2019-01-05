@@ -6,14 +6,16 @@ import { DataState } from "../state/DataState";
 import * as _ from 'lodash';
 import { User } from "../state/User";
 import { Map } from "immutable";
+import { SearchQuery } from "../state/SearchQuery";
 
 export interface IEventProps {
-    events: DataState<Event>;
+    events: DataState<Event, SearchQuery>;
     saveEvent: (event: Event) => void;
     startCreateEvent: () => void;
     editEvent: (property: string, value: any) =>  void;
     loadEvents: () =>  void;
     changeSelection: (selection: IEventSelect) => void;
+    setSearch: (query: SearchQuery) => void;
 }
 
 export const saveEvent= (item: Event) => {
@@ -77,4 +79,8 @@ export const loadEvents = () => {
 
 export const changeSelection = (selection: IEventSelect) => {
     return { type: ActionType.CHANGE_EVENT_SELECTION, payload: selection };
+}
+
+export const setSearch = (query: SearchQuery): IAppAction => {
+    return {type: ActionType.SET_QUERY, payload: query};
 }

@@ -31,6 +31,7 @@ interface IListProps {
     alert: (title: string, message: string, buttons: IAlertButtonOptions[], contents?: React.ComponentType, fullscreen?: boolean) => void;
     dismissAlert: () => void;
     setQuery: (query: SearchQuery) => void;
+    query: SearchQuery;
 }
 
 interface IReservation {
@@ -53,7 +54,7 @@ class ListPage extends Page<IListProps, IState> {
             reserveTicket: {},
             openSearch: false,
             event: null,
-            query: (props.auth && props.auth.searchQuery) ? props.auth.searchQuery.toJS() : (new SearchQuery()).toJS()
+            query: (new SearchQuery()).toJS()
         };
     }
    
@@ -62,6 +63,26 @@ class ListPage extends Page<IListProps, IState> {
         if (this.props.events.isEmpty()) {
             this.props.toggleProgress();
         }
+    }
+
+    public componentDidMount() {
+        const { query } = this.props;
+        if (query) {
+            this.setState({query: query.toJS()});
+        }
+    }
+
+    public async componentWillUnmount() {
+        const { query } = this.props;
+        const disabledQuery = query.set(SearchQuery.APPLY, false) as SearchQuery;
+        try {
+            await this.updateQuery(disabledQuery);
+        } catch (error) {
+            console.log('Error: ' + error);
+        } finally {
+            this.props.setQuery(disabledQuery);
+        }
+        
     }
 
     private navigate = (id: string) => {
@@ -99,20 +120,30 @@ class ListPage extends Page<IListProps, IState> {
 
     private applyQuery = async () => {
         try {
-            const query = new SearchQuery(this.state.query);
-            const userRef = firebase.firestore().collection('users').doc(this.props.auth.uid);
-            const data = {};
-            data[User.SEARCH_QUERY] = query.saveable;
-            await userRef.update(data);
+            const query = new SearchQuery({...this.state.query, apply: true});
+            this.setState({query: query.toJS()});
             this.props.setQuery(query);
+            await this.updateQuery(query);
             this.dismissAlert();
         } catch (error) {
             this.error('Failed to apply query. Please try again');
         }
     }
 
-    private openSearchModal = () => {
+    private updateQuery = async (query: SearchQuery) => {
+        if (this.props.auth) {
+            try {
+                const userRef = firebase.firestore().collection('users').doc(this.props.auth.uid);
+                const data = {};
+                data[User.SEARCH_QUERY] = query.saveable;
+                await userRef.update(data);
+            } catch (error) {
+                throw new Error('Failed to update query');
+            }
+        }
+    }
 
+    private openSearchModal = () => {
         this.alert(
             'Search',
             '',

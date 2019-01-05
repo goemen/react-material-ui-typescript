@@ -14,7 +14,7 @@ interface IAdminProps {
     setUserTablePage: (page: number) => void;
     setUserCustomClaims: (userId: string, claims: any) => void;
     editUser: (path: any, value: any) => void;
-    users: DataState<User>;
+    users: DataState<User, any>;
     materialCharts: any;
     setTitle: (title: string) => void;
 }

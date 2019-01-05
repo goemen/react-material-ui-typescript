@@ -9,6 +9,7 @@ export interface ISearchQuery {
     maxFee?: number;
     location?: string[];
     drawable?: boolean;
+    apply?: boolean;
 }
 
 const SearchQueryModel = Model<ISearchQuery>({
@@ -18,7 +19,8 @@ const SearchQueryModel = Model<ISearchQuery>({
     minFee: 0,
     maxFee: 1000000,
     location: null,
-    drawable: null
+    drawable: null,
+    apply: false
 });
 
 export class SearchQuery extends SearchQueryModel {
@@ -29,6 +31,7 @@ export class SearchQuery extends SearchQueryModel {
     public static MAX_FEE = 'maxFee';
     public static LOCATION = 'location';
     public static DRAWABLE = 'drawable';
+    public static APPLY = 'apply';
 
     public fromDate: Date;
     public toDate: Date;
@@ -37,6 +40,7 @@ export class SearchQuery extends SearchQueryModel {
     public maxFee: number;
     public location: string[];
     public drawable: boolean;
+    public apply: boolean;
 
     public get saveable() {
         return {
@@ -46,7 +50,8 @@ export class SearchQuery extends SearchQueryModel {
             minFee: this.minFee,
             maxFee: this.maxFee,
             location: this.location,
-            drawable: this.drawable
+            drawable: this.drawable,
+            apply: this.apply
         }
     }
 }

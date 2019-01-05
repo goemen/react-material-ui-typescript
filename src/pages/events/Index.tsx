@@ -12,7 +12,7 @@ import { SearchQuery } from '../../state/SearchQuery';
 
 interface IProps {
     load: () => void;
-    events: DataState<Event>;
+    events: DataState<Event, SearchQuery>;
     createInit: () => void;
     editEvent: (prop: string, value: any) => void;
     match: any,
@@ -86,6 +86,7 @@ export class EventsPageRouter extends React.Component<IProps, {}> {
             alert={this.props.alert}
             dismissAlert={this.props.dismissAlert}
             setQuery={this.props.setQuery}
+            query={this.props.events.searchQuery || new SearchQuery()}
         />);
     }
 

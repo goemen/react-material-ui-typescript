@@ -12,7 +12,6 @@ import { IRegisterModel, ILoginModel, IResetPasswordModel } from '../models';
 import { CFAPI } from '../helpers/cf_api';
 import { DataState } from '../state/DataState';
 import { IEventProps } from './Event.Actions';
-import { SearchQuery } from '../state/SearchQuery';
 
 export interface IApplicationProps extends IEventProps {
     openDrawer: () => IAppAction;
@@ -44,7 +43,7 @@ export interface IApplicationProps extends IEventProps {
     history: any;
     utility: Utility;
     authentication: User;
-    users: DataState<User>;
+    users: DataState<User, any>;
     materials: any;
     materialCharts: Array<{ name: string, value: number, fill: string }>;
     toggleAnchor: (payload: any) => void;
@@ -52,7 +51,6 @@ export interface IApplicationProps extends IEventProps {
     editUserSelection: (path: any, value: any) => void;
     toggleProgress: () => void;
     setTitle: (title: string) => void;
-    setSearch: (query: SearchQuery) => void;
 }
 
 export const openDrawer = (): IAppAction => {
@@ -217,8 +215,5 @@ export const editUserSelection = (path: string, value: any) => {
 
 export const setTitle = (title: string): IAppAction => ({ type: ActionType.SET_TITLE, payload: title });
 
-export const setSearch = (query: SearchQuery): IAppAction => {
-    return {type: ActionType.SET_QUERY, payload: query};
-}
 
 

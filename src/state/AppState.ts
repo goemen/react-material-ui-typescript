@@ -4,12 +4,13 @@ import { Model } from './Helpers';
 import { User, ADMIN_ROLE } from './User';
 import { DataState } from './DataState';
 import { Event } from './Event';
+import { SearchQuery } from './SearchQuery';
 
 export interface IAppState {
     utility?: Utility;
     authentication?: User;
-    users?: DataState<User>;
-    events?: DataState<Event>
+    users?: DataState<User, any>;
+    events?: DataState<Event, SearchQuery>
     materials?: any;
     mail?: any;
 }
@@ -17,8 +18,8 @@ export interface IAppState {
 export const AppStateModel = Model<IAppState>({
     utility: new Utility(),
     authentication: null,
-    users: new DataState<User>(),
-    events: new DataState<Event>(),
+    users: new DataState<User, any>(),
+    events: new DataState<Event, SearchQuery>(),
     materials: null,
     mail: null
 });
@@ -29,8 +30,8 @@ export class AppState extends AppStateModel {
 
     public utility: Utility;
     public authentication: User;
-    public users: DataState<User>;
-    public events: DataState<Event>;
+    public users: DataState<User, any>;
+    public events: DataState<Event, SearchQuery>;
     public materials: any;
     public mail: any;
 }

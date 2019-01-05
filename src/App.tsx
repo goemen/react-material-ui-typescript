@@ -62,7 +62,6 @@ class App extends React.Component<{}, { loading: boolean }> {
           const data: ISearchQuery = snapshot.data().searchQuery;
           data.fromDate = setDate(data.fromDate);
           data.toDate = setDate(data.toDate);
-          console.log(data)
           store.dispatch({type: ActionType.SET_QUERY, payload: new SearchQuery(data)});
         });
         firebase.firestore().collection('draws')

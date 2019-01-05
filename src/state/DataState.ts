@@ -10,6 +10,7 @@ interface IDataState {
     selectedId: string;
     selectionIndex?: number;
     saveInProgress?: boolean;
+    searchQuery?: any;
 }
 
 const DataStateModel = Model<IDataState>({
@@ -20,10 +21,11 @@ const DataStateModel = Model<IDataState>({
     selection: null,
     pageIndex: 0,
     saveInProgress: false,
-    selectedId: null
+    selectedId: null,
+    searchQuery: null
 });
 
-export class DataState<M> extends DataStateModel {
+export class DataState<M, S> extends DataStateModel {
     public static ITEMS = 'items';
     public static LOADING = 'loading';
     public static DONE_LOADING = 'doneLoading';
@@ -32,6 +34,7 @@ export class DataState<M> extends DataStateModel {
     public static SELECTED_ID = 'selectedId';
     public static PAGE_INDEX = 'pageIndex';
     public static SAVE_IN_PROGRESS = 'saveInProgress';
+    public static SEARCH_QUERY = 'searchQuery';
 
     public items: Map<string, M>;
     public loading: boolean;
@@ -41,4 +44,5 @@ export class DataState<M> extends DataStateModel {
     public selectionIndex: number;
     public saveInProgress: boolean;
     public selectedId: string;
+    public searchQuery: S;
 }
