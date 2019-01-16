@@ -16,4 +16,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+functions/
+functions-src/
 
+.vscode/settings.json
